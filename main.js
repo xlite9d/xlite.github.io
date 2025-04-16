@@ -7,19 +7,16 @@ document.addEventListener('DOMContentLoaded', function() {
   cursorFollow.classList.add('cursor-follow');
   document.body.appendChild(cursorFollow);
 
-  // Variables to track cursor position
   let mouseX = 0;
   let mouseY = 0;
   let cursorX = 0;
   let cursorY = 0;
 
-  // Add mousemove event to track cursor with smooth animation
   document.addEventListener('mousemove', function(e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
   });
 
-  // Animation loop for smoother cursor following
   function animateCursor() {
     const speed = 0.15;
     cursorX += (mouseX - cursorX) * speed;
@@ -33,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   animateCursor();
 
-  // Add hover effects for game cards
   gameCards.forEach(card => {
     card.addEventListener('mouseenter', function() {
       document.body.classList.add('game-hover');
@@ -57,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Search functionality
   searchInput.addEventListener('input', function() {
     const query = this.value.toLowerCase();
     let resultsFound = false;
