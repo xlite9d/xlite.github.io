@@ -715,13 +715,13 @@
             <div class="sidebar-divider"></div>
 
             <div class="sidebar-section">
-                <div class="sidebar-icon" data-url="/active/Embed.html?url=https://www.twitch.tv">
+                <div class="sidebar-icon" data-url="/active/embed.html?url=https://www.twitch.tv">
                     <i class="fa-brands fa-twitch"></i>
                 </div>
                 <div class="sidebar-icon" data-url="/gamepagev1">
                     <i class="fa-solid fa-gamepad"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/active/Embed.html?url=https://play.geforcenow.com">
+                <div class="sidebar-icon" data-url="/active/embed.html?url=https://play.geforcenow.com">
                     <i class="fa-solid fa-cube"></i>
                 </div>
                 <div class="sidebar-icon" data-url="/tutorials">
@@ -751,7 +751,7 @@
                     <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNsb2NrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCI+PC9jaXJjbGU+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCI+PC9wb2x5bGluZT48L3N2Zz4=" alt="History" width="20" height="20">
                 </div>
                 
-                <div class="sidebar-icon" data-url="/active/Embed.html?url=https://www.dropbox.com">
+                <div class="sidebar-icon" data-url="/active/embed.html?url=https://www.dropbox.com">
                     <i class="fa-solid fa-cube"></i>
                 </div>
             </div>
@@ -970,8 +970,8 @@
             if (url.startsWith('/landin')) return '';
             try {
 
-                if (url.includes('/active/Embed.html?url=')) {
-                    const embedUrl = decodeURIComponent(url.split('/active/Embed.html?url=')[1]);
+                if (url.includes('/active/embed.html?url=')) {
+                    const embedUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
                     if (embedUrl.includes('://')) {
                         return new URL(embedUrl).hostname;
                     } else if (embedUrl.includes('.')) {
@@ -1014,8 +1014,8 @@
         }
 
         function updateUrlBar(url) {
-            if (url.includes('/active/Embed.html?url=')) {
-                const actualUrl = decodeURIComponent(url.split('/active/Embed.html?url=')[1]);
+            if (url.includes('/active/embed.html?url=')) {
+                const actualUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
                 urlBar.value = actualUrl;
             } else {
                 urlBar.value = url;
@@ -1161,9 +1161,9 @@
                 if (internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
                     processedUrl = url;
                 } else if (!url.includes('://') && !url.startsWith('/')) {
-                    processedUrl = `/active/Embed.html?url=https://${url}`;
+                    processedUrl = `/active/embed.html?url=https://${url}`;
                 } else if (!url.startsWith('/')) {
-                    processedUrl = `/active/Embed.html?url=${encodeURIComponent(url)}`;
+                    processedUrl = `/active/embed.html?url=${encodeURIComponent(url)}`;
                 }
 
                 activeFrame.src = processedUrl;
@@ -1256,8 +1256,8 @@
             const timeString = `${hours}:${minutes}`;
 
             let displayUrl = url;
-            if (url.includes('/active/Embed.html?url=')) {
-                displayUrl = decodeURIComponent(url.split('/active/Embed.html?url=')[1]);
+            if (url.includes('/active/embed.html?url=')) {
+                displayUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
             }
 
             browserHistory.unshift({
@@ -1283,7 +1283,7 @@
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type) {
                 if (event.data.type === 'search') {
-                    const searchUrl = `/active/Embed.html?url=https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+                    const searchUrl = `/active/embed.html?url=https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
                     const activeFrame = document.getElementById(`frame-${activeTabId}`);
                     if (activeFrame) {
                         loadingBarContainer.style.display = 'block';
@@ -1301,7 +1301,7 @@
                         storeHistoryItem(`https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`);
                     }
                 } else if (event.data.type === 'navigate') {
-                    const url = `/active/Embed.html?url=${encodeURIComponent(event.data.url)}`;
+                    const url = `/active/embed.html?url=${encodeURIComponent(event.data.url)}`;
 
                     const activeFrame = document.getElementById(`frame-${activeTabId}`);
                     if (activeFrame) {
