@@ -12,7 +12,6 @@
     <meta property="og:description" content="VplazaX, a futuristic gaming site. Watch T.V., movies, and watch tiktok, oh wait, use vtok, a tiktok clone for vplaza! Ah man, we need a logo, use vplaza. Want to be free, use our Opera GX clone proxy!" />
     <meta name="theme-color" content="#FF0000">
     <meta name="orbit:card" content="https://vplaza.org/v1/files/v1-info/images/vplazav1.png">
-    </script>
     <title>VPlaza V1</title>
     <style>
         * {
@@ -39,7 +38,6 @@
             width: 50%;
         }
 
-        /* Text styling */
         .text-white {
             color: #ffffff;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
@@ -75,7 +73,6 @@
             animation: pulse 3s infinite alternate;
         }
 
-        /* Button styling */
         .enter-button {
             display: inline-flex;
             align-items: center;
@@ -115,7 +112,6 @@
             margin-right: 5px;
         }
 
-        /* Custom image container */
         .custom-image-container {
             position: absolute;
             top: 50%;
@@ -135,7 +131,6 @@
             border-radius: 10px;
         }
 
-        /* Small floating dots */
         .dot {
             position: absolute;
             background-color: #ff2d2d;
@@ -145,7 +140,6 @@
             z-index: 0;
         }
 
-        /* Animations */
         @keyframes pulse {
             0% {
                 text-shadow: 0 0 5px rgba(255, 45, 45, 0.8), 0 0 10px rgba(255, 45, 45, 0.5);
@@ -173,7 +167,6 @@
             }
         }
 
-        /* Hover effects */
         .hoverable {
             transition: all 0.3s ease;
         }
@@ -183,7 +176,6 @@
             filter: brightness(1.2);
         }
 
-        /* Instructions text */
         .instructions {
             color: rgba(255, 255, 255, 0.7);
             position: absolute;
@@ -194,7 +186,6 @@
             text-align: center;
         }
 
-        /* Mobile responsiveness */
         @media (max-width: 1100px) {
             .content-container {
                 width: 60%;
@@ -265,7 +256,6 @@
     </div>
 
     <div class="custom-image-container">
-        <!-- Placeholder for user's custom image -->
         <img src="images/vplazav1.png" alt="vplazav1" class="custom-image">
     </div>
 
@@ -273,10 +263,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Create floating dots
             createDots(15);
-
-            // Subtle mouse parallax effect
             document.addEventListener('mousemove', function(e) {
                 const mouseX = e.clientX;
                 const mouseY = e.clientY;
@@ -289,43 +276,35 @@
 
                 const imageContainer = document.querySelector('.custom-image-container');
 
-                // Only apply effects on larger screens
                 if (window.innerWidth > 768) {
                     imageContainer.style.transform = `translateY(-50%) translate(${moveX}px, ${moveY}px)`;
                 }
             });
         });
 
-        // Create floating red dots
         function createDots(num) {
             for (let i = 0; i < num; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'dot';
 
-                // Random position
                 const x = Math.random() * 100;
                 const y = Math.random() * 100;
 
-                // Random size
                 const size = Math.random() * 6 + 2;
 
-                // Random opacity
                 const opacity = Math.random() * 0.6 + 0.2;
 
-                // Set styles
                 dot.style.width = `${size}px`;
                 dot.style.height = `${size}px`;
                 dot.style.left = `${x}%`;
                 dot.style.top = `${y}%`;
                 dot.style.opacity = opacity;
 
-                // Set animation
                 dot.style.animation = `float ${Math.random() * 5 + 3}s ease-in-out infinite alternate`;
 
-                // Add to DOM
                 document.body.appendChild(dot);
             }
         }
-        </script>
+    </script>
 </body>
 </html>
