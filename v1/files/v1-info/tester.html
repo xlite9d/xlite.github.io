@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vplaza v1</title>
+    <link rel="icon" type="image/x-icon" href="/v1/files/v1-info/images/vplazav1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #ff0044 #111111;
+        }
+
+        body {
+            background-color: #000000;
+            color: #e8eaed;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100vh - 40px);
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 56px;
+            height: 100%;
+            background-color: #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            z-index: 10;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 8px 0;
+            transition: 0.3s;
+            border-radius: 10px;
+        }
+
+        .sidebar:hover {
+            background-color: #8c00005b;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #111111;
+            border-radius: 10px;
+            margin: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #ff0044;
+            border-radius: 50px;
+            border: 2px solid #111111;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #ff0066;
+            box-shadow: 0 0 5px rgba(255, 0, 102, 0.5);
+        }
+
+        .sidebar::-webkit-scrollbar-corner {
+            background: #111111;
+            border-radius: 10px;
+        }
+
+        .sidebar-divider {
+            width: 24px;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 8px 0;
+        }
+
+        .opera-logo {
+            width: 40px;
+            height: 32px;
+            margin: 8px 0 16px;
+            position: relative;
+        }
+
+        .opera-logo svg {
+            fill: #ff0037;
+            transition: 0.5s;
+        }
+
+        .opera-logo svg:hover {
+            fill: #8c00005b;
+            box-shadow: 0 4px 15px rgba(255, 0, 128, 0.7);
+            border-radius: 50px;
+        }
+
+        .sidebar-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .sidebar .tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 4px 0;
+            cursor: pointer;
+            position: relative;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar .tab i {
+            font-size: 18px;
+        }
+
+        .sidebar .tab:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .sidebar .tab.active {
+            color: #ff0000;
+        }
+
+        .sidebar .tab.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 16px;
+            background-color: #fa1e4e;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .tabs-top-bar {
+            display: flex;
+            height: 40px;
+            background-color: #000000;
+            align-items: center;
+            padding: 0 8px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .tabs-top-bar:hover {
+            background-color: #8c00005b;
+        }
+
+        .tabs-top-bar::-webkit-scrollbar {
+            height: 0;
+            background: transparent;
+        }
+
+        /* Progressive tab sizing classes */
+        .tabs-top-bar .tab {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            margin-right: 3px;
+            padding: 0 10px;
+            cursor: pointer;
+            position: relative;
+            color: #aaa;
+            transition: all 0.2s ease;
+            background-color: #000000;
+            min-width: 120px;
+            max-width: 200px;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        /* Slight reduction - still shows full text */
+        .tabs-top-bar.crowded .tab {
+            min-width: 100px;
+            max-width: 150px;
+            padding: 0 8px;
+        }
+
+        /* More reduction - shows partial text */
+        .tabs-top-bar.very-crowded .tab {
+            min-width: 80px;
+            max-width: 100px;
+            padding: 0 5px;
+        }
+
+        /* Significantly reduced - shows only first few characters */
+        .tabs-top-bar.extremely-crowded .tab {
+            min-width: 50px;
+            max-width: 60px;
+            padding: 0 4px;
+        }
+
+        /* Single letter mode */
+        .tabs-top-bar.letter-only .tab {
+            min-width: 42px;
+            max-width: 42px;
+            padding: 0 3px;
+        }
+
+        /* Favicon only mode */
+        .tabs-top-bar.favicon-only .tab {
+            min-width: 32px;
+            max-width: 32px;
+            padding: 0;
+            justify-content: center;
+        }
+
+        /* Title text modifications based on crowding */
+        .tabs-top-bar.extremely-crowded .tab .tab-title {
+            max-width: 20px;
+            text-overflow: clip;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .tabs-top-bar.letter-only .tab .tab-title {
+            max-width: 10px;
+            text-overflow: clip;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .tabs-top-bar.favicon-only .tab .tab-title {
+            display: none;
+        }
+
+        /* Close button modifications */
+        .tabs-top-bar.extremely-crowded .tab .tab-close,
+        .tabs-top-bar.letter-only .tab .tab-close {
+            margin-left: 2px;
+            width: 14px;
+            height: 14px;
+            font-size: 10px;
+        }
+
+        .tabs-top-bar.favicon-only .tab .tab-close {
+            margin-left: 0;
+            width: 12px;
+            height: 12px;
+            font-size: 8px;
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .tab.dragging {
+            opacity: 0.65;
+            z-index: 100;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 42px;
+            }
+
+            .main-content {
+                width: calc(100vw - 42px);
+            }
+
+            .opera-logo {
+                width: 32px;
+                height: 26px;
+            }
+
+            .sidebar-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            .history-panel {
+                width: 300px;
+                left: 42px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tabs-top-bar .tab {
+                min-width: 80px;
+            }
+
+            .url-bar-wrapper {
+                margin: 0 5px;
+            }
+
+            .browser-actions {
+                margin-right: 4px;
+            }
+
+            .action-btn {
+                width: 24px;
+                height: 24px;
+            }
+
+            .history-panel {
+                width: 250px;
+            }
+        }
+
+        .tabs-top-bar .tab.active {
+            background-color: #000000;
+            color: #fff;
+        }
+
+        .tabs-top-bar .tab.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #fa1e4e;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .tabs-top-bar .new-tab {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .tabs-top-bar .new-tab:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.4s;
+            margin: 4px 0;
+        }
+
+        .sidebar-icon:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #ff0000;
+        }
+
+        .sidebar-icon.active {
+            color: #fff;
+            background-color: rgba(250, 30, 78, 0.15);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: calc(100vw - 56px);
+            background-color: #000000;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .browser-header {
+            background-color: #000000;
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            height: 52px;
+            transition: 1s;
+        }
+
+        .browser-header:hover {
+            background-color: #8c00005b;
+            border-top-right-radius: 10px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .url-bar-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            font-family: poppins;
+        }
+
+        .browser-actions {
+            display: flex;
+            margin-right: 8px;
+            transition: 0.5s;
+        }
+
+        .action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 14px;
+            margin-right: 4px;
+        }
+
+        .action-btn:hover {
+            background-color: rgba(255, 0, 0, 0.1);
+            color: #fff;
+        }
+
+        .url-bar-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            height: 36px;
+            background-color: #000000;
+            border-radius: 4px;
+            padding: 0 10px;
+            margin: 0 10px;
+            transition: 0.5s;
+        }
+
+        .url-bar-wrapper:hover {
+            background-color: #8c00005b;
+        }
+
+        .url-bar {
+            flex-grow: 1;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ff0044;
+            font-size: 14px;
+            padding: 0 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .url-bar-icon {
+            color: #ff0044;
+            font-size: 14px;
+            transition: 1s;
+        }
+
+        .url-bar-icon:hover {
+            color: black;
+        }
+
+        .window-controls {
+            display: flex;
+            margin-left: auto;
+        }
+
+        .window-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6f6f6f;
+            cursor: pointer;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+        .window-btn:hover {
+            color: #ff00005b;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .window-btn.close:hover {
+            background-color: #3f3f3f78;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+            height: calc(100% - 52px);
+            width: 100%;
+        }
+
+        .tab-content {
+            width: 100%;
+            height: 100%;
+            display: none;
+            overflow: hidden;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 3px solid rgb(255, 0, 119);
+            border-top-left-radius: 20px;
+            display: block;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .loading-bar-container {
+            position: absolute;
+            top: 52px;
+            left: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: transparent;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0;
+            background-color: #ff0000;
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { width: 0; transform: translateX(0); }
+            50% { width: 50%; transform: translateX(50%); }
+            100% { width: 0; transform: translateX(100%); }
+        }
+
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .wave-background {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('uploads/dgfk1h6f2m1-image.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 1;
+            z-index: -1;
+        }
+
+        .new-tab {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 50%;
+            margin: 4px 0;
+            transition: color 0.2s;
+        }
+
+        .new-tab:hover {
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .history-panel {
+            position: fixed;
+            top: 80px;
+            left: 56px;
+            width: 400px;
+            max-height: 500px;
+            background-color: rgba(255, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            color: black;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .history-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            color: black;
+        }
+
+        .history-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .history-item-icon {
+            color: black;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .history-item-time {
+            font-size: 14px;
+            font-weight: 600;
+            color: black;
+            margin-right: 12px;
+            min-width: 45px;
+        }
+
+        .history-divider {
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.4);
+            margin: 15px 0;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .history-icon {
+            margin-right: 10px;
+        }
+
+        .history-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: black;
+        }
+
+        .history-item-url {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            color: black;
+        }
+
+        .tabs-top-bar .tab .tab-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tabs-top-bar .tab .tab-title {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+        }
+
+        .tabs-top-bar .tab .tab-close {
+            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .tabs-top-bar .tab .tab-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tabs-top-bar .tab:hover {
+            background-color: #000000;
+            color: #fff;
+        }
+
+        /* Tab Group Styles */
+        .tab-group-header {
+            height: 3px;
+            background-color: var(--group-color, #ff0044);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            border-radius: 2px 2px 0 0;
+            z-index: 1;
+        }
+
+        .tab-group {
+            position: relative;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            margin-top: 3px;
+            overflow: hidden;
+        }
+
+        .tab-group .tab:first-child {
+            border-top-left-radius: 4px;
+        }
+
+        .tab-group .tab:last-child {
+            border-top-right-radius: 4px;
+        }
+
+        .tab-group.collapsed .tab:not(:first-child) {
+            display: none;
+        }
+
+        .tab-group-name {
+            position: absolute;
+            left: 8px;
+            top: -18px;
+            font-size: 10px;
+            color: var(--group-color, #ff0044);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+            z-index: 2;
+        }
+
+        .tabs-top-bar .tab.selected {
+            box-shadow: inset 0 0 0 2px #ff0044;
+        }
+
+        /* Tab Group Dialog */
+        .tab-group-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #330011;
+            border-radius: 8px;
+            width: 250px;
+            max-width: 90vw;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            padding: 16px;
+            color: #ffffff;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tab-group-dialog.visible {
+            display: flex;
+        }
+
+        .tab-group-dialog input {
+            width: 100%;
+            background-color: #220011;
+            border: none;
+            padding: 8px 12px;
+            color: #ffffff;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            outline: none;
+        }
+
+        .tab-group-dialog input:focus {
+            box-shadow: 0 0 0 2px rgba(255, 0, 68, 0.5);
+        }
+
+        .tab-group-dialog .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        .tab-group-dialog .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tab-group-dialog .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .tab-group-dialog .color-option.selected {
+            box-shadow: 0 0 0 2px white;
+        }
+
+        .tab-group-dialog .color-option i {
+            color: white;
+            font-size: 14px;
+            display: none;
+        }
+
+        .tab-group-dialog .color-option.selected i {
+            display: block;
+        }
+
+        .tab-group-dialog .create-button {
+            background-color: #ff0044;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .tab-group-dialog .create-button:hover {
+            background-color: #ff0066;
+        }
+
+        .tab-in-transition {
+            transition: transform 0.15s ease-out;
+        }
+
+        .tab-placeholder {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="tabs-top-bar" id="tabs-top-bar">
+        <div class="new-tab" id="new-tab-btn-top">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="opera-logo">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2zm0 22.5c-4.694 0-8.5-3.806-8.5-8.5s3.806-8.5 8.5-8.5 8.5 3.806 8.5 8.5-3.806 8.5-8.5 8.5z" />
+                </svg>
+            </div>
+
+            <div class="sidebar-section tabs-section" id="sidebar-tabs-section" style="display:none;">
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-icon" data-url="/active/Embed.html?url=https://www.twitch.tv">
+                    <i class="fa-brands fa-twitch"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/gamepagev1">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/active/Embed.html?url=https://play.geforcenow.com">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/tutorials">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-icon" data-url="/v-ai">
+                    <i class="bi bi-phone"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/ai">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/a">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                </div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-bottom">
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-icon" id="history-btn">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNsb2NrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCI+PC9jaXJjbGU+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCI+PC9wb2x5bGluZT48L3N2Zz4=" alt="History" width="20" height="20">
+                </div>
+
+                <div class="sidebar-icon" data-url="/active/Embed.html?url=https://www.dropbox.com">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="browser-header">
+                <div class="url-bar-container">
+                    <div class="browser-actions">
+                        <div class="action-btn" id="back-btn">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="action-btn" id="forward-btn">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                        <div class="action-btn" id="reload-btn">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </div>
+                    </div>
+                    <div class="url-bar-wrapper">
+                        <i class="fa-solid fa-magnifying-glass url-bar-icon"></i>
+                        <input type="text" class="url-bar" id="url-bar" placeholder="Enter search or web address">
+                    </div>
+                    <div class="window-controls">
+                        <div class="window-btn">
+                            <i class="fa-solid fa-minus"></i>
+                        </div>
+                        <div class="window-btn">
+                            <i class="fa-regular fa-square"></i>
+                        </div>
+                        <div class="window-btn close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-bar-container" id="loading-bar-container">
+                    <div class="loading-bar"></div>
+                </div>
+            </div>
+            <div class="content-area" id="content-area">
+                <div class="tab-content active" id="tab-content-0">
+                    <iframe src="/landin" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
+                </div>
+            </div>
+
+            <div class="background-container">
+                <div class="wave-background"></div>
+            </div>
+
+            <div class="history-panel" id="history-panel">
+                <div class="history-header">
+                    <div class="history-icon">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNsb2NrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCI+PC9jaXJjbGU+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCI+PC9wb2x5bGluZT48L3N2Zz4=" alt="History" width="24" height="24">
+                    </div>
+                    <div class="history-title">History</div>
+                </div>
+                <div class="history-divider"></div>
+                <div id="history-items-container">
+                </div>
+            </div>
+
+            <div class="tab-group-dialog" id="tab-group-dialog">
+                <input type="text" id="tab-group-name" placeholder="name your tab group">
+                <div class="color-options">
+                    <div class="color-option" style="background-color: #5851db;" data-color="#5851db">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="color-option" style="background-color: #e1306c;" data-color="#e1306c">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="color-option" style="background-color: #f77737;" data-color="#f77737">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="color-option selected" style="background-color: #fd5949;" data-color="#fd5949">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="color-option" style="background-color: #fcaf45;" data-color="#fcaf45">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="color-option" style="background-color: #4dc247;" data-color="#4dc247">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <div class="color-option" style="background-color: #38b2ac;" data-color="#38b2ac">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                </div>
+                <button class="create-button" id="create-group-btn">
+                    Create <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let activeTabId = 0;
+        let tabCounter = 1;
+        let tabsInSidebar = false;
+        let draggedTab = null;
+        let dragStartX = 0;
+        let originalTabLeft = 0;
+        let tabPositions = [];
+        let tabWidths = [];
+        let selectedTabs = new Set(); // For tab grouping
+        let isShiftKeyPressed = false;
+        let tabGroups = []; // Store tab group information
+
+        // Initialize localStorage for history
+        let browserHistory = [];
+
+        // Load history from localStorage if available
+        if (localStorage.getItem('browserHistory')) {
+            try {
+                browserHistory = JSON.parse(localStorage.getItem('browserHistory'));
+            } catch (e) {
+                console.error('Error loading history:', e);
+                browserHistory = [];
+            }
+        }
+
+        const sidebar = document.getElementById('sidebar');
+        const sidebarTabsSection = document.getElementById('sidebar-tabs-section');
+        const topTabsBar = document.getElementById('tabs-top-bar');
+        const contentArea = document.getElementById('content-area');
+        const urlBar = document.getElementById('url-bar');
+        const newTabBtnTop = document.getElementById('new-tab-btn-top');
+        const backBtn = document.getElementById('back-btn');
+        const forwardBtn = document.getElementById('forward-btn');
+        const reloadBtn = document.getElementById('reload-btn');
+        const loadingBarContainer = document.getElementById('loading-bar-container');
+        const historyPanel = document.getElementById('history-panel');
+        const historyItemsContainer = document.getElementById('history-items-container');
+
+        // Check tab crowding and adjust classes
+        function checkTabCrowding() {
+            const tabContainer = topTabsBar.getBoundingClientRect();
+            const tabContainerWidth = tabContainer.width - newTabBtnTop.offsetWidth - 10; // Add 10px buffer
+
+            let totalTabsWidth = 0;
+            const tabs = Array.from(topTabsBar.querySelectorAll('.tab'));
+            const tabCount = tabs.length;
+
+            // Reset all crowding classes
+            topTabsBar.classList.remove(
+                'crowded',
+                'very-crowded',
+                'extremely-crowded',
+                'letter-only',
+                'favicon-only'
+            );
+
+            // Each tab has a base size - calculate how much space we'd need ideally
+            const idealWidth = tabCount * 150; // Assume 150px is ideal tab width
+
+            // Calculate progressive levels of crowding
+            if (idealWidth > tabContainerWidth) {
+                // First level of crowding
+                topTabsBar.classList.add('crowded');
+
+                if (idealWidth > tabContainerWidth * 1.3) {
+                    // Second level of crowding
+                    topTabsBar.classList.add('very-crowded');
+
+                    if (idealWidth > tabContainerWidth * 1.7) {
+                        // Third level - start severe truncation
+                        topTabsBar.classList.add('extremely-crowded');
+
+                        if (idealWidth > tabContainerWidth * 2.2) {
+                            // Fourth level - single letter
+                            topTabsBar.classList.add('letter-only');
+
+                            if (idealWidth > tabContainerWidth * 2.8) {
+                                // Final level - favicon only
+                                topTabsBar.classList.add('favicon-only');
+                            }
+                        }
+                    }
+                }
+            }
+
+            // For debugging - log current crowding state
+            // console.log('Tab crowding state:', {
+            //     tabCount,
+            //     idealWidth,
+            //     availableWidth: tabContainerWidth,
+            //     ratio: idealWidth / tabContainerWidth,
+            //     classList: topTabsBar.className
+            // });
+        }
+
+        // Populate history panel from localStorage
+        function populateHistoryPanel() {
+            historyItemsContainer.innerHTML = '';
+
+            browserHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+
+                historyItem.innerHTML = `
+                    <div class="history-item-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <div class="history-item-time">${item.time}</div>
+                    <div class="history-item-url">${item.displayUrl}</div>
+                `;
+
+                historyItem.addEventListener('click', function() {
+                    const clickedUrl = item.url;
+                    navigateToUrl(clickedUrl);
+
+                    historyPanel.classList.remove('visible');
+                    setTimeout(() => {
+                        historyPanel.style.display = 'none';
+                    }, 200);
+                });
+
+                historyItemsContainer.appendChild(historyItem);
+            });
+        }
+
+        const initialTabs = [
+            { id: 0, title: 'New Tab', url: '/landin', icon: 'fa-home' }
+        ];
+
+        function initializeTabs() {
+            while (topTabsBar.firstChild) {
+                if (topTabsBar.firstChild.id === 'new-tab-btn-top') {
+                    break;
+                }
+                topTabsBar.removeChild(topTabsBar.firstChild);
+            }
+
+            initialTabs.forEach(tab => {
+                createTopTab(tab.id, tab.title, tab.url, tab.icon);
+            });
+
+            switchTab(activeTabId);
+            checkTabCrowding();
+        }
+
+        // Replace the old drag and drop with smooth sliding behavior
+        function initDragAndDrop(tab) {
+            tab.setAttribute('draggable', 'true');
+
+            tab.addEventListener('mousedown', (e) => {
+                // Don't start dragging if clicking on the close button or if part of a tab group action
+                if (e.target.closest('.tab-close') || isShiftKeyPressed) {
+                    return;
+                }
+
+                // Get the tab's current position and dimensions
+                const rect = tab.getBoundingClientRect();
+                dragStartX = e.clientX;
+                originalTabLeft = rect.left;
+                draggedTab = tab;
+
+                // Create a placeholder for the dragged tab
+                const placeholder = tab.cloneNode(true);
+                placeholder.classList.add('tab-placeholder');
+                placeholder.style.width = `${rect.width}px`;
+                placeholder.style.height = `${rect.height}px`;
+                placeholder.style.position = 'absolute';
+                placeholder.style.left = `${rect.left}px`;
+                placeholder.style.top = `${rect.top}px`;
+                placeholder.style.zIndex = '100';
+                placeholder.style.pointerEvents = 'none';
+                tab.parentNode.insertBefore(placeholder, tab);
+                tab.classList.add('tab-in-transition');
+                tab.style.opacity = '0.85';
+                tab.style.zIndex = '101';
+
+                // Capture all tab positions for calculations during drag
+                captureTabPositions();
+
+                // Set up event handlers for mousemove and mouseup
+                document.addEventListener('mousemove', handleTabDragMove);
+                document.addEventListener('mouseup', handleTabDragEnd);
+
+                // Prevent default to disable browser's default drag behavior
+                e.preventDefault();
+            });
+
+            // Prevent the default dragstart event which can interfere with our custom implementation
+            tab.addEventListener('dragstart', (e) => {
+                e.preventDefault();
+            });
+        }
+
+        function captureTabPositions() {
+            tabPositions = [];
+            tabWidths = [];
+            const tabs = Array.from(topTabsBar.querySelectorAll('.tab'));
+            tabs.forEach(t => {
+                if (t === draggedTab) return;
+                const tabRect = t.getBoundingClientRect();
+                tabPositions.push({
+                    tab: t,
+                    left: tabRect.left,
+                    right: tabRect.right,
+                    width: tabRect.width
+                });
+            });
+        }
+
+        function handleTabDragMove(e) {
+            if (!draggedTab) return;
+
+            // Calculate how far the tab has been dragged
+            const deltaX = e.clientX - dragStartX;
+
+            // Update the position of the dragged tab
+            draggedTab.style.transform = `translateX(${deltaX}px)`;
+
+            // Check if we need to reorder tabs
+            const draggedRect = draggedTab.getBoundingClientRect();
+            const draggedCenter = draggedRect.left + draggedRect.width / 2;
+
+            // Find the tab whose position would be displaced by the dragged tab
+            for (let i = 0; i < tabPositions.length; i++) {
+                const t = tabPositions[i];
+
+                // Check if the center point of the dragged tab is within the bounds of this tab
+                if (draggedCenter > t.left && draggedCenter < t.right) {
+                    // Move other tabs to make room for the dragged tab
+                    const displacedTab = t.tab;
+                    const displacementDirection = draggedRect.left < t.left ? -1 : 1;
+
+                    // Only move the tab if it's not already in the right place
+                    if ((displacementDirection === -1 && displacedTab.previousElementSibling !== draggedTab) ||
+                        (displacementDirection === 1 && displacedTab.nextElementSibling !== draggedTab)) {
+
+                        if (displacementDirection === -1) {
+                            // The dragged tab is moving left, so move the displaced tab to the right
+                            if (displacedTab.style.transform !== `translateX(${draggedRect.width}px)`) {
+                                displacedTab.classList.add('tab-in-transition');
+                                displacedTab.style.transform = `translateX(${draggedRect.width}px)`;
+                            }
+                        } else {
+                            // The dragged tab is moving right, so move the displaced tab to the left
+                            if (displacedTab.style.transform !== `translateX(${-draggedRect.width}px)`) {
+                                displacedTab.classList.add('tab-in-transition');
+                                displacedTab.style.transform = `translateX(${-draggedRect.width}px)`;
+                            }
+                        }
+
+                        break;
+                    }
+                } else {
+                    // Reset transform for tabs that are no longer displaced
+                    if (t.tab.style.transform) {
+                        t.tab.classList.add('tab-in-transition');
+                        t.tab.style.transform = '';
+                    }
+                }
+            }
+        }
+
+        function handleTabDragEnd(e) {
+            if (!draggedTab) return;
+
+            // Remove the event listeners
+            document.removeEventListener('mousemove', handleTabDragMove);
+            document.removeEventListener('mouseup', handleTabDragEnd);
+
+            // Find the tab that the dragged tab should be inserted before/after
+            const draggedRect = draggedTab.getBoundingClientRect();
+            const draggedCenter = draggedRect.left + draggedRect.width / 2;
+            let targetTab = null;
+            let insertAfter = false;
+
+            for (let i = 0; i < tabPositions.length; i++) {
+                const t = tabPositions[i];
+                if (draggedCenter > t.left && draggedCenter < t.right) {
+                    targetTab = t.tab;
+                    insertAfter = draggedCenter > t.left + t.width / 2;
+                    break;
+                }
+            }
+
+            // Reset the transform and styles of all tabs
+            const allTabs = topTabsBar.querySelectorAll('.tab');
+            allTabs.forEach(tab => {
+                tab.classList.remove('tab-in-transition');
+                tab.style.transform = '';
+                tab.style.opacity = '';
+                tab.style.zIndex = '';
+            });
+
+            // Reorder the tabs if needed
+            if (targetTab) {
+                const placeholder = topTabsBar.querySelector('.tab-placeholder');
+                if (placeholder) {
+                    placeholder.remove();
+                }
+
+                if (insertAfter) {
+                    const nextSibling = targetTab.nextElementSibling;
+                    if (nextSibling !== draggedTab) {
+                        if (nextSibling) {
+                            topTabsBar.insertBefore(draggedTab, nextSibling);
+                        } else {
+                            topTabsBar.insertBefore(draggedTab, newTabBtnTop);
+                        }
+                    }
+                } else {
+                    if (targetTab !== draggedTab.nextElementSibling) {
+                        topTabsBar.insertBefore(draggedTab, targetTab);
+                    }
+                }
+            } else {
+                // If no target tab was found, just remove the placeholder
+                const placeholder = topTabsBar.querySelector('.tab-placeholder');
+                if (placeholder) {
+                    placeholder.remove();
+                }
+            }
+
+            draggedTab = null;
+
+            // Update any tab groups after reordering
+            updateTabGroupsAfterReordering();
+        }
+
+        // Add Shift+Click tab selection for grouping
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Shift') {
+                isShiftKeyPressed = true;
+            }
+        });
+
+        document.addEventListener('keyup', function(e) {
+            if (e.key === 'Shift') {
+                isShiftKeyPressed = false;
+            }
+        });
+
+        // Tab grouping functionality
+        const tabGroupDialog = document.getElementById('tab-group-dialog');
+        const tabGroupNameInput = document.getElementById('tab-group-name');
+        const createGroupBtn = document.getElementById('create-group-btn');
+        let selectedColor = '#fd5949'; // Default selected color
+
+        document.querySelectorAll('.tab-group-dialog .color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove selected class from all options
+                document.querySelectorAll('.tab-group-dialog .color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                // Add selected class to this option
+                this.classList.add('selected');
+
+                // Save the selected color
+                selectedColor = this.getAttribute('data-color');
+            });
+        });
+
+        createGroupBtn.addEventListener('click', function() {
+            const groupName = tabGroupNameInput.value.trim() || 'Group';
+            createTabGroup(Array.from(selectedTabs), groupName, selectedColor);
+            closeTabGroupDialog();
+        });
+
+        function showTabGroupDialog() {
+            if (selectedTabs.size < 2) {
+                return; // Need at least 2 tabs to form a group
+            }
+
+            tabGroupNameInput.value = '';
+            tabGroupDialog.classList.add('visible');
+            tabGroupNameInput.focus();
+        }
+
+        function closeTabGroupDialog() {
+            tabGroupDialog.classList.remove('visible');
+            clearTabSelection();
+        }
+
+        function toggleTabSelection(tab) {
+            const tabId = tab.dataset.tabId;
+
+            if (selectedTabs.has(tabId)) {
+                selectedTabs.delete(tabId);
+                tab.classList.remove('selected');
+            } else {
+                selectedTabs.add(tabId);
+                tab.classList.add('selected');
+            }
+
+            // If we have 2 or more tabs selected and shift is still pressed, show the grouping dialog
+            if (selectedTabs.size >= 2 && isShiftKeyPressed) {
+                showTabGroupDialog();
+            }
+        }
+
+        function clearTabSelection() {
+            document.querySelectorAll('.tab.selected').forEach(tab => {
+                tab.classList.remove('selected');
+            });
+            selectedTabs.clear();
+        }
+
+        function createTabGroup(tabIds, groupName, groupColor) {
+            if (tabIds.length < 2) return;
+
+            // Get all the tab elements from their IDs
+            const tabElements = tabIds.map(tabId =>
+                topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`)
+            ).filter(Boolean);
+
+            if (tabElements.length < 2) return;
+
+            // Create a group container
+            const group = document.createElement('div');
+            group.className = 'tab-group';
+            group.setAttribute('data-group-name', groupName);
+            group.style.setProperty('--group-color', groupColor);
+
+            // Add the group header
+            const groupHeader = document.createElement('div');
+            groupHeader.className = 'tab-group-header';
+            group.appendChild(groupHeader);
+
+            // Add the group name
+            const groupNameElem = document.createElement('div');
+            groupNameElem.className = 'tab-group-name';
+            groupNameElem.textContent = groupName;
+            group.appendChild(groupNameElem);
+
+            // Insert the first tab into the group
+            const firstTab = tabElements[0];
+            group.appendChild(firstTab.cloneNode(true));
+            firstTab.remove();
+
+            // Insert the group after the position of the first tab
+            const referenceTab = tabElements[1];
+            topTabsBar.insertBefore(group, referenceTab);
+
+            // Add the rest of the tabs to the group
+            for (let i = 1; i < tabElements.length; i++) {
+                group.appendChild(tabElements[i]);
+            }
+
+            // Store group information
+            tabGroups.push({
+                id: Date.now().toString(),
+                name: groupName,
+                color: groupColor,
+                tabIds: tabIds
+            });
+
+            // Add click handler to the group header to collapse/expand
+            groupHeader.addEventListener('click', function() {
+                toggleGroupCollapse(group);
+            });
+
+            // Initialize event handlers for the tabs in the group
+            initTabGroupTabs(group);
+
+            // Check tab crowding after creating the group
+            checkTabCrowding();
+        }
+
+        function toggleGroupCollapse(group) {
+            group.classList.toggle('collapsed');
+            checkTabCrowding();
+        }
+
+        function initTabGroupTabs(group) {
+            // Reinitialize the click handlers for tabs in the group
+            group.querySelectorAll('.tab').forEach(tab => {
+                const tabId = tab.dataset.tabId;
+
+                // Remove existing event listeners
+                const newTab = tab.cloneNode(true);
+                tab.parentNode.replaceChild(newTab, tab);
+
+                // Add click event for tab selection
+                newTab.addEventListener('click', (e) => {
+                    if (isShiftKeyPressed) {
+                        e.preventDefault();
+                        toggleTabSelection(newTab);
+                    } else if (!e.target.closest('.tab-close')) {
+                        switchTab(tabId);
+                    }
+                });
+
+                // Add close button event
+                const closeBtn = newTab.querySelector('.tab-close');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        closeTab(tabId);
+                    });
+                }
+
+                // We don't add drag and drop to tabs in a group
+            });
+        }
+
+        function updateTabGroupsAfterReordering() {
+            // Check if any tabs were moved out of groups and update accordingly
+            document.querySelectorAll('.tab-group').forEach(group => {
+                const tabs = group.querySelectorAll('.tab');
+
+                // If a group has less than 2 tabs, we need to disband it
+                if (tabs.length < 2) {
+                    disbandGroup(group);
+                }
+            });
+        }
+
+        function disbandGroup(group) {
+            const tabs = Array.from(group.querySelectorAll('.tab'));
+            const groupParent = group.parentNode;
+            const insertBefore = group.nextElementSibling;
+
+            // Move tabs out of the group
+            tabs.forEach(tab => {
+                // Clone the tab to remove any group-specific event listeners
+                const newTab = tab.cloneNode(true);
+                groupParent.insertBefore(newTab, insertBefore);
+
+                // Initialize the tab with standard behaviors
+                initTabClickHandlers(newTab);
+                initDragAndDrop(newTab);
+            });
+
+            // Remove the group
+            group.remove();
+
+            // Update tab groups array
+            const groupName = group.getAttribute('data-group-name');
+            tabGroups = tabGroups.filter(g => g.name !== groupName);
+
+            // Check tab crowding after disbanding the group
+            checkTabCrowding();
+        }
+
+        function initTabClickHandlers(tab) {
+            const tabId = tab.dataset.tabId;
+
+            tab.addEventListener('click', (e) => {
+                if (isShiftKeyPressed) {
+                    e.preventDefault();
+                    toggleTabSelection(tab);
+                } else if (!e.target.closest('.tab-close')) {
+                    switchTab(tabId);
+                }
+            });
+
+            const closeBtn = tab.querySelector('.tab-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeTab(tabId);
+                });
+            }
+        }
+
+        // Modify createTopTab to initialize tab click handlers
+        function createTopTab(tabId, title, url, icon) {
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.tabId = tabId;
+            tab.dataset.url = url;
+
+            const faviconUrl = url.startsWith('/landin')
+                ? ''
+                : `https://www.google.com/s2/favicons?domain=${extractDomain(url)}`;
+
+            tab.innerHTML = `
+                <div class="tab-icon">
+                    ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<i class="fa-solid ${icon || 'fa-globe'}"></i>`}
+                </div>
+                <div class="tab-title">${title}</div>
+                <div class="tab-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            `;
+
+            topTabsBar.insertBefore(tab, newTabBtnTop);
+
+            // Initialize tab click handlers
+            initTabClickHandlers(tab);
+
+            // Initialize drag and drop
+            initDragAndDrop(tab);
+
+            // Check if tabs need to be compressed
+            checkTabCrowding();
+        }
+
+        // Modified closeTab to handle tabs in groups
+        function closeTab(tabId) {
+            const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            const tabInGroup = document.querySelector(`.tab-group .tab[data-tab-id="${tabId}"]`);
+            const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            const tabContent = document.getElementById(`tab-content-${tabId}`);
+
+            if ((topTab || sidebarTab || tabInGroup) && tabContent) {
+                if (parseInt(tabId) === activeTabId) {
+                    let nextTabId = null;
+
+                    const allTabIds = Array.from(document.querySelectorAll('.tab'))
+                        .map(tab => parseInt(tab.dataset.tabId))
+                        .filter(id => id !== parseInt(tabId));
+
+                    if (allTabIds.length > 0) {
+                        nextTabId = allTabIds[0];
+                    }
+
+                    if (nextTabId !== null) {
+                        switchTab(nextTabId);
+                    }
+                }
+
+                if (topTab) topTab.remove();
+                if (sidebarTab) sidebarTab.remove();
+
+                if (tabInGroup) {
+                    const group = tabInGroup.closest('.tab-group');
+                    tabInGroup.remove();
+
+                    // Check if the group should be disbanded (less than 2 tabs left)
+                    const remainingTabs = group.querySelectorAll('.tab');
+                    if (remainingTabs.length < 2) {
+                        disbandGroup(group);
+                    }
+                }
+
+                tabContent.remove();
+
+                const remainingTabs = document.querySelectorAll('.tab');
+                if (remainingTabs.length === 0) {
+                    createNewTab();
+                }
+
+                checkTabCrowding();
+            }
+        }
+
+        function createNewTab() {
+            const tabId = tabCounter++;
+            const newTabData = {
+                id: tabId,
+                title: 'New Tab',
+                url: '/landin',
+                icon: 'fa-globe'
+            };
+
+            if (tabsInSidebar) {
+                createSidebarTab(tabId, newTabData.url, newTabData.icon);
+            } else {
+                createTopTab(tabId, newTabData.title, newTabData.url, newTabData.icon);
+            }
+
+            const tabContent = document.createElement('div');
+            tabContent.className = 'tab-content';
+            tabContent.id = `tab-content-${tabId}`;
+            tabContent.innerHTML = `<iframe src="${newTabData.url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+
+            contentArea.appendChild(tabContent);
+
+            switchTab(tabId);
+            checkTabCrowding();
+        }
+
+        function createSidebarTab(tabId, url, icon) {
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.tabId = tabId;
+            tab.dataset.url = url;
+
+            const faviconUrl = url.startsWith('/landin')
+                ? ''
+                : `https://www.google.com/s2/favicons?domain=${extractDomain(url)}`;
+
+            if (faviconUrl) {
+                tab.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;">`;
+            } else {
+                tab.innerHTML = `<i class="fa-solid ${icon || 'fa-globe'}"></i>`;
+            }
+
+            sidebarTabsSection.appendChild(tab);
+
+            tab.addEventListener('click', () => switchTab(tabId));
+        }
+
+        function extractDomain(url) {
+            if (url.startsWith('/landin')) return '';
+            try {
+                if (url.includes('/active/Embed.html?url=')) {
+                    const embedUrl = decodeURIComponent(url.split('/active/Embed.html?url=')[1]);
+                    if (embedUrl.includes('://')) {
+                        return new URL(embedUrl).hostname;
+                    } else if (embedUrl.includes('.')) {
+                        return embedUrl.split('/')[0];
+                    }
+                }
+
+                if (url.includes('://')) {
+                    return new URL(url).hostname;
+                } else if (url.includes('.')) {
+                    return url.split('/')[0];
+                }
+            } catch (e) {
+                console.error('Error extracting domain:', e);
+            }
+            return '';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            let selectedTab;
+            if (tabsInSidebar) {
+                selectedTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            } else {
+                selectedTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            }
+
+            const selectedContent = document.getElementById(`tab-content-${tabId}`);
+
+            if (selectedTab && selectedContent) {
+                selectedTab.classList.add('active');
+                selectedContent.classList.add('active');
+                activeTabId = parseInt(tabId);
+
+                const frameUrl = selectedTab.dataset.url;
+                updateUrlBar(frameUrl);
+            }
+        }
+
+        function updateUrlBar(url) {
+            if (url.includes('/active/Embed.html?url=')) {
+                const actualUrl = decodeURIComponent(url.split('/active/Embed.html?url=')[1]);
+                urlBar.value = actualUrl;
+            } else {
+                urlBar.value = url;
+            }
+        }
+
+        // Add resize event listener to check tab crowding on window resize
+        window.addEventListener('resize', checkTabCrowding);
+
+        // Initialize tabs
+        initializeTabs();
+
+        // Load history from localStorage and populate panel
+        populateHistoryPanel();
+
+        newTabBtnTop.addEventListener('click', createNewTab);
+        backBtn.addEventListener('click', goBack);
+        forwardBtn.addEventListener('click', goForward);
+        reloadBtn.addEventListener('click', reloadPage);
+        urlBar.addEventListener('keydown', handleUrlSubmit);
+
+        // Add sidebar icon click handlers
+        document.querySelectorAll('.sidebar-icon:not(#history-btn)').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (url) {
+                    navigateToUrl(url);
+                }
+            });
+        });
+
+        const historyBtn = document.getElementById('history-btn');
+        historyBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (historyPanel.style.display === 'block') {
+                historyPanel.classList.remove('visible');
+                setTimeout(() => {
+                    historyPanel.style.display = 'none';
+                }, 200);
+            } else {
+                historyPanel.style.display = 'block';
+                // Force reflow
+                historyPanel.offsetWidth;
+                historyPanel.classList.add('visible');
+            }
+        });
+
+        // Add document click handler to close history panel
+        document.addEventListener('click', function(event) {
+            // Close history panel if clicking outside
+            if (!historyPanel.contains(event.target) && event.target !== historyBtn && !historyBtn.contains(event.target)) {
+                if (historyPanel.style.display === 'block') {
+                    historyPanel.classList.remove('visible');
+                    setTimeout(() => {
+                        historyPanel.style.display = 'none';
+                    }, 200);
+                }
+            }
+
+            // Close tab group dialog if clicking outside
+            if (!tabGroupDialog.contains(event.target) && tabGroupDialog.classList.contains('visible')) {
+                if (!isShiftKeyPressed) {
+                    closeTabGroupDialog();
+                }
+            }
+        });
+
+        function goBack() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.back();
+                } catch (error) {
+                    console.error("Could not navigate back:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
+            }
+        }
+
+        function goForward() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.forward();
+                } catch (error) {
+                    console.error("Could not navigate forward:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
+            }
+        }
+
+        function reloadPage() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                activeFrame.src = activeFrame.src;
+            }
+        }
+
+        function navigateToUrl(url) {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+
+                const internalPaths = ['/tutorials', '/gamepagev1', '/ai', '/v-ai', '/a', '/landin'];
+
+                let processedUrl = url;
+                if (internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
+                    processedUrl = url;
+                } else if (!url.includes('://') && !url.startsWith('/')) {
+                    processedUrl = `/active/Embed.html?url=https://${url}`;
+                } else if (!url.startsWith('/')) {
+                    processedUrl = `/active/Embed.html?url=${encodeURIComponent(url)}`;
+                }
+
+                activeFrame.src = processedUrl;
+
+                const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+                const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                if (topTab) topTab.dataset.url = processedUrl;
+                if (sidebarTab) sidebarTab.dataset.url = processedUrl;
+
+                updateUrlBar(processedUrl);
+                storeHistoryItem(url);
+            }
+        }
+
+        function handleUrlSubmit(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                let url = urlBar.value.trim();
+
+                if (!url.includes('://') && !url.includes('.') && url !== '/landin') {
+                    url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+                } else if (!url.includes('://') && url !== '/landin') {
+                    url = `https://${url}`;
+                }
+
+                navigateToUrl(url);
+            }
+        }
+
+        function frameLoaded(tabId) {
+            const frame = document.getElementById(`frame-${tabId}`);
+            if (!frame) return;
+
+            if (frame.dataset.isLoading === 'true') {
+                setTimeout(() => {
+                    loadingBarContainer.style.display = 'none';
+                    frame.dataset.isLoading = 'false';
+                }, 500);
+            }
+
+            try {
+                const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                const frameUrl = frame.src;
+
+                let pageTitle = 'New Tab';
+                try {
+                    if (frame.contentDocument) {
+                        pageTitle = frame.contentDocument.title || 'New Tab';
+                    }
+                } catch (e) {
+                    console.log('Could not access title due to cross-origin policy');
+                }
+
+                const faviconUrl = frameUrl.startsWith('/landin')
+                    ? ''
+                    : `https://www.google.com/s2/favicons?domain=${extractDomain(frameUrl)}`;
+
+                if (topTab) {
+                    const titleElement = topTab.querySelector('.tab-title');
+                    if (titleElement) titleElement.textContent = pageTitle;
+
+                    if (faviconUrl) {
+                        const iconElement = topTab.querySelector('.tab-icon');
+                        if (iconElement) {
+                            iconElement.innerHTML = `<img src="${faviconUrl}" alt="">`;
+                        }
+                    }
+                }
+
+                if (sidebarTab && faviconUrl) {
+                    sidebarTab.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;">`;
+                }
+
+                if (parseInt(tabId) === activeTabId) {
+                    updateUrlBar(frameUrl);
+                }
+
+                checkTabCrowding();
+            } catch (e) {
+                console.error('Error updating tab info:', e);
+            }
+        }
+
+        function storeHistoryItem(url) {
+            if (!url || url === '/landin') return;
+
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}`;
+
+            let displayUrl = url;
+            if (url.includes('/active/Embed.html?url=')) {
+                displayUrl = decodeURIComponent(url.split('/active/Embed.html?url=')[1]);
+            }
+
+            // Add to browser history array
+            browserHistory.unshift({
+                url: url,
+                displayUrl: displayUrl,
+                time: timeString,
+                timestamp: now.getTime()
+            });
+
+            // Keep only the last 15 entries
+            if (browserHistory.length > 15) {
+                browserHistory.pop();
+            }
+
+            // Save to localStorage
+            try {
+                localStorage.setItem('browserHistory', JSON.stringify(browserHistory));
+            } catch (e) {
+                console.error('Error saving history:', e);
+            }
+
+            // Update the history panel
+            populateHistoryPanel();
+        }
+
+        // Add message event listener before the sidebar icon event handlers
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type) {
+                if (event.data.type === 'search') {
+                    const searchUrl = `/active/Embed.html?url=https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = searchUrl;
+
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+                        const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) topTab.dataset.url = searchUrl;
+                        if (sidebarTab) sidebarTab.dataset.url = searchUrl;
+
+                        urlBar.value = `https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+
+                        // Store in history
+                        storeHistoryItem(`https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`);
+                    }
+                } else if (event.data.type === 'navigate') {
+                    const url = `/active/Embed.html?url=${encodeURIComponent(event.data.url)}`;
+
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = url;
+
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+                        const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) topTab.dataset.url = url;
+                        if (sidebarTab) sidebarTab.dataset.url = url;
+
+                        urlBar.value = event.data.url;
+
+                        // Store in history
+                        storeHistoryItem(event.data.url);
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>

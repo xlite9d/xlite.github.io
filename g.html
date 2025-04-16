@@ -1,0 +1,255 @@
+
+    <link rel="icon" href="/favicons/vplaza.ico">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPLAZA - DEV</title>
+    <style>
+        body {
+            background-color: black;
+            color: orange;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow-y: scroll;
+            margin: 0;
+            padding: 0;
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: orange;
+            border-radius: 10px;
+        }
+        h1 {
+            font-size: 5rem;
+            font-weight: bold;
+            text-shadow: 0 0 20px orange, 0 0 40px orange;
+            margin: 20px auto;
+            background-color: rgba(255, 208, 0, 0.103);
+            border-radius: 20px;
+            border: 3px solid yellow;
+            max-width: 800px;
+            padding: 60px;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px;
+        }
+        .game {
+            width: 200px;
+            height: 200px;
+            border: 6px solid orange;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.7s;
+            background: rgb(255, 187, 0);
+            box-shadow: 0 0 20px orange;
+            overflow: hidden;
+            position: relative;
+        }
+        .game img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            transition: transform 0.5s ease-in-out;
+        }
+        .game:hover {
+            transform: scale(1.1) rotate(-3deg);
+            box-shadow: 0 0 60px orange, 0 0 40px rgb(255, 0, 0);
+            border-radius: 20px;
+        }
+        .game:hover img {
+            transform: scale(1.2) rotate(-5deg);
+        }
+        .game::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: -100%;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: orange;
+            text-align: center;
+            padding: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: bottom 0.4s ease-in-out;
+        }
+        .game:hover::after {
+            bottom: 0;
+        }
+
+        #gameOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        #gameFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        #closeButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: red;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>VPLAZA - DEV</h1>
+    <div class="grid">
+        <div class="game" data-name="Retro Bowl" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/retro-bowl')">
+            <img src="images/retro-bowl.jpg" alt="retrobowl">
+        </div>
+        <div class="game" data-name="1v1LOL" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/1v1lol')">
+            <img src="images/1v1lol.jpg" alt="1v1">
+        </div>
+        <div class="game" data-name="Slope" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/slope')">
+            <img src="images/slope.jpg" alt="slope">
+        </div>
+        <div class="game" data-name="Subway Surfers" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/subway-surfers')">
+            <img src="images/subway-surferss.png" alt="subway">
+        </div>
+        <div class="game" data-name="Basket Ball Stars" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/basketball-stars')">
+            <img src="images/basketball-stars.jpg" alt="BBS">
+        </div>
+        <div class="game" data-name="Drive Mad" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/drive-mad')">
+            <img src="images/drive-mad.jpg" alt="DM">
+        </div>
+        <div class="game" data-name="Deathrun 3D" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/death-run-3d')">
+            <img src="images/death-run-3d.jpg" alt="dr3d">
+        </div>
+        <div class="game" data-name="Basket Random" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/basket-random')">
+            <img src="images/basket-random.jpg" alt="Snake">
+        </div>
+        <div class="game" data-name="MotoX3M" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/motox3m2')">
+            <img src="images/motox3m.jpg" alt="mx3m2">
+        </div>
+        <div class="game" data-name="Bitlife" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/bitlife')">
+            <img src="images/bitlife.jpg" alt="bl">
+        </div>
+        <div class="game" data-name="Getaway Shootout" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/GetawayShootout')">
+            <img src="images/getaway-shootout.jpg" alt="GS">
+        </div>
+        <div class="game" data-name="Just Fall LOL" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/justfall-lol')">
+            <img src="images/justfall-lol.jpg" alt="jsfall">
+        </div>
+        <div class="game" data-name="Rooftop Snipers" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/rooftop-snipers')">
+            <img src="images/rooftop-snipers.jpg" alt="jsfall">
+        </div>
+        <div class="game" data-name="Cookie Clicker" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/cookieclicker')">
+            <img src="images/cookie-clicker.jpg" alt="jsfall">
+        </div>
+        <div class="game" data-name="2048" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/2048')">
+            <img src="images/2048.jpg" alt="2048">
+        </div>
+        <div class="game" data-name="Snowrider3d" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/snowrider.html')">
+            <img src="images/snow-rider3d.jpg" alt="2048">
+        </div>
+        <div class="game minecraft" data-name="Minecraft 1.20.4" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/eagler')">
+            <img src="images/minecraft.jpg" alt="minecraft" class="normal">
+            <img src="images/explodeminecraft.gif" alt="explodeminecraft" class="hover">
+        </div>
+                <div class="game minecraft" data-name="Minecraft 1.12" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/minecraft.html')">
+            <img src="images/minecraft.jpg" alt="minecraft" class="normal">
+            <img src="images/explodeminecraft.gif" alt="explodeminecraft" class="hover">
+        </div>
+        <div class="game" data-name="Learn to Fly" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/learn-to-fly-2')">
+            <img src="images/learn-to-fly-2.jpg" alt="learn-to-fly-2">
+        </div>
+        <div class="game" data-name="Idle Mining Empire" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/idle-mining-empire')">
+            <img src="images/idle-mining-empire.jpg" alt="idle-mining-empire">
+        </div>
+        <div class="game" data-name="Among Us" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/among-us')">
+            <img src="images/among-us.jpg" alt="among-us">
+        </div>
+        <div class="game" data-name="Paper io 2" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/paper-io-2')">
+            <img src="images/paper-io-2.jpg" alt="paper-io-2">
+        </div>
+        <div class="game" data-name="Flappy Bird" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/flappybird')">
+            <img src="images/flappy-bird.jpg" alt="flappy-bird">
+        </div>
+        <div class="game" data-name="Krunker" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/krunker')">
+            <img src="images/krunker.jpg" alt="krunker">
+        </div>
+        <div class="game" data-name="Geometry Dash (Knockoff)" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/geometry-dash-knockoff')">
+            <img src="images/geometry-dash.jpg" alt="geometry-dash-knockoff">
+        </div>
+        <div class="game" data-name="Baldis Basics" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/baldis-basics')">
+            <img src="images/baldis-basics.jpg" alt="baldis-basics">
+        </div>
+        <div class="game" data-name="Super Hot" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/superhot')">
+            <img src="images/superhot.jpg" alt="superhot">
+        </div>
+        <div class="game" data-name="Temple Run 2" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/temple-run-2')">
+            <img src="images/temple-run-2.jpg" alt="temple-run-2">
+        </div>
+        <div class="game" data-name="Happy Wheels" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/happy-wheels')">
+            <img src="images/happy-wheels.jpg" alt="happy-wheels">
+        </div>
+        <div class="game" data-name="Crossy Road" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/crossyroad')">
+            <img src="images/crossy-road.jpg" alt="crossy-road">
+        </div>
+        <div class="game" data-name="Stickman Hook" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/stickmanhook')">
+            <img src="images/stickmanhook.jpg" alt="stickman">
+        </div>
+        <div class="game" data-name="Tag" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/Tag')">
+            <img src="images/tag.jpg" alt="tag">
+        </div>
+        <div class="game" data-name="Poly Track" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/poly-track')">
+            <img src="images/polytrack.jpg" alt="pt">
+        </div>
+        <div class="game" data-name="Tetris" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/tetris')">
+            <img src="images/tetris.jpg" alt="tetris">
+        </div>
+        <div class="game" data-name="Armed Forces" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/armed-forces')">
+            <img src="images/armed-forces.png" alt="armed forces">
+        </div>
+        <div class="game" data-name="Counter Strike" onclick="openGame('active/embed.html?url=https://gamecloudvplaza.netlify.app/games/counter-strike')">
+            <img src="images/csgo.png" alt="Counter-Strike">
+        </div>
+    </div>
+
+    
+    <div id="gameOverlay">
+        <button id="closeButton" onclick="closeGame()">X</button>
+        <iframe id="gameFrame"></iframe>
+    </div>
+    
+    <script>
+        function openGame(url) {
+            document.getElementById('gameFrame').src = url;
+            document.getElementById('gameOverlay').style.display = 'flex';
+        }
+        
+        function closeGame() {
+            document.getElementById('gameOverlay').style.display = 'none';
+            document.getElementById('gameFrame').src = '';
+        }
+    </script>
+</body>
+</html>

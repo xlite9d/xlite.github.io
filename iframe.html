@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="/favicons/vplaza.ico">
+    <title>VPLAZA - Game Player</title>
+    <style>
+        :root {
+            --primary-color: #0f111a;
+            --secondary-color: #1a1d29;
+            --accent-color: #007bff;
+            --text-color: #ffffff;
+            --secondary-text: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --dark-overlay: rgba(0, 0, 0, 0.7);
+            --button-bg: rgba(30, 30, 30, 0.8);
+            --button-hover: rgba(50, 50, 50, 0.8);
+            --success-color: #43A047;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/default-game.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(20px) brightness(0.1);
+            z-index: -1;
+        }
+
+        .mouse-glow {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.1) 0%, rgba(0, 123, 255, 0) 70%);
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(10, 12, 20, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            height: 60px;
+        }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #3498db, #5dade2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            margin-left: 10px;
+            color: var(--secondary-text);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: var(--button-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--button-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn i {
+            font-size: 16px;
+        }
+
+        .page-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 70px; /* Adjusted for header height + 10px */
+            padding-bottom: 70px; /* Space for dark mode toggle */
+            flex: 1;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 900px; /* Reduced size */
+            padding: 0 10px;
+            position: relative;
+            height: calc(100vh - 150px); /* Adjust height to fit screen */
+            min-height: 400px; /* Minimum height */
+        }
+
+        .game-iframe-container {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: relative;
+            z-index: 2;
+            display: none;
+        }
+
+        .game-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--dark-overlay);
+        }
+
+        .blur-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            z-index: 0;
+            filter: blur(0);
+            transition: filter 0.3s ease;
+        }
+
+        .game-thumbnail-blur {
+            width: 110%;
+            height: 110%;
+            object-fit: cover;
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            z-index: -1;
+            filter: blur(15px) brightness(0.7);
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(0, 123, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 2;
+            transition: transform 0.3s ease, background 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            background: rgba(0, 123, 255, 1);
+        }
+
+        .play-button i {
+            font-size: 32px;
+            color: white;
+            margin-left: 5px;
+        }
+
+        .game-title {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 20px;
+            z-index: 20;
+        }
+
+        .control-left {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--button-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            color: var(--text-color);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--button-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .star-btn {
+            background-color: #333;
+            color: #ccc;
+        }
+
+        .like-btn {
+            background-color: #333;
+            color: #ccc;
+        }
+
+        .star-btn.active {
+            color: yellow;
+        }
+
+        .like-btn.active {
+            color: #ff4d4d;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--button-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            background: var(--button-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .dark-mode-toggle i {
+            font-size: 20px;
+        }
+
+        .dark-mode-label {
+            position: absolute;
+            right: 70px;
+            bottom: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        /* Light mode styles */
+        body.light-mode {
+            --primary-color: #f5f5f5;
+            --secondary-color: #e0e0e0;
+            --text-color: #333;
+            --secondary-text: rgba(0, 0, 0, 0.7);
+            --dark-overlay: rgba(255, 255, 255, 0.5);
+            --button-bg: rgba(220, 220, 220, 0.8);
+            --button-hover: rgba(200, 200, 200, 0.8);
+        }
+
+        /* Media Queries */
+        @media (min-width: 1600px) {
+            .game-container {
+                max-width: 1200px;
+                height: calc(100vh - 200px);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .game-container {
+                max-width: 95%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 8px 15px;
+                height: 50px;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                display: none;
+            }
+
+            .page-content {
+                padding-top: 60px;
+            }
+
+            .game-container {
+                height: calc(100vh - 130px);
+            }
+
+            .play-button {
+                width: 60px;
+                height: 60px;
+            }
+
+            .play-button i {
+                font-size: 24px;
+            }
+
+            .controls {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 5px;
+                justify-content: center;
+                padding: 0 10px;
+                bottom: 10px;
+            }
+
+            .control-left, .control-right {
+                gap: 5px;
+            }
+
+            .control-btn {
+                padding: 5px 10px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 5px 10px;
+                height: 45px;
+            }
+
+            .title {
+                font-size: 1.2rem;
+            }
+
+            .back-btn {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
+
+            .page-content {
+                padding-top: 55px;
+            }
+
+            .game-container {
+                height: calc(100vh - 110px);
+            }
+
+            .control-btn {
+                padding: 4px 8px;
+                font-size: 0.7rem;
+                gap: 4px;
+            }
+
+            .play-button {
+                width: 50px;
+                height: 50px;
+            }
+
+            .play-button i {
+                font-size: 20px;
+            }
+
+            .game-title {
+                font-size: 1.2rem;
+                margin-top: 15px;
+            }
+
+            .dark-mode-toggle {
+                width: 35px;
+                height: 35px;
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .dark-mode-toggle i {
+                font-size: 16px;
+            }
+
+            .dark-mode-label {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-overlay"></div>
+    <div class="mouse-glow"></div>
+
+    <header class="header">
+        <div class="title-container">
+            <h1 class="title">VPLAZA</h1>
+            <p class="subtitle">Entertainment Hub</p>
+        </div>
+        <div class="back-btn" id="back-btn">
+            <i class="fas fa-arrow-left"></i>
+            Back
+        </div>
+    </header>
+
+    <div class="page-content">
+        <main class="game-container">
+            <div class="game-iframe-container">
+                <iframe class="game-iframe" id="game-iframe" src="about:blank" allowfullscreen></iframe>
+
+                <div class="game-preview" id="game-preview">
+                    <div class="blur-container">
+                        <img class="game-thumbnail" id="game-thumbnail" src="images/default-game.jpg" alt="Game Preview">
+                        <img class="game-thumbnail-blur" id="game-thumbnail-blur" src="images/default-game.jpg" alt="">
+                    </div>
+                    <div class="play-button" id="play-button">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <h2 class="game-title" id="game-title">Game Title</h2>
+                </div>
+
+                <div class="controls">
+                    <div class="control-left">
+                        <button class="control-btn" id="fullscreen-btn">
+                            <i class="fas fa-expand"></i>
+                            Fullscreen
+                        </button>
+                        <button class="control-btn" id="restart-btn">
+                            <i class="fas fa-sync-alt"></i>
+                            Restart
+                        </button>
+                    </div>
+                    <div class="control-right">
+                        <button class="control-btn star-btn" id="stars-btn">
+                            <i class="fas fa-star"></i>
+                            <span id="stars-count">0</span>
+                        </button>
+                        <button class="control-btn like-btn" id="likes-btn">
+                            <i class="fas fa-heart"></i>
+                            <span id="likes-count">0</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="dark-mode-toggle" id="dark-mode-toggle">
+        <i class="fas fa-sun"></i>
+    </div>
+    <span class="dark-mode-label">DARK MODE</span>
+
+    <script>
+        // Mouse glow effect
+        const mouseGlow = document.querySelector('.mouse-glow');
+        document.addEventListener('mousemove', (e) => {
+            mouseGlow.style.opacity = '1';
+            mouseGlow.style.left = `${e.clientX - 150}px`;
+            mouseGlow.style.top = `${e.clientY - 150}px`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            mouseGlow.style.opacity = '0';
+        });
+
+        // Get game data from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameUrl = urlParams.get('game');
+        const gameName = urlParams.get('name');
+        const gameType = urlParams.get('type') || 'default'; // Game type parameter for selecting image
+        const gameId = urlParams.get('id') || 'default';
+
+        // Set game title and image
+        const gameTitle = document.getElementById('game-title');
+        const gameThumbnail = document.getElementById('game-thumbnail');
+        const gameThumbnailBlur = document.getElementById('game-thumbnail-blur');
+        const bgOverlay = document.querySelector('.bg-overlay');
+
+        if (gameName) {
+            gameTitle.textContent = gameName;
+            document.title = `VPLAZA - ${gameName}`;
+        }
+
+        // Game image mapping
+        const gameImages = {
+            'default': 'default-game.jpg',
+            'racing': 'racing-game.jpg',
+            'adventure': 'adventure-game.jpg',
+            'puzzle': 'puzzle-game.jpg'
+        };
+
+        // Set the appropriate game image based on game type
+        function setGameImage() {
+            // Get the image file based on game type
+            const imageName = gameImages[gameType] || gameImages['default'];
+            const imagePath = `images/${imageName}`;
+
+            // Set all image elements to the same local image
+            gameThumbnail.src = imagePath;
+            gameThumbnailBlur.src = imagePath;
+
+            // Also update the background
+            bgOverlay.style.backgroundImage = `url('${imagePath}')`;
+
+            // Set alt text
+            gameThumbnail.alt = gameName || 'Game Preview';
+        }
+
+        // Initialize game image
+        setGameImage();
+
+        // Play button functionality
+        const playButton = document.getElementById('play-button');
+        const gamePreview = document.getElementById('game-preview');
+        const gameIframe = document.getElementById('game-iframe');
+
+        playButton.addEventListener('click', () => {
+            if (gameUrl) {
+                gameIframe.src = gameUrl;
+                gameIframe.style.display = 'block';
+                gamePreview.style.display = 'none';
+            }
+        });
+
+        // Load stars and likes from localStorage
+        const loadGameStats = () => {
+            const stars = localStorage.getItem(`stars_${gameId}`) || 0;
+            const likes = localStorage.getItem(`likes_${gameId}`) || 0;
+
+            document.getElementById('stars-count').textContent = stars;
+            document.getElementById('likes-count').textContent = likes;
+
+            // Check if user has already starred or liked
+            const hasStarred = localStorage.getItem(`user_starred_${gameId}`);
+            const hasLiked = localStorage.getItem(`user_liked_${gameId}`);
+
+            if (hasStarred === 'true') {
+                document.getElementById('stars-btn').classList.add('active');
+            }
+
+            if (hasLiked === 'true') {
+                document.getElementById('likes-btn').classList.add('active');
+            }
+        };
+
+        // Load stats when page loads
+        loadGameStats();
+
+        // Back button functionality
+        const backBtn = document.getElementById('back-btn');
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        // Restart button functionality
+        const restartBtn = document.getElementById('restart-btn');
+        restartBtn.addEventListener('click', () => {
+            if (gameIframe.style.display === 'block') {
+                gameIframe.src = gameIframe.src;
+            } else {
+                // If game hasn't started yet, start it
+                if (gameUrl) {
+                    gameIframe.src = gameUrl;
+                    gameIframe.style.display = 'block';
+                    gamePreview.style.display = 'none';
+                }
+            }
+        });
+
+        // Fullscreen button functionality
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        fullscreenBtn.addEventListener('click', () => {
+            const container = document.querySelector('.game-iframe-container');
+
+            if (container.requestFullscreen) {
+                container.requestFullscreen();
+            } else if (container.mozRequestFullScreen) {
+                container.mozRequestFullScreen();
+            } else if (container.webkitRequestFullscreen) {
+                container.webkitRequestFullscreen();
+            } else if (container.msRequestFullscreen) {
+                container.msRequestFullscreen();
+            }
+        });
+
+        // Stars button functionality with toggle
+        const starsBtn = document.getElementById('stars-btn');
+        starsBtn.addEventListener('click', () => {
+            const hasStarred = localStorage.getItem(`user_starred_${gameId}`) === 'true';
+            let stars = parseInt(localStorage.getItem(`stars_${gameId}`) || 0);
+
+            if (hasStarred) {
+                // Remove star
+                stars--;
+                localStorage.setItem(`stars_${gameId}`, stars);
+                localStorage.setItem(`user_starred_${gameId}`, 'false');
+                starsBtn.classList.remove('active');
+            } else {
+                // Add star
+                stars++;
+                localStorage.setItem(`stars_${gameId}`, stars);
+                localStorage.setItem(`user_starred_${gameId}`, 'true');
+                starsBtn.classList.add('active');
+            }
+
+            // Update UI
+            document.getElementById('stars-count').textContent = stars;
+
+            // Animation effect
+            starsBtn.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                starsBtn.style.transform = 'scale(1)';
+            }, 200);
+        });
+
+        // Likes button functionality with toggle
+        const likesBtn = document.getElementById('likes-btn');
+        likesBtn.addEventListener('click', () => {
+            const hasLiked = localStorage.getItem(`user_liked_${gameId}`) === 'true';
+            let likes = parseInt(localStorage.getItem(`likes_${gameId}`) || 0);
+
+            if (hasLiked) {
+                // Remove like
+                likes--;
+                localStorage.setItem(`likes_${gameId}`, likes);
+                localStorage.setItem(`user_liked_${gameId}`, 'false');
+                likesBtn.classList.remove('active');
+            } else {
+                // Add like
+                likes++;
+                localStorage.setItem(`likes_${gameId}`, likes);
+                localStorage.setItem(`user_liked_${gameId}`, 'true');
+                likesBtn.classList.add('active');
+            }
+
+            // Update UI
+            document.getElementById('likes-count').textContent = likes;
+
+            // Animation effect
+            likesBtn.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                likesBtn.style.transform = 'scale(1)';
+            }, 200);
+        });
+
+        // Dark mode toggle functionality
+        // The page is dark by default, so toggling switches to light mode
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+
+            if (document.body.classList.contains('light-mode')) {
+                darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                document.querySelector('.dark-mode-label').textContent = 'LIGHT MODE';
+            } else {
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                document.querySelector('.dark-mode-label').textContent = 'DARK MODE';
+            }
+        });
+    </script>
+</body>
+</html>

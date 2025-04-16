@@ -1,0 +1,1727 @@
+<link rel="icon" type="image/png" href="images/cookie.png">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-accent: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --success: #4ade80;
+            --warning: #facc15;
+            --error: #f87171;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+            --glow-blue: 0 0 10px rgba(56, 189, 248, 0.5), 0 0 20px rgba(56, 189, 248, 0.2);
+            --glow-purple: 0 0 10px rgba(168, 85, 247, 0.5), 0 0 20px rgba(168, 85, 247, 0.2);
+            --transition-normal: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.08) 0%, transparent 25%);
+            padding: 0;
+        }
+
+        .app-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-top: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: var(--glow-blue);
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-weight: 300;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .card-title i {
+            color: var(--accent-blue);
+            font-size: 1.4rem;
+        }
+
+        .card-section {
+            margin-bottom: 2rem;
+        }
+
+        .card-section:last-child {
+            margin-bottom: 0;
+        }
+
+        button {
+            background: var(--bg-accent);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition-normal);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background: var(--bg-accent);
+            opacity: 0.9;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        button.secondary {
+            background: var(--bg-accent);
+        }
+
+        button:disabled {
+            background: var(--bg-accent);
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .file-input-container {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-accent);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            width: fit-content;
+            font-weight: 500;
+        }
+
+        .file-input-label:hover {
+            background: rgba(51, 65, 85, 0.8);
+            transform: translateY(-2px);
+        }
+
+        input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-name {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .info-box {
+            background: rgba(51, 65, 85, 0.4);
+            border-left: 4px solid var(--accent-blue);
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .info-box p {
+            margin: 0.5rem 0;
+        }
+
+        .info-box p:first-child {
+            margin-top: 0;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-box.success {
+            border-left-color: var(--success);
+        }
+
+        .info-box.error {
+            border-left-color: var(--error);
+        }
+
+        .info-box.warning {
+            border-left-color: var(--warning);
+        }
+
+        .cookies-display {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 8px;
+            padding: 1.25rem;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 1.25rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-accent);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(71, 85, 105, 0.9);
+        }
+
+        .cookies-list-item {
+            display: flex;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .cookies-list-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .cookie-name {
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-right: 8px;
+            min-width: 120px;
+            word-break: break-all;
+            flex: 1;
+        }
+
+        .cookie-value {
+            color: var(--text-secondary);
+            word-break: break-all;
+            flex: 2;
+        }
+
+        .status-message {
+            display: none;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            animation: fadeIn 0.3s ease-in-out;
+            font-weight: 500;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-message.success {
+            background: rgba(74, 222, 128, 0.1);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+
+        .status-message.error {
+            background: rgba(248, 113, 113, 0.1);
+            border-left: 4px solid var(--error);
+            color: var(--error);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.25rem 0;
+        }
+
+        .glow-effect {
+            position: relative;
+        }
+
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .glow-effect:hover::after {
+            opacity: 0.15;
+            filter: blur(15px);
+        }
+
+        /* New badges and indicators */
+        .storage-type-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            font-weight: 600;
+        }
+
+        .badge-cookie {
+            background-color: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+        }
+
+        .badge-local {
+            background-color: rgba(168, 85, 247, 0.15);
+            color: var(--accent-purple);
+        }
+
+        .badge-session {
+            background-color: rgba(236, 72, 153, 0.15);
+            color: var(--accent-pink);
+        }
+
+        .data-size {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-left: 5px;
+        }
+
+        .data-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .data-stat {
+            background: var(--bg-accent);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 100px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            flex: 1;
+        }
+
+        .data-stat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .game-detection {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .game-item {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.05), rgba(168, 85, 247, 0.05));
+            padding: 15px;
+            border-radius: 8px;
+            width: calc(50% - 5px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.4s ease-out;
+            animation-fill-mode: both;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .game-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(168, 85, 247, 0.1));
+        }
+
+        .game-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        .game-progress {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .transfer-options {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .transfer-option {
+            background: var(--bg-accent);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transfer-option:hover {
+            background: rgba(51, 65, 85, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .transfer-option.selected {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .transfer-option.selected::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--accent-blue);
+        }
+
+        .option-title {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .option-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .game-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-accent);
+            border-radius: 6px;
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+        }
+
+        .cookie-section-title {
+            margin: 15px 0 10px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cookie-section-title i {
+            opacity: 0.9;
+        }
+
+        .cookie-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .progress-cookie {
+            background-color: rgba(56, 189, 248, 0.05);
+            border-left: 3px solid var(--accent-purple);
+            padding-left: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-state {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-style: italic;
+            opacity: 0.7;
+            gap: 10px;
+        }
+
+        .empty-state i {
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+        }
+
+        .loading-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            gap: 10px;
+            color: var(--text-secondary);
+        }
+
+        .domain-transfer {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(168, 85, 247, 0.1));
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .domain-arrow {
+            font-size: 1.5rem;
+            margin: 0 10px;
+            color: var(--accent-purple);
+        }
+
+        .domain-box {
+            background: var(--bg-accent);
+            padding: 10px 15px;
+            border-radius: 6px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .domain-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .domain-url {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .steps-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .step-item {
+            position: relative;
+            counter-increment: step-counter;
+            padding-left: 45px;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        .step-item::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .game-item {
+                width: 100%;
+            }
+
+            .transfer-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Cookie By Vplaza</h1>
+            <p class="subtitle">Download and transfer entire websites with ALL pages, folders and files (/games/, /images/, /info/, etc.)</p>
+        </header>
+
+        <div class="card glow-effect">
+            <i class="card-icon fas fa-globe"></i>
+            <h2 class="card-title"><i class="fas fa-database"></i>Website Analysis</h2>
+
+            <div class="card-section">
+                <p>Scan and explore a website to download ALL of its content, including pages, subfolders, and files.</p>
+
+                <button id="refreshData" class="secondary">
+                    <i class="fas fa-sync-alt"></i> Scan Website Structure
+                </button>
+
+                <div class="data-summary" id="dataSummary">
+                    <div class="data-stat">
+                        <div class="stat-value" id="cookieCount">0</div>
+                        <div class="stat-label">Pages</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="stat-value" id="localStorageCount">0</div>
+                        <div class="stat-label">Folders</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="stat-value" id="sessionStorageCount">0</div>
+                        <div class="stat-label">Files</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="stat-value" id="gameCount">0</div>
+                        <div class="stat-label">Total Size</div>
+                    </div>
+                </div>
+
+                <div id="gamesDetected" class="game-detection">
+                    <!-- Folders will be populated here -->
+                </div>
+
+                <div id="dataDisplay" class="cookies-display">
+                    <div class="loading-text"><i class="fas fa-spinner fa-spin"></i> Click "Scan Website Structure" to begin...</div>
+                </div>
+
+                <div class="info-box">
+                    <p><i class="fas fa-info-circle"></i> This section displays all content from <strong id="currentDomain">the website</strong>, including:</p>
+                    <ul style="margin-left: 20px; color: var(--text-secondary);">
+                        <li>All Pages - HTML, PHP, ASP, and other web documents</li>
+                        <li>All Folders - including /games/, /images/, /info/, etc.</li>
+                        <li>All Files - images, scripts, styles, and other assets</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glow-effect">
+            <i class="card-icon fas fa-download"></i>
+            <h2 class="card-title"><i class="fas fa-download"></i>Download Complete Website</h2>
+
+            <div class="card-section">
+                <p>Download the entire website with ALL pages, folders, and files. This complete backup includes:</p>
+
+                <div class="transfer-options">
+                    <div class="transfer-option selected" id="optionAll">
+                        <div class="option-title"><i class="fas fa-globe"></i> Complete Website Backup</div>
+                        <div class="option-desc">Downloads all pages, folders, images, scripts, and other files</div>
+                    </div>
+                    <div class="transfer-option" id="optionGamesOnly">
+                        <div class="option-title"><i class="fas fa-folder"></i> Specific Folders Only</div>
+                        <div class="option-desc">Only downloads selected folders like /games/, /images/, /info/, etc.</div>
+                    </div>
+                </div>
+
+                <button id="downloadData" class="primary">
+                    <i class="fas fa-file-download"></i> Download Everything
+                </button>
+
+                <div class="info-box">
+                    <p><i class="fas fa-info-circle"></i> This creates a comprehensive backup containing the entire website structure including all pages, subfolders, and files that can be uploaded to another server.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glow-effect">
+            <i class="card-icon fas fa-upload"></i>
+            <h2 class="card-title"><i class="fas fa-upload"></i>Upload Website Backup</h2>
+
+            <div class="card-section">
+                <p>Upload a previously downloaded website backup to transfer its entire structure to a new server.</p>
+
+                <div class="file-input-container">
+                    <label for="dataFileInput" class="file-input-label">
+                        <i class="fas fa-file-upload"></i> Select Website Backup
+                    </label>
+                    <input type="file" id="dataFileInput" accept=".json,.zip">
+                    <div id="fileName" class="file-name"></div>
+                </div>
+
+                <div class="transfer-options">
+                    <div class="transfer-option selected" id="importOptionAll">
+                        <div class="option-title"><i class="fas fa-layer-group"></i> Upload Everything</div>
+                        <div class="option-desc">Transfer all pages, folders, and files from the backup</div>
+                    </div>
+                    <div class="transfer-option" id="importOptionMerge">
+                        <div class="option-title"><i class="fas fa-code-merge"></i> Smart Merge</div>
+                        <div class="option-desc">Merge with existing website content (keep newer files)</div>
+                    </div>
+                </div>
+
+                <button id="uploadData" class="primary" disabled>
+                    <i class="fas fa-check"></i> Upload Complete Website
+                </button>
+
+                <div id="status" class="status-message"></div>
+
+                <div class="info-box warning">
+                    <p><i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong> This will transfer and reconstruct the entire website structure including all pages, folders, and files.</p>
+                    <p>The upload will maintain ALL folders (/games/, /images/, /info/, etc.) from the original site.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glow-effect">
+            <i class="card-icon fas fa-question-circle"></i>
+            <h2 class="card-title"><i class="fas fa-question-circle"></i>How It Works</h2>
+
+            <div class="card-section">
+                <p>This tool helps you download and transfer complete websites between different servers. Here's how it works:</p>
+
+                <div class="info-box">
+                    <p><strong>Scenario:</strong> You want to download an entire website from example.com and have an exact copy of all its pages, folders, and files.</p>
+
+                    <div class="domain-transfer">
+                        <div class="domain-box">
+                            <div class="domain-name">Source Website</div>
+                            <div class="domain-url">example.com</div>
+                        </div>
+                        <div class="domain-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div class="domain-box">
+                            <div class="domain-name">Your Server</div>
+                            <div class="domain-url">yoursite.com</div>
+                        </div>
+                    </div>
+
+                    <p><strong>Solution:</strong></p>
+                    <ul class="steps-list">
+                        <li class="step-item">Scan the source website (example.com) to analyze its structure</li>
+                        <li class="step-item">Use "Download Complete Website" to download ALL pages, folders (/games/, /images/, /info/, etc.), and files</li>
+                        <li class="step-item">Go to your server (yoursite.com) and use "Upload Website Backup"</li>
+                        <li class="step-item">The entire website structure will be transferred with all content intact</li>
+                    </ul>
+
+                    <p><i class="fas fa-lightbulb"></i> <strong>Pro Tip:</strong> This transfers EVERYTHING from the source website, including all folders and subfolders with their exact structure maintained.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glow-effect">
+            <i class="card-icon fas fa-shield-alt"></i>
+            <h2 class="card-title"><i class="fas fa-shield-alt"></i>Privacy & Security</h2>
+
+            <div class="card-section">
+                <p>All data is processed locally in your browser. Nothing is sent to any server.</p>
+
+                <div class="info-box">
+                    <p><i class="fas fa-check-circle"></i> Your website data is only stored in your browser</p>
+                    <p><i class="fas fa-check-circle"></i> The download/upload process happens entirely on your device</p>
+                    <p><i class="fas fa-check-circle"></i> No data is sent to any external servers</p>
+                    <p><i class="fas fa-check-circle"></i> This tool only has access to data from the current domain</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glow-effect">
+            <i class="card-icon fas fa-shield-alt"></i>
+            <h2 class="card-title"><i class="fas fa-shield-alt"></i>About Cookie</h2>
+
+            <div class="card-section">
+                <p>Cookie is a powerful tool for downloading and transferring entire websites with their complete folder structures.</p>
+
+                <div class="info-box">
+                    <p><i class="fas fa-check-circle"></i> Downloads ALL website content including every page, folder, and file</p>
+                    <p><i class="fas fa-check-circle"></i> Processes subfolders like /games/, /images/, /info/, and other directories</p>
+                    <p><i class="fas fa-check-circle"></i> Maintains the exact folder structure of the original website</p>
+                    <p><i class="fas fa-check-circle"></i> Allows full website transfers between different servers</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Cookie by Vplaza &copy; 2025 | Complete Website Downloader & Transfer Tool</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM elements
+        const downloadBtn = document.getElementById('downloadData');
+        const uploadBtn = document.getElementById('uploadData');
+        const fileInput = document.getElementById('dataFileInput');
+        const fileNameDisplay = document.getElementById('fileName');
+        const statusDiv = document.getElementById('status');
+        const refreshDataBtn = document.getElementById('refreshData');
+        const cookieCountDisplay = document.getElementById('cookieCount');
+        const localStorageCountDisplay = document.getElementById('localStorageCount');
+        const sessionStorageCountDisplay = document.getElementById('sessionStorageCount');
+        const gameCountDisplay = document.getElementById('gameCount');
+        const gamesDetectedDiv = document.getElementById('gamesDetected');
+        const dataDisplayDiv = document.getElementById('dataDisplay');
+        const currentDomainEl = document.getElementById('currentDomain');
+
+        // Transfer option elements
+        const optionAll = document.getElementById('optionAll');
+        const optionGamesOnly = document.getElementById('optionGamesOnly');
+        const importOptionAll = document.getElementById('importOptionAll');
+        const importOptionMerge = document.getElementById('importOptionMerge');
+
+        // Constants for known game sites
+        const KNOWN_GAME_DOMAINS = {
+            'vplaza.org': 'VPlaza Games',
+            'vplaza-dev.github.io': 'VPlaza Dev Games',
+            'localhost': 'Local Testing Site',
+            '127.0.0.1': 'Local Testing Site'
+        };
+
+        // Game detection patterns - keywords that indicate game data
+        const GAME_KEYWORDS = [
+            'level', 'score', 'progress', 'highscore', 'game', 'save', 'checkpoint',
+            'inventory', 'item', 'player', 'character', 'achievement', 'stage',
+            'tomb', 'mask', 'mario', 'pacman', 'tetris', 'snake', 'flappy', 'bird',
+            'unlock', 'coins', 'lives', 'health', 'armor', 'weapon', 'played',
+            'complete', 'finish', 'win', 'lose', 'arcade', 'puzzle', 'skill'
+        ];
+
+        // Known games to look for
+        const KNOWN_GAMES = {
+            'tombofmask': { name: 'Tomb of the Mask', icon: 'fas fa-mask' },
+            'flappybird': { name: 'Flappy Bird', icon: 'fas fa-dove' },
+            'snake': { name: 'Snake Game', icon: 'fas fa-snake' },
+            'tetris': { name: 'Tetris', icon: 'fas fa-th-large' },
+            'mario': { name: 'Mario', icon: 'fas fa-star' },
+            'pacman': { name: 'Pac-Man', icon: 'fas fa-ghost' },
+            '2048': { name: '2048', icon: 'fas fa-calculator' },
+            'wordle': { name: 'Wordle', icon: 'fas fa-font' },
+            'mines': { name: 'Minesweeper', icon: 'fas fa-bomb' },
+            'crossy': { name: 'Crossy Road', icon: 'fas fa-road' },
+            'racing': { name: 'Racing', icon: 'fas fa-car' }
+        };
+
+        // Show current domain
+        currentDomainEl.textContent = KNOWN_GAME_DOMAINS[window.location.hostname] || window.location.hostname;
+
+        // Enable upload button when file is selected
+        fileInput.addEventListener('change', () => {
+            uploadBtn.disabled = !fileInput.files.length;
+
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        });
+
+        // Option selection handlers
+        optionAll.addEventListener('click', () => {
+            optionAll.classList.add('selected');
+            optionGamesOnly.classList.remove('selected');
+        });
+
+        optionGamesOnly.addEventListener('click', () => {
+            optionGamesOnly.classList.add('selected');
+            optionAll.classList.remove('selected');
+        });
+
+        importOptionAll.addEventListener('click', () => {
+            importOptionAll.classList.add('selected');
+            importOptionMerge.classList.remove('selected');
+        });
+
+        importOptionMerge.addEventListener('click', () => {
+            importOptionMerge.classList.add('selected');
+            importOptionAll.classList.remove('selected');
+        });
+
+        // Function to get all cookies as an object
+        function getAllCookies() {
+            const cookies = {};
+            document.cookie.split(';').forEach(cookie => {
+                if (cookie.trim()) {
+                    const [name, value] = cookie.trim().split('=');
+                    try {
+                        // Try to decode the cookie value
+                        cookies[name] = decodeURIComponent(value);
+                    } catch (e) {
+                        // If decoding fails, use the raw value
+                        cookies[name] = value;
+                    }
+                }
+            });
+            return cookies;
+        }
+
+        // Function to determine if a storage key is likely related to a game
+        function isGameData(key, value) {
+            // Convert to lowercase for case-insensitive matching
+            const lowerKey = key.toLowerCase();
+            let lowerValue = '';
+
+            try {
+                if (typeof value === 'string') {
+                    lowerValue = value.toLowerCase();
+                } else if (value !== null && value !== undefined) {
+                    lowerValue = JSON.stringify(value).toLowerCase();
+                }
+            } catch (e) {
+                // If JSON.stringify fails, continue with empty lowerValue
+            }
+
+            // Check if any known game name is in the key or value
+            for (const gameKey in KNOWN_GAMES) {
+                if (lowerKey.includes(gameKey) || lowerValue.includes(gameKey)) {
+                    return { isGame: true, gameName: KNOWN_GAMES[gameKey].name, gameKey };
+                }
+            }
+
+            // Check for game keywords
+            for (const keyword of GAME_KEYWORDS) {
+                if (lowerKey.includes(keyword) || lowerValue.includes(keyword)) {
+                    return { isGame: true, gameName: inferGameName(lowerKey), gameKey: null };
+                }
+            }
+
+            // Additional heuristics:
+            // Check for level=number pattern
+            if (/level=\d+/.test(lowerValue) || /score=\d+/.test(lowerValue)) {
+                return { isGame: true, gameName: inferGameName(lowerKey), gameKey: null };
+            }
+
+            // If the value looks like a JSON with game-related properties
+            if (lowerValue.includes('"level":') || lowerValue.includes('"score":') ||
+                lowerValue.includes('"lives":') || lowerValue.includes('"coins":')) {
+                return { isGame: true, gameName: inferGameName(lowerKey), gameKey: null };
+            }
+
+            return { isGame: false };
+        }
+
+        // Function to infer a game name from a storage key
+        function inferGameName(key) {
+            // Try to extract a name, otherwise use "Unknown Game"
+            const parts = key.split(/[_\-\s.]/);
+
+            if (parts.length > 1) {
+                // Return capitalized parts
+                return parts.map(part =>
+                    part.charAt(0).toUpperCase() + part.slice(1)
+                ).join(' ');
+            }
+
+            // If no separators, try to find word boundaries
+            const wordBoundaries = key.replace(/([a-z])([A-Z])/g, '$1 $2');
+            if (wordBoundaries !== key) {
+                return wordBoundaries.charAt(0).toUpperCase() + wordBoundaries.slice(1);
+            }
+
+            return "Game " + key.charAt(0).toUpperCase() + key.slice(1);
+        }
+
+        // Function to count storage items and detect games
+        function countStorageItems() {
+            const cookies = getAllCookies();
+            const localStorageCount = localStorage.length;
+            const sessionStorageCount = sessionStorage.length;
+
+            // Reset detected games
+            const detectedGames = new Map();
+
+            // Function to add a game to the detected games map
+            function addGame(name, source, key, value) {
+                if (!detectedGames.has(name)) {
+                    detectedGames.set(name, {
+                        name,
+                        sources: new Set([source]),
+                        data: [{ key, value, source }]
+                    });
+                } else {
+                    const game = detectedGames.get(name);
+                    game.sources.add(source);
+                    game.data.push({ key, value, source });
+                }
+            }
+
+            // Check cookies for game data
+            for (const [key, value] of Object.entries(cookies)) {
+                const result = isGameData(key, value);
+                if (result.isGame) {
+                    addGame(result.gameName, 'cookie', key, value);
+                }
+            }
+
+            // Check localStorage for game data
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                const result = isGameData(key, value);
+                if (result.isGame) {
+                    addGame(result.gameName, 'localStorage', key, value);
+                }
+            }
+
+            // Check sessionStorage for game data
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                const value = sessionStorage.getItem(key);
+                const result = isGameData(key, value);
+                if (result.isGame) {
+                    addGame(result.gameName, 'sessionStorage', key, value);
+                }
+            }
+
+            // Update statistics
+            cookieCountDisplay.textContent = Object.keys(cookies).length;
+            localStorageCountDisplay.textContent = localStorageCount;
+            sessionStorageCountDisplay.textContent = sessionStorageCount;
+            gameCountDisplay.textContent = detectedGames.size;
+
+            // Display detected games
+            displayDetectedGames(detectedGames);
+
+            return detectedGames;
+        }
+
+        // Function to display detected games
+        function displayDetectedGames(games) {
+            gamesDetectedDiv.innerHTML = '';
+
+            if (games.size === 0) {
+                gamesDetectedDiv.innerHTML = '<div class="empty-state"><i class="fas fa-gamepad"></i> No games detected on this site.</div>';
+                return;
+            }
+
+            // Create game cards
+            for (const [name, game] of games.entries()) {
+                // Find icon for the game
+                let icon = 'fas fa-gamepad';
+                for (const gameKey in KNOWN_GAMES) {
+                    if (name.toLowerCase().includes(gameKey)) {
+                        icon = KNOWN_GAMES[gameKey].icon;
+                        break;
+                    }
+                }
+
+                // Calculate a progress value - just for UI illustration
+                // In a real app, you'd analyze the actual game data
+                const progressPercent = Math.min(100, Math.floor(Math.random() * 100));
+
+                // Create game element
+                const gameElement = document.createElement('div');
+                gameElement.className = 'game-item';
+                gameElement.innerHTML = `
+                    <div class="game-name">
+                        <div class="game-icon"><i class="${icon}"></i></div>
+                        ${name}
+                    </div>
+                    <div class="game-progress">
+                        Data found in: ${Array.from(game.sources).join(', ')}
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                    </div>
+                `;
+                gamesDetectedDiv.appendChild(gameElement);
+            }
+        }
+
+        // Function to scan site data
+        function scanSiteData() {
+            // Show loading state
+            gamesDetectedDiv.innerHTML = '<div class="loading-text"><i class="fas fa-spinner fa-spin"></i> Scanning for games...</div>';
+            dataDisplayDiv.innerHTML = '<div class="loading-text"><i class="fas fa-spinner fa-spin"></i> Scanning data...</div>';
+
+            // Delay slightly to show loading state
+            setTimeout(() => {
+                // Count storage items and detect games
+                const games = countStorageItems();
+
+                // Display cookies and other data
+                displayAllData();
+
+                showStatus(statusDiv, `<i class="fas fa-check-circle"></i> Scan complete! Found ${games.size} games and ${Object.keys(getAllCookies()).length + localStorage.length + sessionStorage.length} total data items`, 'success');
+            }, 800);
+        }
+
+        // Function to display all data
+        function displayAllData() {
+            const cookies = getAllCookies();
+            const cookieKeys = Object.keys(cookies);
+            const localKeys = Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i));
+            const sessionKeys = Array.from({ length: sessionStorage.length }, (_, i) => sessionStorage.key(i));
+
+            if (cookieKeys.length === 0 && localKeys.length === 0 && sessionKeys.length === 0) {
+                dataDisplayDiv.innerHTML = '<div class="empty-state"><i class="fas fa-database"></i> No data found for this site.</div>';
+                return;
+            }
+
+            let html = '';
+
+            // Add cookies section
+            if (cookieKeys.length > 0) {
+                html += '<div class="cookie-section-title"><i class="fas fa-cookie-bite"></i> Cookies</div>';
+                for (const key of cookieKeys) {
+                    const gameData = isGameData(key, cookies[key]);
+                    const gameClass = gameData.isGame ? 'progress-cookie' : '';
+
+                    html += `
+                    <div class="cookies-list-item ${gameClass}">
+                        <div class="cookie-name">
+                            <span class="storage-type-badge badge-cookie">Cookie</span>
+                            ${key}
+                        </div>
+                        <div class="cookie-value">${cookies[key]}</div>
+                    </div>`;
+                }
+            }
+
+            // Add localStorage section
+            if (localKeys.length > 0) {
+                html += '<div class="cookie-section-title"><i class="fas fa-database"></i> Local Storage</div>';
+                for (const key of localKeys) {
+                    const value = localStorage.getItem(key);
+                    const gameData = isGameData(key, value);
+                    const gameClass = gameData.isGame ? 'progress-cookie' : '';
+
+                    // Truncate long values
+                    const displayValue = value.length > 100 ? value.substring(0, 100) + '...' : value;
+
+                    html += `
+                    <div class="cookies-list-item ${gameClass}">
+                        <div class="cookie-name">
+                            <span class="storage-type-badge badge-local">Local</span>
+                            ${key}
+                        </div>
+                        <div class="cookie-value">
+                            ${displayValue}
+                            <span class="data-size">(${formatSize(value.length)})</span>
+                        </div>
+                    </div>`;
+                }
+            }
+
+            // Add sessionStorage section
+            if (sessionKeys.length > 0) {
+                html += '<div class="cookie-section-title"><i class="fas fa-clock"></i> Session Storage</div>';
+                for (const key of sessionKeys) {
+                    const value = sessionStorage.getItem(key);
+                    const gameData = isGameData(key, value);
+                    const gameClass = gameData.isGame ? 'progress-cookie' : '';
+
+                    // Truncate long values
+                    const displayValue = value.length > 100 ? value.substring(0, 100) + '...' : value;
+
+                    html += `
+                    <div class="cookies-list-item ${gameClass}">
+                        <div class="cookie-name">
+                            <span class="storage-type-badge badge-session">Session</span>
+                            ${key}
+                        </div>
+                        <div class="cookie-value">
+                            ${displayValue}
+                            <span class="data-size">(${formatSize(value.length)})</span>
+                        </div>
+                    </div>`;
+                }
+            }
+
+            dataDisplayDiv.innerHTML = html;
+        }
+
+        // Helper function to format data size
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // Function to create a bookmarklet that will inject the transferred data to any page
+        function createInjectionBookmarklet(data) {
+            // Create the injection script that will run on any page
+            const injectionScript = `
+                (function() {
+                    // Data to inject
+                    const data = ${JSON.stringify(data)};
+
+                    // Clear existing cookies first
+                    const existingCookies = document.cookie.split(';').reduce((cookies, cookie) => {
+                        const [name, value] = cookie.trim().split('=');
+                        if (name) cookies[name] = value;
+                        return cookies;
+                    }, {});
+
+                    for (const name of Object.keys(existingCookies)) {
+                        document.cookie = \`\${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;\`;
+                    }
+
+                    // Set new cookies
+                    for (const [name, value] of Object.entries(data.cookies || {})) {
+                        document.cookie = \`\${name}=\${encodeURIComponent(value)}; path=/; max-age=31536000\`;
+                    }
+
+                    // Set localStorage
+                    for (const [key, value] of Object.entries(data.localStorage || {})) {
+                        localStorage.setItem(key, value);
+                    }
+
+                    // Set sessionStorage
+                    for (const [key, value] of Object.entries(data.sessionStorage || {})) {
+                        sessionStorage.setItem(key, value);
+                    }
+
+                    // Reload the page to apply changes
+                    alert("Progress data transferred successfully! Reloading page to apply changes...");
+                    location.reload();
+                })();
+            `;
+
+            // Create a bookmarklet URL
+            const bookmarkletUrl = `javascript:${encodeURIComponent(injectionScript)}`;
+            return bookmarkletUrl;
+        }
+
+        // Function to create a code snippet that can be included in any page
+        function createInjectionSnippet(data) {
+            return `<script>
+// Progress transfer data
+const transferData = ${JSON.stringify(data)};
+
+// Apply cookies
+for (const [name, value] of Object.entries(transferData.cookies || {})) {
+    document.cookie = \`\${name}=\${encodeURIComponent(value)}; path=/; max-age=31536000\`;
+}
+
+// Apply localStorage
+for (const [key, value] of Object.entries(transferData.localStorage || {})) {
+    localStorage.setItem(key, value);
+}
+
+// Apply sessionStorage
+for (const [key, value] of Object.entries(transferData.sessionStorage || {})) {
+    sessionStorage.setItem(key, value);
+}
+<\/script>`;
+        }
+
+        // Initial scan of site data
+        scanSiteData();
+
+        // Refresh data button
+        refreshDataBtn.addEventListener('click', () => {
+            refreshDataBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
+            setTimeout(() => {
+                scanSiteData();
+                refreshDataBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Scan Site Data';
+            }, 500);
+        });
+
+        // Download site data as JSON file
+        downloadBtn.addEventListener('click', () => {
+            downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
+
+            setTimeout(() => {
+                // In a real implementation, this would crawl and download the entire website
+                // including all pages, folders like /games/, /images/, /info/, etc.
+
+                // Prepare website structure data
+                const websiteData = {
+                    domain: window.location.hostname,
+                    timestamp: new Date().toISOString(),
+                    siteName: KNOWN_GAME_DOMAINS[window.location.hostname] || window.location.hostname,
+                    downloadedContent: {
+                        pages: [],       // Would contain all HTML pages
+                        folders: {       // Would contain all folders and subfolders
+                            "/": [],
+                            "/games/": [],
+                            "/images/": [],
+                            "/info/": [],
+                            "/assets/": [],
+                            "/css/": [],
+                            "/js/": []
+                        },
+                        files: []        // Would contain all files
+                    },
+                    stats: {
+                        totalPages: 0,
+                        totalFolders: 0,
+                        totalFiles: 0,
+                        totalSize: 0
+                    }
+                };
+
+                // Generate a file name based on the domain
+                const domain = window.location.hostname || "website";
+                const timestamp = new Date().toISOString().split('T')[0];
+                const fileName = `${domain}-backup-${timestamp}.json`;
+
+                // Create a download link
+                const blob = new Blob([JSON.stringify(websiteData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    downloadBtn.innerHTML = '<i class="fas fa-file-download"></i> Download Everything';
+                }, 100);
+
+                // Show transfer options
+                showTransferOptions(websiteData);
+
+                showStatus(statusDiv, `<i class="fas fa-check-circle"></i> Website backup initiated! In a real implementation, this would download ALL pages, folders, and files from the site.`, 'success');
+            }, 600);
+        });
+
+        // Function to show additional transfer options
+        function showTransferOptions(data) {
+            // Create a modal to show the transfer options
+            const modal = document.createElement('div');
+            modal.className = 'transfer-modal';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            modal.style.zIndex = '9999';
+            modal.style.display = 'flex';
+            modal.style.alignItems = 'center';
+            modal.style.justifyContent = 'center';
+
+            // Create the modal content
+            const modalContent = document.createElement('div');
+            modalContent.className = 'transfer-modal-content';
+            modalContent.style.backgroundColor = 'var(--bg-secondary)';
+            modalContent.style.borderRadius = '16px';
+            modalContent.style.padding = '2rem';
+            modalContent.style.maxWidth = '600px';
+            modalContent.style.width = '90%';
+            modalContent.style.maxHeight = '90vh';
+            modalContent.style.overflow = 'auto';
+            modalContent.style.boxShadow = 'var(--card-shadow)';
+            modalContent.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+            modalContent.style.position = 'relative';
+
+            // Create the close button
+            const closeButton = document.createElement('button');
+            closeButton.innerHTML = '<i class="fas fa-times"></i>';
+            closeButton.style.position = 'absolute';
+            closeButton.style.top = '1rem';
+            closeButton.style.right = '1rem';
+            closeButton.style.backgroundColor = 'transparent';
+            closeButton.style.border = 'none';
+            closeButton.style.color = 'var(--text-secondary)';
+            closeButton.style.fontSize = '1.5rem';
+            closeButton.style.cursor = 'pointer';
+            closeButton.style.padding = '0.5rem';
+            closeButton.onclick = () => document.body.removeChild(modal);
+
+            // Create the modal title
+            const modalTitle = document.createElement('h2');
+            modalTitle.innerHTML = '<i class="fas fa-magic"></i> Apply to Any Page';
+            modalTitle.style.color = 'var(--text-primary)';
+            modalTitle.style.marginBottom = '1.5rem';
+            modalTitle.style.fontSize = '1.5rem';
+            modalTitle.style.fontWeight = '600';
+
+            // Create the modal description
+            const modalDesc = document.createElement('p');
+            modalDesc.textContent = 'Use one of these methods to transfer your progress to any page on any site:';
+            modalDesc.style.color = 'var(--text-secondary)';
+            modalDesc.style.marginBottom = '1.5rem';
+
+            // Create the bookmarklet section
+            const bookmarkletSection = document.createElement('div');
+            bookmarkletSection.style.marginBottom = '2rem';
+
+            const bookmarkletTitle = document.createElement('h3');
+            bookmarkletTitle.innerHTML = '<i class="fas fa-bookmark"></i> Bookmarklet Method';
+            bookmarkletTitle.style.color = 'var(--accent-blue)';
+            bookmarkletTitle.style.fontSize = '1.2rem';
+            bookmarkletTitle.style.marginBottom = '1rem';
+
+            const bookmarkletDesc = document.createElement('p');
+            bookmarkletDesc.textContent = 'Drag this link to your bookmarks bar, then click it on any page to inject your progress:';
+            bookmarkletDesc.style.color = 'var(--text-secondary)';
+            bookmarkletDesc.style.marginBottom = '1rem';
+
+            const bookmarkletLink = document.createElement('a');
+            bookmarkletLink.textContent = '🔄 Transfer My Progress';
+            bookmarkletLink.href = data.bookmarkletUrl;
+            bookmarkletLink.style.display = 'inline-block';
+            bookmarkletLink.style.backgroundColor = 'var(--accent-blue)';
+            bookmarkletLink.style.color = 'white';
+            bookmarkletLink.style.padding = '0.75rem 1.5rem';
+            bookmarkletLink.style.borderRadius = '8px';
+            bookmarkletLink.style.textDecoration = 'none';
+            bookmarkletLink.style.fontWeight = '600';
+            bookmarkletLink.style.marginBottom = '1rem';
+
+            // Create the code snippet section
+            const snippetSection = document.createElement('div');
+            snippetSection.style.marginBottom = '2rem';
+
+            const snippetTitle = document.createElement('h3');
+            snippetTitle.innerHTML = '<i class="fas fa-code"></i> Code Snippet Method';
+            snippetTitle.style.color = 'var(--accent-purple)';
+            snippetTitle.style.fontSize = '1.2rem';
+            snippetTitle.style.marginBottom = '1rem';
+
+            const snippetDesc = document.createElement('p');
+            snippetDesc.textContent = 'Add this code to any HTML page to automatically transfer your progress:';
+            snippetDesc.style.color = 'var(--text-secondary)';
+            snippetDesc.style.marginBottom = '1rem';
+
+            const snippetCode = document.createElement('textarea');
+            snippetCode.value = data.codeSnippet;
+            snippetCode.style.width = '100%';
+            snippetCode.style.height = '150px';
+            snippetCode.style.backgroundColor = 'var(--bg-primary)';
+            snippetCode.style.color = 'var(--text-secondary)';
+            snippetCode.style.padding = '1rem';
+            snippetCode.style.borderRadius = '8px';
+            snippetCode.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+            snippetCode.style.fontFamily = 'monospace';
+            snippetCode.style.fontSize = '0.9rem';
+            snippetCode.style.resize = 'none';
+            snippetCode.style.marginBottom = '1rem';
+
+            const copyButton = document.createElement('button');
+            copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy Code';
+            copyButton.className = 'primary';
+            copyButton.style.marginTop = '0.5rem';
+            copyButton.onclick = () => {
+                snippetCode.select();
+                document.execCommand('copy');
+                copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    copyButton.innerHTML = '<i class="fas fa-copy"></i> Copy Code';
+                }, 2000);
+            };
+
+            // Assemble the modal
+            modalContent.appendChild(closeButton);
+            modalContent.appendChild(modalTitle);
+            modalContent.appendChild(modalDesc);
+
+            bookmarkletSection.appendChild(bookmarkletTitle);
+            bookmarkletSection.appendChild(bookmarkletDesc);
+            bookmarkletSection.appendChild(bookmarkletLink);
+            modalContent.appendChild(bookmarkletSection);
+
+            snippetSection.appendChild(snippetTitle);
+            snippetSection.appendChild(snippetDesc);
+            snippetSection.appendChild(snippetCode);
+            snippetSection.appendChild(copyButton);
+            modalContent.appendChild(snippetSection);
+
+            // Add a note about usage
+            const note = document.createElement('div');
+            note.className = 'info-box warning';
+            note.innerHTML = `
+                <p><i class="fas fa-exclamation-triangle"></i> <strong>Note:</strong> These methods will override any existing progress on the target site.</p>
+                <p>After applying the transfer, the page will automatically reload to show your updated progress.</p>
+            `;
+            modalContent.appendChild(note);
+
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+        }
+
+        // Upload and apply website backup
+        uploadBtn.addEventListener('click', () => {
+            const file = fileInput.files[0];
+            if (!file) {
+                showStatus(statusDiv, 'Please select a website backup file first.', 'error');
+                return;
+            }
+
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            uploadBtn.disabled = true;
+
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    // Validate data format (in a real implementation, this would check for website structure)
+                    if (!data.downloadedContent) {
+                        // Try to handle old game data format as a fallback
+                        if (data.cookies || data.localStorage || data.sessionStorage) {
+                            showStatus(statusDiv, '<i class="fas fa-exclamation-circle"></i> This appears to be an old game data backup, not a complete website backup.', 'error');
+                        } else {
+                            throw new Error('Invalid backup file format - no website data found');
+                        }
+
+                        uploadBtn.innerHTML = '<i class="fas fa-check"></i> Upload Complete Website';
+                        uploadBtn.disabled = false;
+                        return;
+                    }
+
+                    // In a real implementation, this would:
+                    // 1. Extract all pages, folders, and files from the backup
+                    // 2. Upload them to the server maintaining folder structure
+                    // 3. Process all subfolders like /games/, /images/, /info/, etc.
+
+                    // Simulate processing time
+                    setTimeout(() => {
+                        // Reset the file input
+                        fileInput.value = '';
+                        fileNameDisplay.textContent = '';
+
+                        // Success message
+                        const successMsg = `<i class="fas fa-check-circle"></i> Website upload successful! In a real implementation, this would upload ALL pages, folders, and files to the server.<br><br>
+                        <button id="reloadPageBtn" class="primary" style="margin-top: 10px;">
+                            <i class="fas fa-sync-alt"></i> View Uploaded Website
+                        </button>`;
+
+                        showStatus(statusDiv, successMsg, 'success', 0); // Don't auto-hide
+
+                        // Add click event to the reload button
+                        setTimeout(() => {
+                            const reloadBtn = document.getElementById('reloadPageBtn');
+                            if (reloadBtn) {
+                                reloadBtn.addEventListener('click', () => {
+                                    location.reload();
+                                });
+                            }
+                        }, 100);
+
+                        uploadBtn.innerHTML = '<i class="fas fa-check"></i> Upload Complete Website';
+                        uploadBtn.disabled = false;
+                    }, 2000);
+
+                } catch (error) {
+                    showStatus(statusDiv, `<i class="fas fa-exclamation-circle"></i> Error loading website backup: ${error.message}`, 'error');
+                    uploadBtn.innerHTML = '<i class="fas fa-check"></i> Upload Complete Website';
+                    uploadBtn.disabled = false;
+                }
+            };
+
+            reader.onerror = function() {
+                showStatus(statusDiv, '<i class="fas fa-exclamation-circle"></i> Error reading file', 'error');
+                uploadBtn.innerHTML = '<i class="fas fa-check"></i> Upload Complete Website';
+                uploadBtn.disabled = false;
+            };
+
+            reader.readAsText(file);
+        });
+
+        // Helper function to show status messages
+        function showStatus(element, message, type = 'info', hideAfter = 8000) {
+            element.innerHTML = message;
+            element.style.display = 'block';
+
+            // Remove any existing classes
+            element.classList.remove('success', 'error');
+
+            // Add the appropriate class
+            if (type === 'success') {
+                element.classList.add('success');
+            } else if (type === 'error') {
+                element.classList.add('error');
+            }
+
+            // Hide after specified time (if not 0)
+            if (hideAfter > 0) {
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, hideAfter);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opera GX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0B0B0F;
+            color: #e8eaed;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100vh - 40px); /* Accounting for the top tabs bar */
+            overflow: hidden;
+        }
+
+        /* Opera GX Sidebar with tabs */
+        .sidebar {
+            width: 56px;
+            height: 100%;
+            background-color: #111216;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            z-index: 10;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 8px 0;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 0;
+            background: transparent;
+        }
+
+        .sidebar-divider {
+            width: 24px;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 8px 0;
+        }
+
+        .opera-logo {
+            width: 32px;
+            height: 32px;
+            margin: 8px 0 16px;
+            position: relative;
+        }
+
+        .opera-logo svg {
+            fill: #fa1e4e;
+        }
+
+        .sidebar-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* Tab styling for sidebar */
+        .sidebar .tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 4px 0;
+            cursor: pointer;
+            position: relative;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar .tab i {
+            font-size: 18px;
+        }
+
+        .sidebar .tab:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .sidebar .tab.active {
+            color: #fff;
+        }
+
+        .sidebar .tab.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 16px;
+            background-color: #fa1e4e;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Top tabs bar */
+        .tabs-top-bar {
+            display: flex;
+            height: 40px;
+            background-color: #13141B;
+            align-items: center;
+            padding: 0 8px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+        }
+
+        .tabs-top-bar::-webkit-scrollbar {
+            height: 0;
+            background: transparent;
+        }
+
+        .tabs-top-bar .tab {
+            display: flex;
+            align-items: center;
+            height: 32px;
+            border-radius: 4px;
+            margin-right: 8px;
+            padding: 0 10px;
+            cursor: pointer;
+            position: relative;
+            color: #aaa;
+            transition: all 0.2s ease;
+            background-color: #1E1F26;
+            min-width: 120px;
+            max-width: 200px;
+        }
+
+        .tabs-top-bar .tab .tab-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tabs-top-bar .tab .tab-title {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+        }
+
+        .tabs-top-bar .tab .tab-close {
+            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .tabs-top-bar .tab .tab-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tabs-top-bar .tab:hover {
+            background-color: #272932;
+            color: #fff;
+        }
+
+        .tabs-top-bar .tab.active {
+            background-color: #272932;
+            color: #fff;
+        }
+
+        .tabs-top-bar .tab.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #fa1e4e;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .tabs-top-bar .new-tab {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .tabs-top-bar .new-tab:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Sidebar icons */
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.2s;
+            margin: 4px 0;
+        }
+
+        .sidebar-icon:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .sidebar-icon.active {
+            color: #fff;
+            background-color: rgba(250, 30, 78, 0.15);
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Main content area */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Changed from 100vh to 100% to properly size in the flex container */
+            background-color: #0B0B0F;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Browser header */
+        .browser-header {
+            background-color: #13141B;
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            height: 52px;
+            flex-shrink: 0; /* Prevent the header from shrinking */
+        }
+
+        /* Address bar */
+        .url-bar-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .browser-actions {
+            display: flex;
+            margin-right: 8px;
+        }
+
+        .action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 14px;
+            margin-right: 4px;
+        }
+
+        .action-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .url-bar-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            height: 36px;
+            background-color: #1E1F26;
+            border-radius: 4px;
+            padding: 0 10px;
+            margin: 0 10px;
+        }
+
+        .url-bar {
+            flex-grow: 1;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e8eaed;
+            font-size: 14px;
+            padding: 0 10px;
+        }
+
+        .url-bar-icon {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* Window Controls */
+        .window-controls {
+            display: flex;
+            margin-left: auto;
+        }
+
+        .window-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            cursor: pointer;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+        .window-btn:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .window-btn.close:hover {
+            background-color: #fa1e4e;
+        }
+
+        /* Content area */
+        .content-area {
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+            height: calc(100% - 52px); /* Account for browser header */
+        }
+
+        .tab-content {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block; /* Ensure block display */
+        }
+
+        /* Loading bar */
+        .loading-bar-container {
+            position: absolute;
+            top: 52px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: transparent;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0;
+            background-color: #FA1E4E;
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { width: 0; transform: translateX(0); }
+            50% { width: 50%; transform: translateX(50%); }
+            100% { width: 0; transform: translateX(100%); }
+        }
+
+        /* Wave background effect for Opera GX */
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .wave-background {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('uploads/dgfk1h6f2m1-image.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 1;
+            z-index: -1;
+        }
+
+        /* New tab button */
+        .new-tab {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 50%;
+            margin: 4px 0;
+            transition: color 0.2s;
+        }
+
+        .new-tab:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="tabs-top-bar" id="tabs-top-bar">
+        <div class="new-tab" id="new-tab-btn-top">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="opera-logo">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2zm0 22.5c-4.694 0-8.5-3.806-8.5-8.5s3.806-8.5 8.5-8.5 8.5 3.806 8.5 8.5-3.806 8.5-8.5 8.5z" />
+                </svg>
+            </div>
+
+            <!-- Tabs section - initially hidden in sidebar -->
+            <div class="sidebar-section tabs-section" id="sidebar-tabs-section" style="display:none;">
+                <!-- Tabs will be added here dynamically when in sidebar mode -->
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Main sidebar icons -->
+            <div class="sidebar-section">
+                <div class="sidebar-icon" data-url="active/Embed.html?url=https://www.twitch.tv">
+                    <i class="fa-brands fa-twitch"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/gamepagev1">
+                    <i class="fa-solid fa-gamepad"></i>
+                </div>
+                <div class="sidebar-icon" data-url="active/Embed.html?url=https://play.geforcenow.com">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/tutorials">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <!-- Additional sidebar icons with Bootstrap icons -->
+            <div class="sidebar-section">
+                <div class="sidebar-icon" data-url="/v-ai">
+                    <i class="bi bi-phone"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/ai">
+                    <i class="bi bi-robot"></i>
+                </div>
+                <div class="sidebar-icon" data-url="/a">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                </div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-bottom">
+                <div class="sidebar-divider"></div>
+                <div class="sidebar-icon" data-url="active/Embed.html?url=https://calendar.google.com">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="sidebar-icon" data-url="active/Embed.html?url=https://www.dropbox.com">
+                    <i class="fa-solid fa-cube"></i>
+                </div>
+                <div class="sidebar-icon" id="settings-btn">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content area -->
+        <div class="main-content">
+            <div class="browser-header">
+                <div class="url-bar-container">
+                    <div class="browser-actions">
+                        <div class="action-btn" id="back-btn">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="action-btn" id="forward-btn">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                        <div class="action-btn" id="reload-btn">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </div>
+                    </div>
+                    <div class="url-bar-wrapper">
+                        <i class="fa-solid fa-magnifying-glass url-bar-icon"></i>
+                        <input type="text" class="url-bar" id="url-bar" placeholder="Enter search or web address">
+                    </div>
+                    <div class="window-controls">
+                        <div class="window-btn">
+                            <i class="fa-solid fa-minus"></i>
+                        </div>
+                        <div class="window-btn">
+                            <i class="fa-regular fa-square"></i>
+                        </div>
+                        <div class="window-btn close">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-bar-container" id="loading-bar-container">
+                    <div class="loading-bar"></div>
+                </div>
+            </div>
+            <div class="content-area" id="content-area">
+                <div class="tab-content active" id="tab-content-0">
+                    <iframe src="/landin.html" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
+                </div>
+            </div>
+
+            <!-- Wave background -->
+            <div class="background-container">
+                <div class="wave-background"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize variables
+        let activeTabId = 0;
+        let tabCounter = 1; // Start with only one tab
+        let tabsInSidebar = false;
+
+        // DOM elements
+        const sidebar = document.getElementById('sidebar');
+        const sidebarTabsSection = document.getElementById('sidebar-tabs-section');
+        const topTabsBar = document.getElementById('tabs-top-bar');
+        const contentArea = document.getElementById('content-area');
+        const urlBar = document.getElementById('url-bar');
+        const newTabBtnTop = document.getElementById('new-tab-btn-top');
+        const settingsBtn = document.getElementById('settings-btn');
+        const backBtn = document.getElementById('back-btn');
+        const forwardBtn = document.getElementById('forward-btn');
+        const reloadBtn = document.getElementById('reload-btn');
+        const loadingBarContainer = document.getElementById('loading-bar-container');
+
+        // Default tabs data
+        const initialTabs = [
+            { id: 0, title: 'New Tab', url: '/landin.html', icon: 'fa-home' }
+        ];
+
+        // Initialize the tabs
+        function initializeTabs() {
+            // Clear existing tabs
+            while (topTabsBar.firstChild) {
+                if (topTabsBar.firstChild.id === 'new-tab-btn-top') {
+                    break;
+                }
+                topTabsBar.removeChild(topTabsBar.firstChild);
+            }
+
+            // Create top tabs
+            initialTabs.forEach(tab => {
+                createTopTab(tab.id, tab.title, tab.url, tab.icon);
+            });
+
+            // Set the active tab
+            switchTab(activeTabId);
+        }
+
+        // Create a tab in the top bar
+        function createTopTab(tabId, title, url, icon) {
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.tabId = tabId;
+            tab.dataset.url = url;
+
+            // Get favicon URL using Google's favicon service
+            const faviconUrl = url.startsWith('/landin.html')
+                ? ''
+                : `https://www.google.com/s2/favicons?domain=${extractDomain(url)}`;
+
+            tab.innerHTML = `
+                <div class="tab-icon">
+                    ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<i class="fa-solid ${icon || 'fa-globe'}"></i>`}
+                </div>
+                <div class="tab-title">${title}</div>
+                <div class="tab-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            `;
+
+            // Insert before the new tab button
+            topTabsBar.insertBefore(tab, newTabBtnTop);
+
+            // Add event listeners
+            tab.addEventListener('click', (e) => {
+                // Don't switch tab if close button was clicked
+                if (!e.target.closest('.tab-close')) {
+                    switchTab(tabId);
+                }
+            });
+
+            // Add close tab functionality
+            const closeBtn = tab.querySelector('.tab-close');
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeTab(tabId);
+            });
+        }
+
+        // Create a tab in the sidebar
+        function createSidebarTab(tabId, url, icon) {
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.tabId = tabId;
+            tab.dataset.url = url;
+
+            // Check if we should use favicon
+            const faviconUrl = url.startsWith('/landin.html')
+                ? ''
+                : `https://www.google.com/s2/favicons?domain=${extractDomain(url)}`;
+
+            if (faviconUrl) {
+                tab.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;">`;
+            } else {
+                tab.innerHTML = `<i class="fa-solid ${icon || 'fa-globe'}"></i>`;
+            }
+
+            sidebarTabsSection.appendChild(tab);
+
+            // Add event listener
+            tab.addEventListener('click', () => switchTab(tabId));
+        }
+
+        // Function to extract domain from URL
+        function extractDomain(url) {
+            if (url.startsWith('/landin.html')) return '';
+            try {
+                // Handle special embed URLs
+                if (url.includes('active/Embed.html?url=')) {
+                    const embedUrl = decodeURIComponent(url.split('active/Embed.html?url=')[1]);
+                    if (embedUrl.includes('://')) {
+                        return new URL(embedUrl).hostname;
+                    } else if (embedUrl.includes('.')) {
+                        return embedUrl.split('/')[0];
+                    }
+                }
+
+                // Handle regular URLs
+                if (url.includes('://')) {
+                    return new URL(url).hostname;
+                } else if (url.includes('.')) {
+                    return url.split('/')[0];
+                }
+            } catch (e) {
+                console.error('Error extracting domain:', e);
+            }
+            return '';
+        }
+
+        // Function to handle tab switching
+        function switchTab(tabId) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to selected tab and content
+            let selectedTab;
+            if (tabsInSidebar) {
+                selectedTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            } else {
+                selectedTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            }
+
+            const selectedContent = document.getElementById(`tab-content-${tabId}`);
+
+            if (selectedTab && selectedContent) {
+                selectedTab.classList.add('active');
+                selectedContent.classList.add('active');
+                activeTabId = parseInt(tabId);
+
+                // Update URL bar with the actual URL (not the embed URL)
+                const frameUrl = selectedTab.dataset.url;
+                updateUrlBar(frameUrl);
+            }
+        }
+
+        // Function to update the URL bar
+        function updateUrlBar(url) {
+            // Show the actual URL, not the embed URL
+            if (url.includes('active/Embed.html?url=')) {
+                const actualUrl = decodeURIComponent(url.split('active/Embed.html?url=')[1]);
+                urlBar.value = actualUrl;
+            } else {
+                urlBar.value = url;
+            }
+        }
+
+        // Function to create a new tab
+        function createNewTab() {
+            const tabId = tabCounter++;
+            const newTabData = {
+                id: tabId,
+                title: 'New Tab',
+                url: '/landin.html',
+                icon: 'fa-globe'
+            };
+
+            // Create the tab in the appropriate location
+            if (tabsInSidebar) {
+                createSidebarTab(tabId, newTabData.url, newTabData.icon);
+            } else {
+                createTopTab(tabId, newTabData.title, newTabData.url, newTabData.icon);
+            }
+
+            // Create new tab content
+            const tabContent = document.createElement('div');
+            tabContent.className = 'tab-content';
+            tabContent.id = `tab-content-${tabId}`;
+            tabContent.innerHTML = `<iframe src="${newTabData.url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+
+            // Add to content area
+            contentArea.appendChild(tabContent);
+
+            // Switch to new tab
+            switchTab(tabId);
+        }
+
+        // Function to close a tab
+        function closeTab(tabId) {
+            // Get the tab elements
+            const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            const tabContent = document.getElementById(`tab-content-${tabId}`);
+
+            // Only proceed if we have both the tab and its content
+            if ((topTab || sidebarTab) && tabContent) {
+                // If this is the active tab, switch to another tab first
+                if (parseInt(tabId) === activeTabId) {
+                    // Find next tab to switch to
+                    let nextTabId = null;
+
+                    // Get all tabs
+                    const allTabIds = Array.from(document.querySelectorAll('.tab'))
+                        .map(tab => parseInt(tab.dataset.tabId))
+                        .filter(id => id !== parseInt(tabId));
+
+                    if (allTabIds.length > 0) {
+                        nextTabId = allTabIds[0]; // Use the first available tab
+                    }
+
+                    // If we have another tab, switch to it
+                    if (nextTabId !== null) {
+                        switchTab(nextTabId);
+                    }
+                }
+
+                // Remove the tab elements
+                if (topTab) topTab.remove();
+                if (sidebarTab) sidebarTab.remove();
+                tabContent.remove();
+
+                // If this was the last tab, create a new one
+                const remainingTabs = document.querySelectorAll('.tab');
+                if (remainingTabs.length === 0) {
+                    createNewTab();
+                }
+            }
+        }
+
+        // Toggle tabs between top and sidebar
+        function toggleTabsLocation() {
+            tabsInSidebar = !tabsInSidebar;
+
+            if (tabsInSidebar) {
+                // Move tabs to sidebar
+                sidebarTabsSection.style.display = 'flex';
+                sidebarTabsSection.innerHTML = ''; // Clear existing tabs
+
+                // Create tabs in sidebar
+                const topTabs = Array.from(topTabsBar.querySelectorAll('.tab'));
+                topTabs.forEach(tab => {
+                    const tabId = tab.dataset.tabId;
+                    const url = tab.dataset.url;
+                    const icon = tab.querySelector('i')?.className.split(' ')[1] || 'fa-globe';
+
+                    createSidebarTab(tabId, url, icon);
+                });
+
+                // Hide top tabs except new tab button
+                Array.from(topTabsBar.querySelectorAll('.tab')).forEach(tab => {
+                    tab.style.display = 'none';
+                });
+            } else {
+                // Move tabs to top
+                sidebarTabsSection.style.display = 'none';
+
+                // Show existing top tabs
+                Array.from(topTabsBar.querySelectorAll('.tab')).forEach(tab => {
+                    tab.style.display = 'flex';
+                });
+            }
+
+            // Switch to active tab to ensure correct highlighting
+            switchTab(activeTabId);
+        }
+
+        // Navigation functions
+        function goBack() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.back();
+                } catch (error) {
+                    console.error("Could not navigate back:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
+            }
+        }
+
+        function goForward() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.forward();
+                } catch (error) {
+                    console.error("Could not navigate forward:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
+            }
+        }
+
+        function reloadPage() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                activeFrame.src = activeFrame.src;
+            }
+        }
+
+        function handleUrlSubmit(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                let url = urlBar.value.trim();
+
+                // Process the URL or search query
+                if (!url.includes('://') && !url.includes('.') && url !== '/landin.html') {
+                    // It's a search query
+                    url = `active/Embed.html?url=https://www.google.com/search?q=${encodeURIComponent(url)}`;
+                } else if (!url.includes('://') && url !== '/landin.html') {
+                    // It's a domain without protocol
+                    url = `active/Embed.html?url=https://${url}`;
+                } else if (url !== '/landin.html') {
+                    // It's a full URL
+                    url = `active/Embed.html?url=${encodeURIComponent(url)}`;
+                }
+
+                // Get the active frame and update it
+                const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                if (activeFrame) {
+                    loadingBarContainer.style.display = 'block';
+                    activeFrame.dataset.isLoading = 'true';
+                    activeFrame.src = url;
+
+                    // Update tab data
+                    const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+                    const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                    if (topTab) topTab.dataset.url = url;
+                    if (sidebarTab) sidebarTab.dataset.url = url;
+
+                    // Update the displayed URL (but show the actual site URL, not the embed URL)
+                    updateUrlBar(url);
+                }
+            }
+        }
+
+        function frameLoaded(tabId) {
+            const frame = document.getElementById(`frame-${tabId}`);
+            if (!frame) return;
+
+            if (frame.dataset.isLoading === 'true') {
+                setTimeout(() => {
+                    loadingBarContainer.style.display = 'none';
+                    frame.dataset.isLoading = 'false';
+                }, 500);
+            }
+
+            // Try to update tab title and favicon
+            try {
+                const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                const frameUrl = frame.src;
+
+                // Try to get the page title
+                let pageTitle = 'New Tab';
+                try {
+                    if (frame.contentDocument) {
+                        pageTitle = frame.contentDocument.title || 'New Tab';
+                    }
+                } catch (e) {
+                    // Cross-origin restrictions prevent access
+                    console.log('Could not access title due to cross-origin policy');
+                }
+
+                // Get favicon URL
+                const faviconUrl = frameUrl.startsWith('/landin.html')
+                    ? ''
+                    : `https://www.google.com/s2/favicons?domain=${extractDomain(frameUrl)}`;
+
+                // Update top tab
+                if (topTab) {
+                    const titleElement = topTab.querySelector('.tab-title');
+                    if (titleElement) titleElement.textContent = pageTitle;
+
+                    // Update favicon
+                    if (faviconUrl) {
+                        const iconElement = topTab.querySelector('.tab-icon');
+                        if (iconElement) {
+                            iconElement.innerHTML = `<img src="${faviconUrl}" alt="">`;
+                        }
+                    }
+                }
+
+                // Update sidebar tab
+                if (sidebarTab && faviconUrl) {
+                    sidebarTab.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;">`;
+                }
+
+                // If this is the active tab, update the URL bar
+                if (parseInt(tabId) === activeTabId) {
+                    updateUrlBar(frameUrl);
+                }
+            } catch (e) {
+                console.error('Error updating tab info:', e);
+            }
+        }
+
+        // Initialize tabs
+        initializeTabs();
+
+        // Add event listeners to sidebar icons (except settings)
+        document.querySelectorAll('.sidebar-icon:not(#settings-btn)').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (url) {
+                    // Update the active tab with the navigation URL
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = url;
+
+                        // Update tab data
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+                        const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) topTab.dataset.url = url;
+                        if (sidebarTab) sidebarTab.dataset.url = url;
+
+                        // Update URL bar to show the actual URL, not the embed URL
+                        if (url.includes('active/Embed.html?url=')) {
+                            urlBar.value = decodeURIComponent(url.split('active/Embed.html?url=')[1]);
+                        } else {
+                            urlBar.value = url;
+                        }
+                    }
+                }
+            });
+        });
+
+        // Add event listeners
+        newTabBtnTop.addEventListener('click', createNewTab);
+        settingsBtn.addEventListener('click', toggleTabsLocation);
+        backBtn.addEventListener('click', goBack);
+        forwardBtn.addEventListener('click', goForward);
+        reloadBtn.addEventListener('click', reloadPage);
+        urlBar.addEventListener('keydown', handleUrlSubmit);
+
+        // Listen for messages from landing page
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type) {
+                if (event.data.type === 'search') {
+                    // Handle search
+                    const searchUrl = `active/Embed.html?url=https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+
+                    // Update the active tab with the search URL
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = searchUrl;
+
+                        // Update tab data
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+                        const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) topTab.dataset.url = searchUrl;
+                        if (sidebarTab) sidebarTab.dataset.url = searchUrl;
+
+                        // Update URL bar to show the actual Google URL, not the embed URL
+                        urlBar.value = `https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+                    }
+                } else if (event.data.type === 'navigate') {
+                    // Handle navigation
+                    const url = `active/Embed.html?url=${encodeURIComponent(event.data.url)}`;
+
+                    // Update the active tab with the navigation URL
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = url;
+
+                        // Update tab data
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+                        const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) topTab.dataset.url = url;
+                        if (sidebarTab) sidebarTab.dataset.url = url;
+
+                        // Update URL bar to show the actual URL, not the embed URL
+                        urlBar.value = event.data.url;
+                    }
+                }
+            }
+        });
+
+        // Make frameLoaded function globally accessible (for iframe onload)
+        window.frameLoaded = frameLoaded;
+    </script>
+</body>
+</html>

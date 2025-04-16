@@ -1,0 +1,52 @@
+
+    <link rel="icon" href="/favicons/vplaza.ico">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XWMFDM1WRX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XWMFDM1WRX');
+</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>V Plaza - Settings</title>
+</head>
+<body>
+    <div class="settingsmodal">
+        <div class="toggle-container">
+            <span class="toggle-label">About:blank cloak toggle</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="toggle" />
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div class="toggle-container">
+            <span class="toggle-label">Custom Cursor Toggle</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="cursor-toggle" />
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <script src="aboutblankontoggle.js"></script>
+    <script>
+        document.getElementById('cursor-toggle').addEventListener('change', function() {
+            if (this.checked) {
+                document.body.style.cursor = "url('favicons/vplaza.ico'), auto";
+            } else {
+                document.body.style.cursor = "default";
+            }
+        });
+    </script>
+</body>
+</html>

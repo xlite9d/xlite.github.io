@@ -1,0 +1,1669 @@
+<link rel="icon" type="image/png" href="/favicons/VAI.png">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V-oice👋</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0066ff;
+            --dark-bg: #0b0b12;
+            --darker-bg: #070710;
+            --glow-blue: #00ccff;
+            --light-blue: #e6f2ff;
+            --gradient-start: #0033cc;
+            --gradient-end: #0099ff;
+            --discord-color: #5865F2;
+            --purple: #8f5ddb;
+        }
+
+        /* Loading overlay styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.active {
+            opacity: 1;
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .loading-dot {
+            width: 15px;
+            height: 15px;
+            background-color: #8f5ddb;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .loading-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 1;
+            }
+        }
+
+        /* Interrupt Mode Toggle Styles */
+        .interrupt-mode-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            color: var(--purple);
+            font-weight: 600;
+            user-select: none;
+        }
+
+        .interrupt-mode-toggle .toggle-checkbox {
+            display: none;
+        }
+
+        .interrupt-mode-toggle .toggle-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .interrupt-mode-toggle .toggle-switch {
+            width: 24px;
+            height: 24px;
+            background-color: var(--purple);
+            border-radius: 5px;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(143, 93, 219, 0.5);
+        }
+
+        .interrupt-mode-toggle .toggle-text {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(143, 93, 219, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .app-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .background-effect {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at center, rgba(0, 102, 255, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: -2;
+            filter: blur(5px); /* Add blur effect */
+        }
+
+        .orb {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 50px rgba(120, 80, 190, 0.3);
+            filter: blur(0px);
+            border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+            animation: morphBlob 8s ease-in-out infinite;
+        }
+
+        .orb-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            overflow: hidden;
+            /* Remove the float animation */
+        }
+
+        .orb-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            overflow: hidden;
+            box-shadow: 0 0 100px rgba(0, 153, 255, 0.3);
+            background: linear-gradient(135deg, #371b58, #4c3a88, #3a88c8, #2a6fc8);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes morphBlob {
+            0%, 100% {
+                border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+            }
+            25% {
+                border-radius: 40% 60% 54% 46% / 49% 60% 40% 51%;
+            }
+            50% {
+                border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+            }
+            75% {
+                border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+            }
+        }
+
+        .orb-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: inset 0 0 30px rgba(0, 153, 255, 0.2); /* Reduced from 0.4 */
+            opacity: 0.4; /* Reduced from 0.6 */
+            z-index: 1;
+            transition: all 0.5s ease;
+            animation: glowPulse 3s infinite alternate;
+        }
+
+        .orb-glow.active {
+            opacity: 0.6; /* Reduced from 0.85 */
+        }
+
+        .wave-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .wave-container.active {
+            opacity: 1;
+        }
+
+        .sound-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 5; /* Ensure it's above other elements */
+        }
+
+        .sound-wave.active {
+            opacity: 1;
+            animation: waveFormDistort 2s infinite alternate;
+        }
+
+        .sound-wave.ai-speaking {
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .wave-bar {
+            width: 4px;
+            background-color: #000000; /* Black color for better visibility */
+            border-radius: 2px;
+            animation: waveAnimation 1.2s infinite ease-in-out;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .wave-bar:nth-child(1) { animation-delay: 0.0s; height: 10px; }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; height: 15px; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; height: 20px; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; height: 30px; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; height: 20px; }
+        .wave-bar:nth-child(6) { animation-delay: 0.3s; height: 15px; }
+        .wave-bar:nth-child(7) { animation-delay: 0.2s; height: 10px; }
+
+        .controls-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background: rgba(30, 30, 40, 0.6);
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .mic-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8f5ddb, #7b4cbc);
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 20px rgba(143, 93, 219, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        /* Add styles for mic-button locked/unlocked states */
+        .mic-button.locked {
+            background: linear-gradient(135deg, #d43838, #9e2929);
+            box-shadow: 0 0 20px rgba(212, 56, 56, 0.5);
+        }
+
+        .mic-button.unlocked {
+            background: linear-gradient(135deg, #8f5ddb, #7b4cbc);
+            box-shadow: 0 0 20px rgba(143, 93, 219, 0.5);
+        }
+
+        .trash-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5c5c5c, #3a3a3a);
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 20px rgba(60, 60, 60, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .delete-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d43838, #9e2929);
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 20px rgba(212, 56, 56, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .mic-button:hover:not(:disabled), .delete-button:hover, .trash-button:hover {
+            transform: scale(1.05);
+        }
+
+        .mic-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+        }
+
+        .mic-button i, .delete-button i, .trash-button i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .status-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 20px;
+            color: white;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+            text-align: center;
+            min-height: 28px;
+            display: none; /* Hide status text */
+        }
+
+        .delete-chat-btn {
+            display: none; /* Hide the original delete button */
+        }
+
+        /* Enhanced wake word input box styles */
+        .wake-word-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            background: rgba(30, 30, 40, 0.7);
+            border-radius: 30px;
+            padding: 2px 5px 2px 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(143, 93, 219, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .wake-word-container:hover {
+            box-shadow: 0 5px 25px rgba(143, 93, 219, 0.3);
+            border: 1px solid rgba(143, 93, 219, 0.4);
+        }
+
+        .wake-word-container.active {
+            border: 1px solid rgba(143, 93, 219, 0.7);
+            box-shadow: 0 5px 25px rgba(143, 93, 219, 0.5);
+        }
+
+        .wake-word-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-right: 8px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .wake-word-input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 12px 15px;
+            font-size: 16px;
+            width: 150px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .wake-word-input:focus {
+            width: 170px;
+        }
+
+        .wake-word-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .wake-word-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: #5c5c5c;
+            transition: all 0.3s ease;
+        }
+
+        .wake-word-indicator.active {
+            background-color: #8f5ddb;
+            box-shadow: 0 0 8px rgba(143, 93, 219, 0.7);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                opacity: 0.7;
+                transform: scale(0.95);
+            }
+            70% {
+                opacity: 0;
+                transform: scale(1.3);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+        }
+
+        @keyframes waveAnimation {
+            0%, 100% {
+                transform: scaleY(0.3);
+                background-color: #8f5ddb; /* Purple color at start/end */
+            }
+            50% {
+                transform: scaleY(1);
+                background-color: #000000; /* Black color at peak */
+            }
+        }
+
+        @keyframes pulseButton {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(143, 93, 219, 0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(143, 93, 219, 0.7);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(143, 93, 219, 0.5);
+            }
+        }
+
+        @keyframes waveFormDistort {
+            0% {
+                transform: perspective(200px) rotateX(0deg) scale(1);
+            }
+            50% {
+                transform: perspective(200px) rotateX(5deg) scale(1.05);
+            }
+            100% {
+                transform: perspective(200px) rotateX(-5deg) scale(1.1);
+            }
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .orb {
+                width: 220px;
+                height: 220px;
+            }
+
+            .controls-container {
+                flex-direction: column;
+                left: 20px;
+                bottom: 80px;
+                transform: translateX(0);
+            }
+          
+            .mic-button,
+            .trash-button,
+            .delete-button {
+                margin-bottom: 10px; /* Add some space between buttons */
+            }
+
+            .wake-word-container {
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                z-index: 100;
+            }
+
+            .interrupt-mode-toggle {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 100;
+            }
+        }
+
+        @keyframes glowPulse {
+            0% {
+                box-shadow: inset 0 0 20px rgba(69, 39, 160, 0.2), 0 0 10px rgba(69, 39, 160, 0.1); /* Reduced intensity */
+            }
+            100% {
+                box-shadow: inset 0 0 30px rgba(0, 153, 255, 0.3), 0 0 20px rgba(0, 153, 255, 0.1); /* Reduced intensity */
+            }
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .check-animation {
+            position: absolute;
+            width: 80%; /* Increased from 70% to fill more of the orb */
+            height: 80%; /* Increased from 70% to fill more of the orb */
+            object-fit: contain;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .check-animation.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="interrupt-mode-toggle">
+        <div class="toggle-label" id="interrupt-mode-label">
+            <div class="toggle-switch">
+                <i class="fas fa-check"></i>
+            </div>
+            <span class="toggle-text">INTERRUPT MODE</span>
+            <input type="checkbox" class="toggle-checkbox" id="interrupt-mode-checkbox" checked>
+        </div>
+    </div>
+    <div class="app-container">
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-dots">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>
+        </div>
+        <div class="background-effect"></div>
+        <img src="/images/bg.jpg" class="background-image" alt="Background" id="background-image">
+
+        <div class="orb">
+            <div class="orb-inner">
+                <div class="orb-content">
+                    <div class="orb-glow"></div>
+                    <div class="wave-container">
+                        <div class="wave-circle"></div>
+                        <div class="wave-circle"></div>
+                        <div class="wave-circle"></div>
+                    </div>
+                    <div class="sound-wave">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                    <img src="/assets/check.gif" class="check-animation" id="check-animation" alt="Check animation">
+                </div>
+            </div>
+        </div>
+
+        <div class="status-text">Tap microphone to talk</div>
+        <div class="wake-word-container" id="wake-word-container">
+            <div class="wake-word-label">Wake word:</div>
+            <input type="text" class="wake-word-input" id="wake-word-input" placeholder="set wake word">
+            <div class="wake-word-indicator" id="wake-word-indicator"></div>
+        </div>
+        <div class="controls-container">
+            <button class="mic-button" id="mic-button">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button class="trash-button" id="trash-button">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+            <button class="delete-button" id="delete-button">
+                <i class="fas fa-phone-slash"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            apiKey: "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",
+            model: "llama3-8b-8192",
+            apiEndpoint: "https://api.groq.com/openai/v1/chat/completions",
+            defaultGreeting: "Hello! How can I assist you today?",
+            voiceID: "e8e5fffb-252c-436d-b842-8879b84445b6", // Cartesia's AI Voice Codey
+            voiceEmbed: [-0.023989892, -0.08448649, 0.022031268, -0.07057139, 0.12223451, -0.029491369, 0.045303233, -0.011311343, 0.13188389, -0.016259475, 0.0046919156, -0.06912895, -0.10005153, -0.02191228, -0.09062025, 0.049770422, -0.053926792, -0.034793563, 0.046280753, 0.11103954, -0.054568704, 0.095876604, -0.061484158, -0.0875655, -0.08495131, 0.085307896, -0.100641645, -0.0012436107, 0.11817303, -0.037164245, -0.02990801, 0.016991355, 0.0015218591, 0.13920002, -0.019198101, -0.025688726, 0.041610297, -0.07351482, -0.036994908, -0.044812255, -0.035154916, -0.10578436, -0.065148085, -0.07112482, -0.16526894, 0.10494398, 0.11660931, 0.013476909, 0.07631803, 0.010208819, -0.051123552, 0.028208287, 0.024599375, -0.03864338, 0.0016316884, -0.05169146, -0.028076882, 0.024385704, 0.10735396, 0.10839656, 0.027845534, -0.0826449, -0.010290669, -0.008548923, -0.013661587, 0.061037697, 0.11423113, 0.006610708, 0.06287958, -0.10213754, -0.059306297, 0.14914681, 0.019782793, 0.056643162, 0.064816676, -0.10200007, -0.06365681, 0.12645498, 0.042626865, -0.02642232, -0.025649097, -0.011646276, -0.007965857, 0.06454265, 0.03266104, -0.053809416, 0.024273401, 0.11329707, 0.030302474, -0.00050120795, -0.07243864, -0.08599348, 0.038157098, 0.003464039, 0.13629903, -0.28741464, -0.0014421503, -0.14735115, 0.041660942, -0.054005496, 0.03740774, -0.053002954, -0.0752357, 0.048252273, -0.055931248, 0.03196891, -0.07858551, 0.04284852, -0.012976681, 0.014983372, 0.07826965, -0.042085744, -0.084927686, -0.027896233, 0.031068621, -0.00074405497, -0.014435404, -0.07833662, -0.082763, 0.060509756, 0.051797185, 0.037373513, -0.0902045, -0.03892902, -0.009162266, 0.0031911524, -0.05750676, -0.006241986, -0.026270388, -0.029814603, 0.046943713, -0.0080407765, -0.03210368, -0.028178234, 0.123207994, 0.047551144, 0.07950631, 0.019763911, 0.031892627, 0.08915652, 0.10601049, 0.08901922, -0.007866781, 0.019862816, -0.08856446, -0.04735954, -0.084398516, 0.089368686, 0.1527405, -0.022071263, 0.07413698, 0.022185814, 0.102057464, 0.08290962, -0.019248147, -0.007064097, -0.018397521, 0.022572413, -0.18511306, -0.067540735, 0.10665864, 0.036814064, 0.006329614, -0.06867632, 0.1916783, 0.031433817, 0.007089221, -0.028897751, -0.05296714, -0.060072105, -0.04238049, 0.019612296, -0.066136815, -0.03478029, -0.021567797, -0.10116889, 0.011895469, -0.07380574, 0.1828761, -0.15627074, 0.014369829, 0.05888959, -0.014544148, 0.074670225, 0.06708018, -0.02226682, 0.0072541055, 0.06080716, -0.009129852, -0.03880983, -0.06828793, -0.110845335]
+        };
+
+        // Load user settings
+        let userSettings = JSON.parse(localStorage.getItem('userSettings')) || {
+            wakeWord: '',
+            useWakeWord: false,
+            alarms: [],
+            interruptMode: true // Default interrupt mode to true
+        };
+
+        // DOM Elements
+        const micButton = document.getElementById('mic-button');
+        const statusText = document.querySelector('.status-text');
+        const orbGlow = document.querySelector('.orb-glow');
+        const waveContainer = document.querySelector('.wave-container');
+        const soundWave = document.querySelector('.sound-wave');
+        const checkAnimation = document.getElementById('check-animation');
+        const deleteButton = document.getElementById('delete-button');
+        const trashButton = document.getElementById('trash-button');
+        const backgroundImage = document.getElementById('background-image');
+        const wakeWordInput = document.getElementById('wake-word-input');
+        const wakeWordContainer = document.getElementById('wake-word-container');
+        const wakeWordIndicator = document.getElementById('wake-word-indicator');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        // Function to show loading overlay
+        function showLoading() {
+            loadingOverlay.classList.add('active');
+        }
+
+        // Function to hide loading overlay
+        function hideLoading() {
+            loadingOverlay.classList.remove('active');
+        }
+
+        // Set initial wake word value from local storage if it exists
+        wakeWordInput.value = userSettings.wakeWord || '';
+
+        // Update indicator based on saved wake word
+        updateWakeWordIndicator();
+
+        function updateWakeWordIndicator() {
+            if (userSettings.useWakeWord && userSettings.wakeWord && userSettings.wakeWord.trim().length > 0) {
+                wakeWordIndicator.classList.add('active');
+                wakeWordContainer.classList.add('active');
+            } else {
+                wakeWordIndicator.classList.remove('active');
+                wakeWordContainer.classList.remove('active');
+            }
+        }
+
+        // Save wake word when input changes - handle both change and blur events
+        wakeWordInput.addEventListener('change', saveWakeWord);
+        wakeWordInput.addEventListener('blur', saveWakeWord);
+
+        // Also handle the Enter key press
+        wakeWordInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                saveWakeWord();
+            }
+        });
+
+        function saveWakeWord() {
+            const newWakeWord = wakeWordInput.value.trim();
+
+            // Only update if the wake word has actually changed
+            if (newWakeWord !== userSettings.wakeWord) {
+                if (newWakeWord) {
+                    userSettings.wakeWord = newWakeWord;
+                    userSettings.useWakeWord = true;
+
+                    console.log("WAKE WORD SET TO:", newWakeWord);
+                    console.log("Wake word detection is ENABLED");
+
+                    saveUserSettings();
+
+                    // Create a confirmation dialog or flash message
+                    statusText.textContent = `Wake word set to: "${newWakeWord}"`;
+                    setTimeout(() => {
+                        statusText.textContent = "Listening...";
+                    }, 3000);
+
+                    synthesizeSpeech(`Wake word set to "${newWakeWord}". I'll only respond when you say this first.`);
+                } else {
+                    userSettings.wakeWord = '';
+                    userSettings.useWakeWord = false;
+
+                    console.log("WAKE WORD DISABLED");
+
+                    saveUserSettings();
+
+                    statusText.textContent = "Wake word disabled";
+                    setTimeout(() => {
+                        statusText.textContent = "Listening...";
+                    }, 3000);
+
+                    synthesizeSpeech("Wake word disabled. I'll respond to all your queries now.");
+                }
+
+                // Update the indicator
+                updateWakeWordIndicator();
+            }
+        }
+
+        // App State
+        let isListening = false;
+        let isAISpeaking = false;
+        let autoListenMode = true;
+        let hasInitialMicPermission = false;
+        let speechSynthesis = window.speechSynthesis;
+        let recognition;
+        let conversation = JSON.parse(localStorage.getItem('conversation')) || [];
+        let activeAlarms = [];
+        let micLocked = false; // New state to track if mic is locked/unlocked
+        let interruptMode = true; // Global variable for the interrupt mode
+
+        // Helper function to check for wake word and process input
+        function checkWakeWordAndProcess(transcript) {
+            console.log("Checking transcript for wake word:", transcript);
+
+            // Check for wake word if enabled
+            if (userSettings.useWakeWord && userSettings.wakeWord && userSettings.wakeWord.trim().length > 0) {
+                const wakeWordLower = userSettings.wakeWord.toLowerCase();
+                const transcriptLower = transcript.toLowerCase();
+
+                console.log("Wake word is enabled. Looking for:", wakeWordLower, "in:", transcriptLower);
+
+                // Simplified wake word detection - just check if it's included in the transcript
+                const hasWakeWord = transcriptLower.includes(wakeWordLower);
+
+                if (hasWakeWord) {
+                    console.log("✅ WAKE WORD DETECTED!");
+
+                    // Flash the wake word indicator
+                    wakeWordIndicator.style.backgroundColor = '#00ff00';
+                    setTimeout(() => {
+                        wakeWordIndicator.style.backgroundColor = '';
+                        wakeWordIndicator.classList.add('active');
+                    }, 1000);
+
+                    // Wake word found, remove it and process
+                    const cleanedTranscript = transcriptLower
+                        .replace(wakeWordLower, '')
+                        .trim();
+
+                    console.log("Command after removing wake word:", cleanedTranscript);
+
+                    // Visual feedback for wake word detection
+                    statusText.textContent = "Wake word detected!";
+                    setTimeout(() => {
+                        statusText.textContent = "Processing...";
+                    }, 1000);
+
+                    // Use the cleaned transcript if it exists, otherwise use original
+                    const finalTranscript = cleanedTranscript || transcript;
+                    console.log("Processing command:", finalTranscript);
+                    processUserInput(finalTranscript);
+                } else {
+                    console.log("❌ Wake word NOT detected in transcript. Ignoring input.");
+                    // Continue listening
+                    if (!isAISpeaking && autoListenMode && !micLocked) {
+                        console.log("Restarting listening...");
+                        startListening();
+                    }
+                }
+            } else {
+                // No wake word needed, process directly
+                console.log("No wake word set. Processing directly:", transcript);
+                processUserInput(transcript);
+            }
+        }
+
+        // Initialize interrupt mode from settings
+        function initInterruptMode() {
+            // Set initial state based on saved settings
+            interruptMode = userSettings.interruptMode !== undefined ? userSettings.interruptMode : true;
+
+            const checkbox = document.getElementById('interrupt-mode-checkbox');
+            const toggle = document.querySelector('.interrupt-mode-toggle .toggle-switch');
+            const toggleText = document.querySelector('.interrupt-mode-toggle .toggle-text');
+
+            // Update checkbox state
+            checkbox.checked = interruptMode;
+
+            // Update visual indicators
+            if (interruptMode) {
+                toggle.innerHTML = '<i class="fas fa-check"></i>';
+                toggleText.textContent = "INTERRUPT MODE";
+            } else {
+                toggle.innerHTML = '';
+                toggleText.textContent = "INTERRUPT MODE OFF";
+            }
+
+            console.log("Initial interrupt mode:", interruptMode);
+        }
+
+        // Helper function to check if wake word matches even with slight variations
+        function wakeWordMatches(transcript, wakeWord) {
+            // Split wake word into individual words
+            const wakeWordParts = wakeWord.split(' ');
+
+            // If wake word is a single word, we already checked with includes()
+            if (wakeWordParts.length <= 1) return false;
+
+            // Check if all parts appear in the transcript in the correct order
+            let lastIndex = -1;
+            for (const part of wakeWordParts) {
+                if (part.length < 2) continue; // Skip very short words
+
+                const index = transcript.indexOf(part, lastIndex + 1);
+                if (index === -1) return false; // Part not found
+
+                lastIndex = index;
+            }
+
+            return true; // All parts found in correct order
+        }
+
+        // Function to toggle interrupt mode
+        function toggleInterruptMode() {
+            interruptMode = !interruptMode;
+            const checkbox = document.getElementById('interrupt-mode-checkbox');
+            const toggle = document.querySelector('.interrupt-mode-toggle .toggle-switch');
+            const toggleText = document.querySelector('.interrupt-mode-toggle .toggle-text');
+
+            checkbox.checked = interruptMode;
+
+            if (interruptMode) {
+                toggle.innerHTML = '<i class="fas fa-check"></i>';
+                console.log("Interrupt mode ENABLED");
+            } else {
+                toggle.innerHTML = '';
+                console.log("Interrupt mode DISABLED");
+            }
+
+            // Update the text to match the current state
+            toggleText.textContent = interruptMode ? "INTERRUPT MODE" : "INTERRUPT MODE OFF";
+
+            // Save to user settings
+            userSettings.interruptMode = interruptMode;
+            localStorage.setItem('userSettings', JSON.stringify(userSettings));
+
+            // Provide vocal feedback
+            if (!isAISpeaking) {
+                const message = interruptMode ?
+                    "Interrupt mode enabled. I will stop talking when you speak." :
+                    "Interrupt mode disabled. I will finish my sentences.";
+                synthesizeSpeech(message);
+            }
+        }
+
+        // Initialize interrupt mode toggle
+        function setupInterruptMode() {
+            // Make sure the checkbox is checked by default
+            const interruptModeCheckbox = document.getElementById('interrupt-mode-checkbox');
+            const interruptModeToggle = document.querySelector('.interrupt-mode-toggle .toggle-switch');
+            const toggleText = document.querySelector('.interrupt-mode-toggle .toggle-text');
+            const toggleLabel = document.querySelector('.interrupt-mode-toggle .toggle-label');
+
+            // Set default state based on user settings
+            interruptMode = userSettings.interruptMode !== undefined ? userSettings.interruptMode : true;
+            interruptModeCheckbox.checked = interruptMode;
+            updateInterruptModeToggle();
+
+            // Function to update the toggle visual
+            function updateInterruptModeToggle() {
+                if (interruptMode) {
+                    interruptModeToggle.innerHTML = '<i class="fas fa-check"></i>';
+                    toggleText.textContent = "INTERRUPT MODE";
+                } else {
+                    interruptModeToggle.innerHTML = '';
+                    toggleText.textContent = "INTERRUPT MODE OFF";
+                }
+            }
+
+            // Toggle event listener - clicking anywhere on the label
+            toggleLabel.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default behavior
+
+                // Toggle the interrupt mode state
+                interruptMode = !interruptMode;
+                interruptModeCheckbox.checked = interruptMode;
+                userSettings.interruptMode = interruptMode;
+
+                console.log("Interrupt mode toggled to:", interruptMode);
+
+                updateInterruptModeToggle();
+                saveUserSettings();
+
+                // Provide vocal feedback about interrupt mode change
+                const modeChangeMessage = interruptMode ?
+                    "Interrupt mode enabled. I'll stop when you start speaking." :
+                    "Interrupt mode disabled. I'll finish my sentences.";
+
+                // Only announce if not currently speaking
+                if (!isAISpeaking) {
+                    synthesizeSpeech(modeChangeMessage);
+                }
+            });
+        }
+
+        // Call setup functions
+        setupInterruptMode();
+        initInterruptMode();
+
+        // Save user settings
+        function saveUserSettings() {
+            localStorage.setItem('userSettings', JSON.stringify(userSettings));
+        }
+
+        // Check and process alarms
+        function checkAndProcessAlarms() {
+            const now = new Date();
+            const currentTime = now.getTime();
+
+            userSettings.alarms.forEach((alarm, index) => {
+                if (alarm.time <= currentTime && !alarm.triggered) {
+                    // Trigger alarm
+                    userSettings.alarms[index].triggered = true;
+                    saveUserSettings();
+
+                    // Pause any active speech or listening
+                    if (isAISpeaking) {
+                        speechSynthesis.cancel();
+                    }
+                    if (isListening) {
+                        pauseListening();
+                    }
+
+                    // Notify the user
+                    const alarmMessage = `Your alarm for ${alarm.label || 'Reminder'} is now.`;
+                    synthesizeSpeech(alarmMessage);
+                }
+            });
+
+            // Clean up old alarms (keep for 1 hour after triggering)
+            userSettings.alarms = userSettings.alarms.filter(alarm => {
+                return !(alarm.triggered && alarm.time < currentTime - 3600000);
+            });
+            saveUserSettings();
+
+            // Check again in 5 seconds
+            setTimeout(checkAndProcessAlarms, 5000);
+        }
+
+        // Process commands from user input
+        function processCommands(text) {
+            const lowerText = text.toLowerCase();
+            let isCommand = false;
+
+            // Check for "who made you" type questions
+            if (lowerText.includes('who made you') ||
+                lowerText.includes('who created you') ||
+                lowerText.includes('who built you') ||
+                lowerText.includes('who developed you') ||
+                lowerText.includes('who designed you') ||
+                lowerText.includes('who programmed you')) {
+                isCommand = true;
+                const creatorMessage = "The Vplaza Team has created me, a static, full stack ai MODAL who has a brain unlike you";
+                synthesizeSpeech(creatorMessage);
+
+                // Add to conversation history
+                conversation.push({
+                    role: 'assistant',
+                    content: creatorMessage
+                });
+                localStorage.setItem('conversation', JSON.stringify(conversation));
+
+                return isCommand;
+            }
+
+            // Set alarm command
+            if (lowerText.includes('set alarm') || lowerText.includes('set a alarm') || lowerText.includes('set an alarm')) {
+                isCommand = true;
+
+                // Extract time information
+                const timePattern = /\b(1[0-2]|0?[1-9]):([0-5][0-9])(?:\s*)?(am|pm)?\b|\b(1[0-2]|0?[1-9])(?:\s*)?(am|pm)\b|\b(1[0-2]|0?[1-9])\s+o'clock(?:\s*)?(am|pm)?\b/i;
+                const timeMatch = text.match(timePattern);
+
+                if (timeMatch) {
+                    let hours, minutes = 0, period;
+
+                    if (timeMatch[1] && timeMatch[2]) {
+                        hours = parseInt(timeMatch[1]);
+                        minutes = parseInt(timeMatch[2]);
+                        period = timeMatch[3] ? timeMatch[3].toLowerCase() : null;
+                    } else if (timeMatch[4]) {
+                        hours = parseInt(timeMatch[4]);
+                        period = timeMatch[5] ? timeMatch[5].toLowerCase() : null;
+                    } else if (timeMatch[6]) {
+                        hours = parseInt(timeMatch[6]);
+                        period = timeMatch[7] ? timeMatch[7].toLowerCase() : null;
+                    }
+
+                    // Default to PM for hours 1-11 if no AM/PM specified
+                    if (!period) {
+                        const currentHour = new Date().getHours();
+                        if (hours < 12 && currentHour >= 12) {
+                            period = 'pm';
+                        } else {
+                            period = 'am';
+                        }
+                    }
+
+                    // Convert to 24-hour format
+                    if (period === 'pm' && hours < 12) {
+                        hours += 12;
+                    } else if (period === 'am' && hours === 12) {
+                        hours = 0;
+                    }
+
+                    // Set the alarm time
+                    const now = new Date();
+                    let alarmTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0);
+
+                    // If the time is in the past, set it for tomorrow
+                    if (alarmTime < now) {
+                        alarmTime.setDate(alarmTime.getDate() + 1);
+                    }
+
+                    // Extract label if present
+                    let label = "Alarm";
+                    const labelMatch = text.match(/for\s+(.+?)(?:$|\.|\band\b)/i);
+                    if (labelMatch && labelMatch[1]) {
+                        label = labelMatch[1].trim();
+                    }
+
+                    // Add the alarm
+                    userSettings.alarms.push({
+                        time: alarmTime.getTime(),
+                        label: label,
+                        triggered: false
+                    });
+                    saveUserSettings();
+
+                    // Confirmation message
+                    const confirmationMessage = `Alarm set for ${hours % 12 || 12}:${minutes.toString().padStart(2, '0')} ${period.toUpperCase()} ${label !== "Alarm" ? `for ${label}` : ""}.`;
+                    synthesizeSpeech(confirmationMessage);
+                } else {
+                    synthesizeSpeech("I couldn't understand the time for your alarm. Please specify a time like 3:30 PM.");
+                }
+
+                return isCommand;
+            }
+
+            // Set wake word command
+            if (lowerText.includes('only answer to me when i say') || lowerText.includes('only respond when i say')) {
+                isCommand = true;
+
+                // Extract the wake word/phrase
+                const wakeWordMatch = text.match(/(?:only answer to me when i say|only respond when i say)\s+(.+?)(?:$|\.)/i);
+                if (wakeWordMatch && wakeWordMatch[1]) {
+                    userSettings.wakeWord = wakeWordMatch[1].trim();
+                    userSettings.useWakeWord = true;
+                    saveUserSettings();
+
+                    synthesizeSpeech(`Wake word set to "${userSettings.wakeWord}". I'll only respond when you say this first.`);
+                } else {
+                    synthesizeSpeech("I couldn't understand the wake word. Please try again with a clearer phrase.");
+                }
+
+                return isCommand;
+            }
+
+            // Disable wake word
+            if (lowerText.includes('disable wake word') || lowerText.includes('turn off wake word')) {
+                isCommand = true;
+                userSettings.useWakeWord = false;
+                saveUserSettings();
+
+                synthesizeSpeech("Wake word disabled. I'll respond to all your queries now.");
+                return isCommand;
+            }
+
+            // Change background image
+            if (lowerText.includes('change background') || lowerText.includes('new background')) {
+                isCommand = true;
+
+                // Generate a random nature background from Unsplash
+                const categories = ['nature', 'space', 'abstract', 'technology', 'landscape', 'cosmos'];
+                const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+                const backgroundUrl = "/images/bg.jpg";
+
+                backgroundImage.src = backgroundUrl;
+                synthesizeSpeech(`Background changed to a ${randomCategory} theme.`);
+                return isCommand;
+            }
+
+            return isCommand;
+        }
+
+        // Function to process user input (extracted to avoid duplicate code)
+        function processUserInput(transcript) {
+            // Ignore empty transcripts
+            if (!transcript || transcript.trim().length === 0) {
+                return;
+            }
+
+            // Check if this is a command
+            if (processCommands(transcript)) {
+                // It was a command, no need to send to AI
+                return;
+            }
+
+            // Add to conversation memory
+            conversation.push({
+                role: 'user',
+                content: transcript
+            });
+            localStorage.setItem('conversation', JSON.stringify(conversation));
+
+            // Pause listening temporarily while processing
+            pauseListening();
+
+            // Send to AI API for processing
+            sendToAI(transcript);
+        }
+
+        // Initialize Speech Recognition with better permission handling
+        function initSpeechRecognition() {
+            if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+                statusText.textContent = "Speech recognition not supported";
+                micButton.disabled = true;
+                return false;
+            }
+
+            try {
+                recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+
+                // Request permission explicitly to avoid repeated prompts
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        // Stop the stream immediately - we just needed permission
+                        stream.getTracks().forEach(track => track.stop());
+                        hasInitialMicPermission = true;
+
+                        // Configure recognition
+                        setupRecognition();
+
+                        // Start listening if auto mode and mic is not locked
+                        if (autoListenMode && !micLocked) {
+                            startListening();
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Microphone permission denied:", err);
+                        statusText.textContent = "Microphone access denied";
+                        micButton.disabled = false;
+                    });
+
+                return true;
+            } catch (error) {
+                console.error("Error initializing speech recognition:", error);
+                statusText.textContent = "Speech recognition error";
+                micButton.disabled = true;
+                return false;
+            }
+        }
+
+        // Setup recognition configuration
+        function setupRecognition() {
+            recognition.continuous = true;
+            recognition.interimResults = false; // Keep this as false for reliability
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                isListening = true;
+                statusText.textContent = "Listening...";
+                micButton.classList.add('listening');
+                soundWave.classList.add('active');
+                waveContainer.classList.add('active');
+                orbGlow.classList.add('active');
+            };
+
+            recognition.onresult = (event) => {
+                // If mic is locked, don't process any results
+                if (micLocked) return;
+
+                const resultIndex = event.resultIndex;
+                const transcript = event.results[resultIndex][0].transcript.trim();
+
+                if (transcript.length > 0) {
+                    console.log("Speech recognized:", transcript);
+                    console.log("AI speaking:", isAISpeaking, "Interrupt mode:", interruptMode);
+
+                    // If AI is speaking and the user speaks, check interrupt mode
+                    if (isAISpeaking && interruptMode) {
+                        console.log("INTERRUPTING AI - interrupt mode is ON");
+                        // Cancel current speech
+                        speechSynthesis.cancel();
+                        isAISpeaking = false;
+                        soundWave.classList.remove('ai-speaking');
+
+                        // Show visual feedback - blurry loading overlay
+                        showLoading();
+
+                        // Show interrupted status
+                        statusText.textContent = "Interrupted";
+
+                        // Immediately process the new command
+                        checkWakeWordAndProcess(transcript);
+                    } else {
+                        // Not interrupting, process normally with wake word check
+                        checkWakeWordAndProcess(transcript);
+                    }
+                }
+            };
+
+            recognition.onend = () => {
+                if (isListening) {
+                    // If we still want to be listening but it ended for some reason,
+                    // restart it (unless the mic is locked)
+                    if (autoListenMode && !micLocked) {
+                        setTimeout(() => {
+                            startListening();
+                        }, 100);
+                    } else {
+                        resetUIState();
+                    }
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+
+                // Don't show error for aborted recognition (happens during normal operation)
+                if (event.error !== 'aborted') {
+                    statusText.textContent = "Error: " + event.error;
+                }
+
+                resetUIState();
+
+                // If permission denied, update UI accordingly
+                if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+                    hasInitialMicPermission = false;
+                    statusText.textContent = "Microphone access denied";
+                    micButton.disabled = false;
+                } else if (autoListenMode && !isAISpeaking) {
+                    // Try to restart listening if in auto mode
+                    setTimeout(() => {
+                        startListening();
+                    }, 1000);
+                }
+            };
+        }
+
+        // Function to start listening
+        function startListening() {
+            // Only start if we're not already listening and not while AI is speaking
+            if (!isListening && hasInitialMicPermission && !micLocked) {
+                isListening = true;
+
+                // Update UI to show listening state
+                micButton.classList.add('listening');
+                statusText.textContent = 'Listening...';
+                orbGlow.classList.add('active');
+                waveContainer.classList.add('active');
+                soundWave.classList.add('active');
+
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error('Recognition error:', e);
+                    pauseListening();
+                }
+            }
+        }
+
+        // Pause listening
+        function pauseListening() {
+            if (isListening) {
+                isListening = false;
+
+                // Update UI to show not listening state
+                micButton.classList.remove('listening');
+                statusText.textContent = 'Tap microphone to talk';
+                waveContainer.classList.remove('active');
+                soundWave.classList.remove('active');
+
+                try {
+                    recognition.stop();
+                } catch (e) {
+                    console.error('Recognition stop error:', e);
+                }
+            }
+        }
+
+        // Reset UI state
+        function resetUIState() {
+            micButton.classList.remove('listening');
+            statusText.textContent = 'Tap microphone to talk';
+            orbGlow.classList.remove('active');
+            waveContainer.classList.remove('active');
+            soundWave.classList.remove('active');
+            soundWave.classList.remove('ai-speaking');
+        }
+
+        // Mic Button Click Event - FIXED FOR LOCK/UNLOCK MIC
+        micButton.addEventListener('click', () => {
+            // Toggle mic lock
+            micLocked = !micLocked;
+
+            // Update button icon and classes based on lock state
+            if (micLocked) {
+                micButton.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                micButton.classList.add('locked');
+                micButton.classList.remove('unlocked');
+                pauseListening();
+                resetUIState();
+                console.log("Microphone locked/muted");
+            } else {
+                micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                micButton.classList.add('unlocked');
+                micButton.classList.remove('locked');
+                startListening();
+                hasInitialMicPermission = true;
+                console.log("Microphone unlocked/unmuted");
+            }
+        });
+
+        // Trash Button Click Event
+        trashButton.addEventListener('click', () => {
+            // Logic to clear conversation or perform a trash action
+            conversation = [];
+            localStorage.setItem('conversation', JSON.stringify(conversation));
+            synthesizeSpeech("Conversation cleared.");
+        });
+
+        // Delete Button Click Event
+        deleteButton.addEventListener('click', () => {
+            // Close the tab when hang-up button is pressed
+            window.close();
+        });
+
+        // Function to synthesize speech
+        function synthesizeSpeech(text) {
+            console.log("Speaking:", text, "Interrupt mode:", interruptMode);
+
+            isAISpeaking = true;
+            statusText.textContent = "Speaking...";
+            orbGlow.classList.add('active');
+
+            // Only show sound wave if check animation isn't active
+            if (!checkAnimation.classList.contains('active')) {
+                soundWave.classList.add('active');
+            }
+
+            soundWave.classList.add('ai-speaking');
+
+            // Cancel any existing speech before starting new speech
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+
+            // Create the utterance
+            const utterance = new SpeechSynthesisUtterance(text);
+
+            // Set voice properties
+            utterance.rate = 0.95;  // Slightly slower rate for more natural speaking
+            utterance.pitch = 1.1;  // Slightly higher pitch for clarity
+            utterance.volume = 1.0;
+
+            // Get available voices
+            let voices = speechSynthesis.getVoices();
+            if (voices.length === 0) {
+                speechSynthesis.onvoiceschanged = () => {
+                    voices = speechSynthesis.getVoices();
+                    selectVoice();
+                };
+            } else {
+                selectVoice();
+            }
+
+            function selectVoice() {
+                // Try to find a nice male voice - prioritize natural-sounding voices
+                const preferredVoices = [
+                    'Google UK English Male',
+                    'Microsoft David',
+                    'Microsoft Mark',
+                    'Microsoft Guy',
+                    'Daniel',
+                    'Alex'
+                ];
+
+                for (const preferredVoice of preferredVoices) {
+                    const voice = voices.find(v => v.name.includes(preferredVoice));
+                    if (voice) {
+                        utterance.voice = voice;
+                        break;
+                    }
+                }
+
+                // If no preferred voice found, try to find any male voice
+                if (!utterance.voice) {
+                    const maleVoice = voices.find(v => v.name.toLowerCase().includes('male'));
+                    if (maleVoice) {
+                        utterance.voice = maleVoice;
+                    }
+                }
+
+                // Store the current utterance for potential interrupt access
+                window.currentUtterance = utterance;
+
+                // Set up event handlers
+                utterance.onstart = () => {
+                    console.log("Speech started");
+                    isAISpeaking = true;
+                };
+
+                utterance.onend = () => {
+                    console.log("Speech ended normally");
+                    finishSpeaking();
+                    window.currentUtterance = null;
+                };
+
+                utterance.onerror = (e) => {
+                    console.error("Speech error:", e);
+                    finishSpeaking();
+                    window.currentUtterance = null;
+                };
+
+                // Speak the text
+                speechSynthesis.speak(utterance);
+                console.log("Speech synthesis started");
+            }
+        }
+
+        // Function to send message to AI API
+        async function sendToAI(message) {
+            try {
+                statusText.textContent = "Thinking...";
+                // Show loading overlay
+                showLoading();
+
+                // Prepare conversation history for API
+                const messages = [...conversation];
+                if (messages.length === 0 || messages[messages.length - 1].role !== 'user') {
+                    messages.push({ role: 'user', content: message });
+                }
+
+                // Call Groq API for Llama 3
+                const response = await fetch(CONFIG.apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CONFIG.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: CONFIG.model,
+                        messages: messages,
+                        max_tokens: 500,
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                // Hide loading overlay when response is received
+                hideLoading();
+                processChatCompletion(data);
+
+            } catch (error) {
+                console.error('Error communicating with AI:', error);
+                statusText.textContent = "Error communicating with AI";
+                isAISpeaking = false;
+                // Hide loading overlay on error
+                hideLoading();
+
+                setTimeout(() => {
+                    if (autoListenMode && hasInitialMicPermission) {
+                        startListening();
+                    } else {
+                        statusText.textContent = "Tap microphone to talk";
+                        micButton.disabled = false;
+                    }
+                }, 3000);
+            }
+        }
+
+        // Function to process chat completion response
+        async function processChatCompletion(completion) {
+            // If we have a completion
+            if (completion && completion.choices && completion.choices.length > 0) {
+                // Extract the response text
+                const responseText = completion.choices[0].message.content;
+
+                // Hide sound wave when check animation shows
+                soundWave.classList.remove('active');
+
+                // Show check animation when response is received
+                const checkAnimation = document.getElementById('check-animation');
+                checkAnimation.classList.add('active');
+
+                // Add to conversation history
+                conversation.push({
+                    role: 'assistant',
+                    content: responseText
+                });
+                localStorage.setItem('conversation', JSON.stringify(conversation));
+
+                // Speak the response
+                synthesizeSpeech(responseText);
+
+                // Remove the animation after 5 seconds
+                setTimeout(() => {
+                    checkAnimation.classList.remove('active');
+                    // Only show sound wave again if AI is speaking and check animation is gone
+                    if (isAISpeaking) {
+                        soundWave.classList.add('active');
+                    }
+                }, 5000);
+            }
+        }
+
+        // Function to clean up after speech is done
+        function finishSpeaking() {
+            isAISpeaking = false;
+            statusText.textContent = "Listening...";
+            soundWave.classList.remove('ai-speaking');
+
+            // Auto start listening again if we have permission and mic isn't locked
+            if (autoListenMode && hasInitialMicPermission && !micLocked) {
+                startListening();
+            } else {
+                resetUIState();
+            }
+        }
+
+        // Initialize with a welcome message
+        window.addEventListener('load', () => {
+            // Initialize the speech recognition
+            initSpeechRecognition();
+
+            // Initialize visual effects
+            orbGlow.classList.add('active');
+
+            // Set mic to unlocked state by default
+            micLocked = false;
+            micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            micButton.classList.add('unlocked');
+            micButton.classList.remove('locked');
+
+            // Set wake word input value from settings and log
+            if (userSettings.wakeWord) {
+                wakeWordInput.value = userSettings.wakeWord;
+                console.log("Wake word loaded from settings:", userSettings.wakeWord);
+                console.log("Wake word detection is:", userSettings.useWakeWord ? "ENABLED" : "DISABLED");
+            } else {
+                console.log("No wake word found in settings");
+            }
+
+            // Update the indicator
+            updateWakeWordIndicator();
+
+            // If we have a conversation already, don't re-greet
+            const needsGreeting = !conversation.length;
+
+            if (needsGreeting) {
+                setTimeout(() => {
+                    synthesizeSpeech(CONFIG.defaultGreeting);
+
+                    // Add initial message to conversation
+                    conversation.push({
+                        role: 'assistant',
+                        content: CONFIG.defaultGreeting
+                    });
+                    localStorage.setItem('conversation', JSON.stringify(conversation));
+                }, 1000);
+            } else {
+                // If we already have a conversation, start listening right away
+                setTimeout(() => {
+                    if (autoListenMode && !micLocked) {
+                        startListening();
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

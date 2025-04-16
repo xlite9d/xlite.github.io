@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Talk to V-oice</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .hex-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 173.2" xmlns="http://www.w3.org/2000/svg"><g stroke="%23000" stroke-width="3"><polygon fill="none" stroke="%2308080C" points="100,0 200,57.7 200,173.2 100,230.9 0,173.2 0,57.7" /></g></svg>');
+      background-size: 300px 260px;
+      opacity: 0.1;
+      z-index: 0;
+    }
+
+    .call-button {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      transform: translateY(-50%);
+      background: radial-gradient(circle, #a855f7, #6b21a8);
+      border-radius: 50%;
+      width: 160px;
+      height: 160px;
+      border: 2px dashed #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      cursor: pointer;
+      box-shadow: 0 0 20px #9333ea, 0 0 40px #9333ea, 0 0 60px #9333ea;
+      transition: transform 0.3s ease;
+    }
+
+    .call-button:hover {
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .call-button-inner {
+      background-color: #00ff7f;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #fff;
+      box-shadow: 0 0 15px #00ff7f, 0 0 30px #00ff7f;
+    }
+
+    .text-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-5%, -50%);
+      text-align: left;
+      color: white;
+      z-index: 1;
+    }
+
+    .text-content h1 {
+      font-size: 4em;
+      font-weight: 800;
+      color: #00bfff;
+      text-shadow: 0 0 10px #00bfff, 0 0 25px #00bfff, 0 0 50px #00bfff;
+    }
+
+    .text-content h2 {
+      font-size: 4.5em;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 0 15px #ffffff, 0 0 30px #ffffff, 0 0 60px #ffffff;
+    }
+
+    .text-content p {
+      font-size: 1.5em;
+      font-weight: 800;
+      color: white;
+      margin-top: 15px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #00bfff, 0 0 25px #ffffff, 0 0 35px #00bfff;
+    }
+  </style>
+</head>
+<body>
+  <div class="hex-bg"></div>
+
+  <a href="/assets/v-oiceVAI" class="call-button">
+    <div class="call-button-inner">
+      <i class="fas fa-phone"></i>
+    </div>
+  </a>
+
+  <div class="text-content">
+    <h1>Talk to</h1>
+    <h2>V-oice today</h2>
+    <p>BETA</p>
+  </div>
+</body>
+</html>

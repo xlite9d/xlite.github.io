@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X514E26P5B"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-X514E26P5B');
+    </script>
+
+    <title>Cookie by Vplaza</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background-color: #192639;
+            --card-background: #35445f;
+            --primary-text: #ffffff;
+            --secondary-text: #c3c9de;
+            --accent-color: #5ea9d8;
+            --accent-gradient: linear-gradient(90deg, #5ea9d8, #7b82d8);
+            --border-color: #2c3e7e;
+            --glow-color: rgba(94, 169, 216, 0.1);
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-text);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .subtitle {
+            color: var(--secondary-text);
+            font-size: 1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .glow-effect:hover {
+            box-shadow: 0 0 15px var(--glow-color);
+        }
+
+        .card-title {
+            padding: 1rem 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            color: var(--primary-text);
+            background-color: rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .card-section {
+            padding: 1.5rem;
+        }
+
+        p {
+            color: var(--secondary-text);
+            margin-bottom: 1rem;
+        }
+
+        button, .file-input-label {
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            padding: 0.8rem 1.5rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        button i, .file-input-label i {
+            margin-right: 8px;
+        }
+
+        .primary {
+            background: var(--accent-gradient);
+            color: white;
+        }
+
+        .primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(94, 169, 216, 0.2);
+        }
+
+        .secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--secondary-text);
+        }
+
+        .secondary:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .file-input-container {
+            margin: 1rem 0;
+        }
+
+        .file-input-label {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--secondary-text);
+            display: inline-block;
+        }
+
+        .file-input-label:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-name {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            color: var(--secondary-text);
+            word-break: break-all;
+        }
+
+        .data-summary {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .data-stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            color: var(--secondary-text);
+            margin: 1rem 0;
+        }
+
+        .info-box {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .info-box p {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-box.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: var(--secondary-text);
+        }
+
+        .status-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .status-message.success {
+            background-color: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: var(--success-color);
+        }
+
+        .status-message.warning {
+            background-color: rgba(255, 152, 0, 0.1);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            color: var(--warning-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: var(--secondary-text);
+            font-size: 0.9rem;
+        }
+
+        .save-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .save-info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .save-info-label {
+            font-size: 0.9rem;
+            color: var(--secondary-text);
+        }
+
+        .save-info-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--accent-color);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--secondary-text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .back-button i {
+            margin-right: 6px;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .data-summary {
+                flex-wrap: wrap;
+            }
+
+            .data-stat {
+                flex: 1 0 50%;
+                margin-bottom: 1rem;
+            }
+
+            .save-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .save-info-item {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-button"><i class="fas fa-arrow-left"></i> Back to Home</a>
+
+    <div class="app-container">
+        <header>
+            <h1>Vplaza</h1>
+            <p class="subtitle">Manage your game saves with ease. Download and upload your progress securely with automatic backup on every page.</p>
+        </header>
+
+        <div class="card glow-effect">
+            <h2 class="card-title"><i class="fas fa-gamepad"></i>Save Information</h2>
+            <div class="card-section">
+                <p>View information about your current game save data:</p>
+
+                <div class="save-info">
+                    <div class="save-info-item">
+                        <div class="save-info-label">Last Saved</div>
+                        <div class="save-info-value" id="lastSaved">-</div>
+                    </div>
+                    <div class="save-info-item">
+                        <div class="save-info-label">Data Size</div>
+                        <div class="save-info-value" id="dataSize">-</div>
+                    </div>
+                    <div class="save-info-item">
+                        <div class="save-info-label">Items Saved</div>
+                        <div class="save-info-value" id="itemCount">-</div>
+                    </div>
+                </div>
+
+                <div class="data-summary">
+                    <div class="data-stat">
+                        <div class="stat-value" id="totalKeys">0</div>
+                        <div class="stat-label">Total Keys</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="stat-value" id="gameStates">0</div>
+                        <div class="stat-label">Game States</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="stat-value" id="userPrefs">0</div>
+                        <div class="stat-label">User Preferences</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="stat-value" id="otherData">0</div>
+                        <div class="stat-label">Other Data</div>
+                    </div>
+                </div>
+
+                <div id="autoSaveStatus" class="status-message success">Auto-save is enabled. Your progress is saved automatically.</div>
+
+                <div class="info-box">
+                    <p><strong>How Save Data Works:</strong></p>
+                    <ul>
+                        <li>All game progress is automatically saved as you play</li>
+                        <li>Data is stored securely in your browser's local storage</li>
+                        <li>You can download backups at any time for safekeeping</li>
+                        <li>Upload previous saves to restore your progress</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glow-effect">
+            <h2 class="card-title"><i class="fas fa-download"></i>Download Save</h2>
+            <div class="card-section">
+                <p>Download a complete backup of your game save data. This file can be used to restore your progress later.</p>
+
+                <button id="download-btn" class="primary">
+                    <i class="fas fa-download"></i> Download Save File
+                </button>
+
+                <div class="info-box">
+                    <p>The downloaded file will contain ALL of your game progress and settings, including:</p>
+                    <ul>
+                        <li>Game progress for all levels and achievements</li>
+                        <li>Character configurations and customizations</li>
+                        <li>User preferences and settings</li>
+                        <li>Any other data stored while playing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glow-effect">
+            <h2 class="card-title"><i class="fas fa-upload"></i>Upload Save</h2>
+            <div class="card-section">
+                <p>Upload a previously downloaded save file to restore your game progress.</p>
+
+                <div class="file-input-container">
+                    <label for="file-input" class="file-input-label">
+                        <i class="fas fa-file-upload"></i> Select Save File
+                    </label>
+                    <input type="file" id="file-input" accept=".vplazasave">
+                    <div id="fileName" class="file-name"></div>
+                </div>
+
+                <div id="uploadStatus" class="status-message success">Please select a .vplazasave file to upload.</div>
+
+                <div class="info-box warning">
+                    <p><strong>Note:</strong> Uploading a save file will replace your current progress. Make sure to download a backup first if needed.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glow-effect">
+            <h2 class="card-title"><i class="fas fa-question-circle"></i>How It Works</h2>
+            <div class="card-section">
+                <p>The Game Save Manager helps you maintain your game progress with easy backup and restoration. Here's how it works:</p>
+
+                <div class="info-box">
+                    <p><strong>Automatic Saving:</strong> Your progress is automatically saved as you play through each level and complete achievements.</p>
+                    <p><strong>Manual Backups:</strong> Download save files (.vplazasave) to your device as a backup at any time.</p>
+                    <p><strong>Cross-Device Play:</strong> Upload your save files to continue your progress on different devices.</p>
+                    <p><strong>Data Security:</strong> All save data is stored locally on your device for enhanced privacy and security.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Cookie © 2025 | Secure Game Progress Backup & Restore Tool</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize auto-save functionality
+        let lastSaveTime = new Date();
+        const AUTO_SAVE_INTERVAL = 30000; // 30 seconds
+
+        // Track last page visit to ensure saves between page navigation
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'hidden') {
+                saveAllProgress();
+            }
+        });
+
+        // Auto-save timer
+        setInterval(function() {
+            saveAllProgress();
+            updateSaveInfo();
+        }, AUTO_SAVE_INTERVAL);
+
+        // Function to save all progress
+        function saveAllProgress() {
+            lastSaveTime = new Date();
+            // Additional auto-save logic can be added here if needed
+
+            // Update the last saved time display
+            updateSaveInfo();
+
+            // Show auto-save notification
+            const autoSaveStatus = document.getElementById('autoSaveStatus');
+            autoSaveStatus.textContent = 'Auto-save completed at ' + formatTime(lastSaveTime);
+            autoSaveStatus.style.display = 'block';
+
+            // Hide the notification after 3 seconds
+            setTimeout(function() {
+                autoSaveStatus.style.display = 'none';
+            }, 3000);
+        }
+
+        // Format time for display
+        function formatTime(date) {
+            const hours = date.getHours();
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12;
+
+            return `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+        }
+
+        // Format date for display
+        function formatDate(date) {
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const year = date.getFullYear();
+
+            return `${month}/${day}/${year}`;
+        }
+
+        // Update save information displays
+        function updateSaveInfo() {
+            const totalKeys = Object.keys(localStorage).length;
+
+            // Count different types of data (for display purposes)
+            let gameStates = 0;
+            let userPrefs = 0;
+            let otherData = 0;
+
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    if (key.startsWith('game_')) {
+                        gameStates++;
+                    } else if (key.startsWith('pref_')) {
+                        userPrefs++;
+                    } else {
+                        otherData++;
+                    }
+                }
+            }
+
+            // Calculate data size
+            let totalSize = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    totalSize += localStorage[key].length;
+                }
+            }
+
+            // Convert to appropriate unit
+            let sizeDisplay = totalSize + ' B';
+            if (totalSize > 1024) {
+                sizeDisplay = (totalSize / 1024).toFixed(2) + ' KB';
+            }
+            if (totalSize > 1024 * 1024) {
+                sizeDisplay = (totalSize / (1024 * 1024)).toFixed(2) + ' MB';
+            }
+
+            // Update the DOM elements
+            document.getElementById('lastSaved').textContent = formatDate(lastSaveTime) + ' ' + formatTime(lastSaveTime);
+            document.getElementById('dataSize').textContent = sizeDisplay;
+            document.getElementById('itemCount').textContent = totalKeys;
+
+            document.getElementById('totalKeys').textContent = totalKeys;
+            document.getElementById('gameStates').textContent = gameStates;
+            document.getElementById('userPrefs').textContent = userPrefs;
+            document.getElementById('otherData').textContent = otherData;
+        }
+
+        // Event listener for the "Download Save" button
+        document.getElementById('download-btn').addEventListener('click', function() {
+            // Save progress before downloading
+            saveAllProgress();
+
+            // Grab all data from localStorage
+            const saves = JSON.stringify(localStorage);
+
+            // Create a Blob from the localStorage data
+            const blob = new Blob([saves], { type: 'application/json' });
+
+            // Generate the filename with a timestamp
+            const now = new Date();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const year = now.getFullYear();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+
+            // Convert to 12-hour format
+            hours = hours % 12;
+            hours = hours ? String(hours).padStart(2, '0') : '12';
+
+            // Construct the filename with .vplazasave extension
+            const filename = `GameSave_${month}-${day}-${year}_${hours}-${minutes}${ampm}.vplazasave`;
+
+            // Create a temporary link element to trigger the download
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename; // Set the filename to save
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            // Revoke the Blob URL to free resources
+            URL.revokeObjectURL(url);
+
+            // Show success message
+            const autoSaveStatus = document.getElementById('autoSaveStatus');
+            autoSaveStatus.textContent = 'Save file downloaded successfully!';
+            autoSaveStatus.style.display = 'block';
+
+            // Hide the notification after 3 seconds
+            setTimeout(function() {
+                autoSaveStatus.style.display = 'none';
+            }, 3000);
+        });
+
+        // Event listener for file input to import save data
+        document.getElementById('file-input').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Update file name display
+                document.getElementById('fileName').textContent = file.name;
+
+                // Check file extension
+                if (!file.name.endsWith('.vplazasave')) {
+                    const uploadStatus = document.getElementById('uploadStatus');
+                    uploadStatus.textContent = 'Error: Please select a .vplazasave file.';
+                    uploadStatus.className = 'status-message warning';
+                    uploadStatus.style.display = 'block';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const inputText = e.target.result;
+                    try {
+                        // Import the saves into localStorage
+                        const saves = JSON.parse(inputText);
+
+                        // Create backup of current data before overwriting
+                        const currentSaves = JSON.stringify(localStorage);
+                        const backupTime = new Date().toISOString();
+                        localStorage.setItem('_auto_backup_' + backupTime, currentSaves);
+
+                        // Import the new saves
+                        for (const key in saves) {
+                            localStorage.setItem(key, saves[key]);
+                        }
+
+                        // Update the status and save info
+                        const uploadStatus = document.getElementById('uploadStatus');
+                        uploadStatus.textContent = 'Save file imported successfully! Your game progress has been restored.';
+                        uploadStatus.className = 'status-message success';
+                        uploadStatus.style.display = 'block';
+
+                        // Update the save information display
+                        updateSaveInfo();
+
+                    } catch (e) {
+                        // Show error message
+                        const uploadStatus = document.getElementById('uploadStatus');
+                        uploadStatus.textContent = 'Error: Failed to import save file. The file may be corrupted or invalid.';
+                        uploadStatus.className = 'status-message warning';
+                        uploadStatus.style.display = 'block';
+                    }
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Initialize the save information on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSaveInfo();
+
+            // Start with auto-save message hidden
+            document.getElementById('autoSaveStatus').style.display = 'none';
+
+            // Hide upload status message until needed
+            document.getElementById('uploadStatus').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

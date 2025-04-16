@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/favicons/vplaza.ico">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XWMFDM1WRX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XWMFDM1WRX');
+    </script>
+    <script type='text/javascript' src='https://cdn.scaledrone.com/scaledrone.min.js'></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js"></script>
+    <title>VCHAT</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <style>
+        :root {
+            /* Base colors */
+            --discord-primary: #5865f2;
+            --discord-danger: #ed4245;
+            --discord-online: #3ba55c;
+            --discord-bg-dark: #202225;
+            --discord-bg-medium: #2f3136;
+            --discord-bg-light: #36393f;
+            --discord-bg-message: #40444b;
+            --discord-text-normal: #dcddde;
+            --discord-text-muted: #a3a6aa;
+            --discord-text-link: #00aff4;
+            --discord-interactive-hover: #4752c4;
+            --discord-interactive-active: #3c45a5;
+            --discord-channel-text: #8e9297;
+            --discord-channel-active: #fff;
+            --discord-border: rgba(78, 80, 88, 0.48);
+
+            /* Added colors */
+            --discord-purple: #7289da;
+            --discord-success: #43b581;
+            --discord-warning: #faa61a;
+            --gradient-start: #4e54c8;
+            --gradient-end: #8f94fb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--discord-bg-light);
+            color: var(--discord-text-normal);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Login & Sign Up Screens */
+        .auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .auth-container {
+            background-color: rgba(0, 0, 0, 0.85);
+            border-radius: 8px;
+            width: 480px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(128, 128, 255, 0.2);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .auth-header h2 {
+            font-size: 28px;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .auth-header p {
+            color: var(--discord-text-muted);
+            font-size: 16px;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .auth-input-group {
+            position: relative;
+        }
+
+        .auth-input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--discord-text-muted);
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            background-color: var(--discord-bg-dark);
+            border: 1px solid var(--discord-border);
+            border-radius: 4px;
+            color: var(--discord-text-normal);
+            font-size: 16px;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .auth-input:focus {
+            border-color: var(--discord-primary);
+        }
+
+        .auth-input::placeholder {
+            color: var(--discord-text-muted);
+        }
+
+        .auth-avatar-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .auth-avatar-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--discord-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .auth-avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .auth-avatar-circle input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .auth-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 44px;
+            background-color: var(--discord-primary);
+            color: white;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            width: 100%;
+        }
+
+        .auth-button:hover {
+            background-color: var(--discord-interactive-hover);
+        }
+
+        .auth-button.google {
+            background-color: white;
+            color: #333;
+        }
+
+        .auth-button.google:hover {
+            background-color: #e6e6e6;
+        }
+
+        .auth-button img {
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .auth-separator {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--discord-text-muted);
+            font-size: 14px;
+        }
+
+        .auth-separator::before,
+        .auth-separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--discord-border);
+        }
+
+        .auth-separator::before {
+            margin-right: 16px;
+        }
+
+        .auth-separator::after {
+            margin-left: 16px;
+        }
+
+        .auth-link {
+            color: var(--discord-text-link);
+            text-align: center;
+            font-size: 14px;
+            margin-top: 16px;
+            cursor: pointer;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Server list sidebar */
+        .server-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 72px;
+            background-color: var(--discord-bg-dark);
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            background-color: var(--discord-bg-medium);
+            border-radius: 50%;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-radius 0.2s, background-color 0.2s;
+            position: relative;
+            color: var(--discord-primary);
+            font-size: 1.5rem;
+            overflow: hidden;
+        }
+
+        .server-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .server-icon:hover {
+            border-radius: 16px;
+            background-color: var(--discord-primary);
+            color: white;
+        }
+
+        .server-icon.active {
+            border-radius: 16px;
+            background-color: var(--discord-primary);
+            color: white;
+        }
+
+        .server-icon.active::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            width: 8px;
+            height: 40px;
+            border-radius: 0 4px 4px 0;
+            background-color: white;
+        }
+
+        .divider {
+            width: 32px;
+            height: 2px;
+            background-color: var(--discord-border);
+            margin: 8px 0;
+        }
+
+        .add-server {
+            width: 48px;
+            height: 48px;
+            background-color: var(--discord-bg-medium);
+            border-radius: 50%;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            color: var(--discord-success);
+            font-size: 24px;
+        }
+
+        .add-server:hover {
+            background-color: var(--discord-success);
+            color: white;
+            border-radius: 16px;
+        }
+
+        /* Channel sidebar */
+        .channel-sidebar {
+            width: 240px;
+            background-color: var(--discord-bg-medium);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .server-header {
+            padding: 16px;
+            height: 48px;
+            border-bottom: 1px solid var(--discord-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .server-header h2 {
+            font-size: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .server-header button {
+            background: none;
+            border: none;
+            color: var(--discord-text-muted);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .channel-category {
+            margin-top: 24px;
+            padding: 0 8px;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            color: var(--discord-text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 8px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+
+        .category-header i {
+            margin-right: 4px;
+            font-size: 10px;
+        }
+
+        .channel-list {
+            list-style-type: none;
+        }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            color: var(--discord-channel-text);
+            padding: 6px 8px;
+            margin: 2px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            justify-content: space-between;
+        }
+
+        .channel-item:hover {
+            background-color: rgba(79, 84, 92, 0.32);
+            color: var(--discord-text-normal);
+        }
+
+        .channel-item.active {
+            background-color: rgba(79, 84, 92, 0.32);
+            color: var(--discord-channel-active);
+            font-weight: 500;
+        }
+
+        .channel-item-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .channel-item i {
+            margin-right: 6px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .add-channel {
+            display: none;
+            color: var(--discord-text-muted);
+            font-size: 16px;
+        }
+
+        .channel-item:hover .add-channel {
+            display: block;
+        }
+
+        .user-area {
+            margin-top: auto;
+            padding: 8px;
+            height: 52px;
+            background-color: rgba(32, 34, 37, 0.5);
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--discord-online);
+            border: 2px solid var(--discord-bg-medium);
+        }
+
+        .user-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: -2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-tag {
+            font-size: 12px;
+            color: var(--discord-text-muted);
+        }
+
+        .user-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .user-controls button {
+            background: none;
+            border: none;
+            color: var(--discord-text-muted);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Chat area */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--discord-bg-light);
+        }
+
+        .chat-header {
+            height: 48px;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--discord-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header h3 i {
+            margin-right: 6px;
+            color: var(--discord-channel-text);
+        }
+
+        .chat-header-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .chat-header-actions button {
+            background: none;
+            border: none;
+            color: var(--discord-text-muted);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .chat-header-actions button:hover {
+            color: var(--discord-text-normal);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .messages-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .members-container {
+            width: 240px;
+            background-color: var(--discord-bg-medium);
+            padding: 16px 8px;
+            overflow-y: auto;
+        }
+
+        .members-header {
+            color: var(--discord-text-muted);
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding: 0 8px;
+        }
+
+        .members-list {
+            list-style-type: none;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .member-item:hover {
+            background-color: rgba(79, 84, 92, 0.32);
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-status {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--discord-online);
+            border: 2px solid var(--discord-bg-medium);
+        }
+
+        .member-name {
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            display: flex;
+            padding: 8px 0;
+            margin-bottom: 8px;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .message:hover {
+            background-color: rgba(4, 4, 5, 0.07);
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: var(--discord-text-muted);
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.375;
+            color: var(--discord-text-normal);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .message-actions {
+            position: absolute;
+            top: 0;
+            right: 16px;
+            display: none;
+            background-color: var(--discord-bg-medium);
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16);
+            overflow: hidden;
+        }
+
+        .message:hover .message-actions {
+            display: flex;
+        }
+
+        .message-action-btn {
+            background: none;
+            border: none;
+            color: var(--discord-text-normal);
+            cursor: pointer;
+            padding: 6px 8px;
+            font-size: 14px;
+        }
+
+        .message-action-btn:hover {
+            background-color: var(--discord-bg-light);
+        }
+
+        .message-reactions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .message-reaction {
+            display: flex;
+            align-items: center;
+            background-color: rgba(79, 84, 92, 0.16);
+            border-radius: 10px;
+            padding: 0 6px;
+            height: 24px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .message-reaction:hover {
+            background-color: rgba(79, 84, 92, 0.32);
+        }
+
+        .message-reaction.reacted {
+            background-color: rgba(88, 101, 242, 0.15);
+            border-color: rgba(88, 101, 242, 0.3);
+        }
+
+        .message-reaction-emoji {
+            font-size: 16px;
+            margin-right: 4px;
+        }
+
+        .message-reaction-count {
+            font-size: 12px;
+            color: var(--discord-text-muted);
+        }
+
+        .message-form {
+            padding: 0 16px 24px;
+            position: relative;
+        }
+
+        .message-input-container {
+            background-color: var(--discord-bg-message);
+            border-radius: 8px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .message-form__input {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 15px;
+            color: var(--discord-text-normal);
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .message-form__input::placeholder {
+            color: var(--discord-text-muted);
+        }
+
+        .message-form-actions {
+            display: flex;
+            gap: 12px;
+            margin-right: 8px;
+        }
+
+        .message-form-action {
+            background: none;
+            border: none;
+            color: var(--discord-text-muted);
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .message-form-action:hover {
+            color: var(--discord-text-normal);
+        }
+
+        /* Modals */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background-color: var(--discord-bg-medium);
+            border-radius: 8px;
+            width: 480px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--discord-border);
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-content {
+            padding: 16px;
+        }
+
+        .modal-footer {
+            padding: 16px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            border-top: 1px solid var(--discord-border);
+            background-color: rgba(32, 34, 37, 0.3);
+        }
+
+        .modal-footer button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .modal-btn-cancel {
+            background-color: transparent;
+            color: var(--discord-text-normal);
+            border: none;
+        }
+
+        .modal-btn-cancel:hover {
+            text-decoration: underline;
+        }
+
+        .modal-btn-confirm {
+            background-color: var(--discord-primary);
+            color: white;
+            border: none;
+        }
+
+        .modal-btn-confirm:hover {
+            background-color: var(--discord-interactive-hover);
+        }
+
+        .modal-btn-danger {
+            background-color: var(--discord-danger);
+            color: white;
+            border: none;
+        }
+
+        .modal-btn-danger:hover {
+            background-color: #a12d2f;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--discord-text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--discord-bg-dark);
+            border: 1px solid var(--discord-border);
+            border-radius: 4px;
+            color: var(--discord-text-normal);
+            font-size: 16px;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--discord-primary);
+        }
+
+        /* Emoji picker */
+        emoji-picker {
+            position: absolute;
+            bottom: 56px;
+            right: 16px;
+            z-index: 10;
+            --background: var(--discord-bg-medium);
+            --border-color: var(--discord-border);
+            --indicator-color: var(--discord-primary);
+            --input-border-color: var(--discord-border);
+            --input-font-color: var(--discord-text-normal);
+            --input-placeholder-color: var(--discord-text-muted);
+            --outline-color: var(--discord-primary);
+        }
+
+        /* Direct message container */
+        .direct-message-container {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            background-color: var(--discord-bg-light);
+        }
+
+        /* File upload */
+        .file-upload-preview {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            background-color: var(--discord-bg-dark);
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .file-upload-preview img {
+            max-width: 80px;
+            max-height: 80px;
+            margin-right: 12px;
+            border-radius: 4px;
+        }
+
+        .file-upload-info {
+            flex: 1;
+        }
+
+        .file-upload-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .file-upload-size {
+            font-size: 12px;
+            color: var(--discord-text-muted);
+        }
+
+        .file-upload-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .file-upload-btn {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .file-upload-btn-remove {
+            background-color: var(--discord-danger);
+            color: white;
+            border: none;
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .members-container {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .members-container {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .server-list {
+                width: 60px;
+            }
+
+            .channel-sidebar {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .server-list {
+                width: 50px;
+            }
+
+            .channel-sidebar {
+                width: 180px;
+            }
+
+            .auth-container {
+                width: 90%;
+                padding: 24px;
+            }
+        }
+
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .d-flex {
+            display: flex !important;
+        }
+
+        .flex-column {
+            flex-direction: column !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- This will hold the application UI -->
+    <div id="app">
+        <!-- Login Screen -->
+        <div class="auth-screen" id="login-screen">
+            <div class="auth-container fade-in">
+                <div class="auth-header">
+                    <h2>Welcome to VCHAT</h2>
+                    <p>Log in to start chatting</p>
+                </div>
+                <form class="auth-form" id="login-form">
+                    <div class="auth-input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="auth-input" id="login-email" placeholder="Email address" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="auth-input" id="login-password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="auth-button">Log In</button>
+                </form>
+                <div class="auth-separator">OR</div>
+                <button class="auth-button google" id="googleSignIn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google logo">
+                    Sign in with Google
+                </button>
+                <div class="auth-link" id="show-signup">Don't have an account? Sign Up</div>
+            </div>
+        </div>
+
+        <!-- Sign Up Screen -->
+        <div class="auth-screen hidden" id="signup-screen">
+            <div class="auth-container fade-in">
+                <div class="auth-header">
+                    <h2>Create an Account</h2>
+                    <p>Join the VCHAT community</p>
+                </div>
+                <div class="auth-avatar-upload">
+                    <div class="auth-avatar-circle" id="signup-avatar-preview">
+                        <i class="fas fa-camera fa-lg"></i>
+                        <input type="file" id="signup-avatar" accept="image/*">
+                    </div>
+                    <span>Profile Picture (optional)</span>
+                </div>
+                <form class="auth-form" id="signup-form">
+                    <div class="auth-input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" class="auth-input" id="signup-username" placeholder="Create a fun display name!" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" class="auth-input" id="signup-email" placeholder="Your email" required>
+                    </div>
+                    <div class="auth-input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" class="auth-input" id="signup-password" placeholder="Create a secure password" required>
+                    </div>
+                    <button type="submit" class="auth-button">Sign Up!</button>
+                </form>
+                <div class="auth-separator">OR</div>
+                <button class="auth-button google" id="googleSignUp">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google logo">
+                    Sign up with Google
+                </button>
+                <div class="auth-link" id="show-login">Already have an account? Log in!</div>
+            </div>
+        </div>
+
+        <!-- Main Chat UI -->
+        <div class="main-chat-ui hidden">
+            <!-- Server List (Left Sidebar) -->
+            <div class="server-list">
+                <div class="server-icon active" data-server-id="starter">
+                    <i class="fa-solid fa-comment"></i>
+                </div>
+                <div class="divider"></div>
+                <!-- User's servers will be added here dynamically -->
+                <div class="add-server" id="create-server-btn">
+                    <i class="fas fa-plus"></i>
+                </div>
+            </div>
+
+            <!-- Channel Sidebar -->
+            <div class="channel-sidebar">
+                <div class="server-header">
+                    <h2 id="current-server-name">Starter Server</h2>
+                    <button id="server-settings-btn"><i class="fa-solid fa-cog"></i></button>
+                </div>
+
+                <div class="channel-category">
+                    <div class="category-header">
+                        <i class="fa-solid fa-chevron-down"></i> Text Channels
+                        <i class="fas fa-plus" id="add-text-channel-btn" style="margin-left: auto; font-size: 12px; display: none;"></i>
+                    </div>
+                    <ul class="channel-list" id="text-channels-list">
+                        <li class="channel-item active" data-channel-id="general">
+                            <div class="channel-item-left">
+                                <i class="fa-solid fa-hashtag"></i> general
+                            </div>
+                        </li>
+                        <!-- More channels will be added dynamically -->
+                    </ul>
+                </div>
+
+                <div class="channel-category">
+                    <div class="category-header">
+                        <i class="fa-solid fa-chevron-down"></i> Voice Channels
+                        <i class="fas fa-plus" id="add-voice-channel-btn" style="margin-left: auto; font-size: 12px; display: none;"></i>
+                    </div>
+                    <ul class="channel-list" id="voice-channels-list">
+                        <li class="channel-item" data-channel-id="general-voice">
+                            <div class="channel-item-left">
+                                <i class="fa-solid fa-volume-high"></i> General Voice
+                            </div>
+                        </li>
+                        <!-- More voice channels will be added dynamically -->
+                    </ul>
+                </div>
+
+                <div class="user-area">
+                    <div class="user-avatar">
+                        <img id="user-avatar-img" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
+                        <div class="user-status"></div>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name" id="user-display-name">Username</div>
+                        <div class="user-tag" id="user-tag">#0000</div>
+                    </div>
+                    <div class="user-controls">
+                        <button id="user-settings-btn"><i class="fa-solid fa-gear"></i></button>
+                        <button id="user-logout-btn"><i class="fa-solid fa-sign-out-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Container (For Channels) -->
+            <div class="chat-container" id="channel-chat-container">
+                <div class="chat-header">
+                    <div class="chat-header-left">
+                        <h3><i class="fa-solid fa-hashtag"></i> <span id="current-channel-name">general</span></h3>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button id="channel-members-toggle"><i class="fa-solid fa-users"></i></button>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div class="messages-container">
+                        <div class="messages" id="channel-messages"></div>
+
+                        <form class="message-form" id="channel-message-form" onsubmit="return false;">
+                            <div class="message-input-container">
+                                <input
+                                    class="message-form__input"
+                                    id="channel-message-input"
+                                    placeholder="Message #general"
+                                    type="text"
+                                />
+                                <div class="message-form-actions">
+                                    <button type="button" class="message-form-action" id="channel-emoji-button">
+                                        <i class="far fa-smile"></i>
+                                    </button>
+                                    <button type="button" class="message-form-action" id="channel-upload-button">
+                                        <i class="fas fa-paperclip"></i>
+                                        <input type="file" id="channel-file-input" style="display: none;" accept="image/*">
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="channel-file-preview" class="file-upload-preview hidden"></div>
+                            <emoji-picker id="channel-emoji-picker" class="hidden"></emoji-picker>
+                        </form>
+                    </div>
+
+                    <div class="members-container" id="channel-members-container">
+                        <div class="members-header">Members — <span id="members-count">0</span></div>
+                        <ul class="members-list" id="members-list"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Direct Message Container -->
+            <div class="direct-message-container" id="dm-container">
+                <div class="chat-header">
+                    <div class="chat-header-left">
+                        <h3>
+                            <div class="user-avatar" style="width: 24px; height: 24px; margin-right: 8px;">
+                                <img id="dm-recipient-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="User Avatar">
+                                <div class="user-status" style="width: 8px; height: 8px; border-width: 1px;"></div>
+                            </div>
+                            <span id="dm-recipient-name">User</span>
+                        </h3>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button id="close-dm-btn"><i class="fa-solid fa-times"></i></button>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div class="messages-container">
+                        <div class="messages" id="dm-messages"></div>
+
+                        <form class="message-form" id="dm-message-form" onsubmit="return false;">
+                            <div class="message-input-container">
+                                <input
+                                    class="message-form__input"
+                                    id="dm-message-input"
+                                    placeholder="Message @User"
+                                    type="text"
+                                />
+                                <div class="message-form-actions">
+                                    <button type="button" class="message-form-action" id="dm-emoji-button">
+                                        <i class="far fa-smile"></i>
+                                    </button>
+                                    <button type="button" class="message-form-action" id="dm-upload-button">
+                                        <i class="fas fa-paperclip"></i>
+                                        <input type="file" id="dm-file-input" style="display: none;" accept="image/*">
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="dm-file-preview" class="file-upload-preview hidden"></div>
+                            <emoji-picker id="dm-emoji-picker" class="hidden"></emoji-picker>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Server Modal -->
+        <div class="modal-backdrop hidden" id="create-server-modal">
+            <div class="modal slide-in">
+                <div class="modal-header">
+                    <h3>Create a Server</h3>
+                </div>
+                <div class="modal-content">
+                    <form id="create-server-form">
+                        <div class="auth-avatar-upload">
+                            <div class="auth-avatar-circle" id="server-icon-preview">
+                                <i class="fas fa-camera fa-lg"></i>
+                                <input type="file" id="server-icon-input" accept="image/*">
+                            </div>
+                            <span>Server Icon (optional)</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="server-name">Server Name</label>
+                            <input type="text" class="form-control" id="server-name" placeholder="Enter server name">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn-cancel" id="cancel-create-server">Cancel</button>
+                    <button class="modal-btn-confirm" id="confirm-create-server">Create Server</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Channel Modal -->
+        <div class="modal-backdrop hidden" id="create-channel-modal">
+            <div class="modal slide-in">
+                <div class="modal-header">
+                    <h3>Create a Channel</h3>
+                </div>
+                <div class="modal-content">
+                    <form id="create-channel-form">
+                        <div class="form-group">
+                            <label for="channel-name">Channel Name</label>
+                            <input type="text" class="form-control" id="channel-name" placeholder="Enter channel name">
+                        </div>
+                        <div class="form-group">
+                            <label>Channel Type</label>
+                            <div style="display: flex; gap: 16px;">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="radio" name="channel-type" value="text" checked style="margin-right: 8px;">
+                                    Text Channel
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="radio" name="channel-type" value="voice" style="margin-right: 8px;">
+                                    Voice Channel
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn-cancel" id="cancel-create-channel">Cancel</button>
+                    <button class="modal-btn-confirm" id="confirm-create-channel">Create Channel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Actions Modal (Edit/Delete) -->
+        <div class="modal-backdrop hidden" id="edit-message-modal">
+            <div class="modal slide-in">
+                <div class="modal-header">
+                    <h3>Edit Message</h3>
+                </div>
+                <div class="modal-content">
+                    <form id="edit-message-form">
+                        <div class="form-group">
+                            <textarea class="form-control" id="edit-message-text" rows="4"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn-cancel" id="cancel-edit-message">Cancel</button>
+                    <button class="modal-btn-confirm" id="confirm-edit-message">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Message Confirmation -->
+        <div class="modal-backdrop hidden" id="delete-message-modal">
+            <div class="modal slide-in">
+                <div class="modal-header">
+                    <h3>Delete Message</h3>
+                </div>
+                <div class="modal-content">
+                    <p>Are you sure you want to delete this message? This cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn-cancel" id="cancel-delete-message">Cancel</button>
+                    <button class="modal-btn-danger" id="confirm-delete-message">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- React to Message Modal -->
+        <div class="modal-backdrop hidden" id="react-message-modal">
+            <div class="modal slide-in">
+                <div class="modal-header">
+                    <h3>Add Reaction</h3>
+                </div>
+                <div class="modal-content">
+                    <emoji-picker id="reaction-emoji-picker"></emoji-picker>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn-cancel" id="cancel-add-reaction">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import {
+            getAuth,
+            signInWithPopup,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            GoogleAuthProvider,
+            signOut,
+            onAuthStateChanged,
+            updateProfile
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import {
+            getFirestore,
+            collection,
+            doc,
+            addDoc,
+            setDoc,
+            getDoc,
+            getDocs,
+            updateDoc,
+            deleteDoc,
+            query,
+            where,
+            orderBy,
+            onSnapshot,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import {
+            getStorage,
+            ref,
+            uploadBytes,
+            getDownloadURL
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7wfMI_f-nvZSZi-_PY6w22mxJD0jZkzk",
+            authDomain: "orbit-games-auth.firebaseapp.com",
+            projectId: "orbit-games-auth",
+            storageBucket: "orbit-games-auth.appspot.com",
+            messagingSenderId: "779763234363",
+            appId: "1:779763234363:web:28d2bfd50bb1e6cc010e1e",
+            measurementId: "G-HF7MPN5HKP"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // ScaleDrone configuration
+        const CLIENT_ID = 'AtcvRAQgKB6cflHl';
+        let drone;
+        let userProfile = null;
+        let currentServer = "starter";
+        let currentChannel = "general";
+        let currentUser = null;
+        let members = [];
+        let currentDMUser = null;
+        let activeChats = {};
+        let currentMessageToEdit = null;
+        let currentMessageToReact = null;
+        let fileToUpload = null;
+
+        // DOM Elements - Authentication
+        const loginScreen = document.getElementById('login-screen');
+        const signupScreen = document.getElementById('signup-screen');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const showSignupLink = document.getElementById('show-signup');
+        const showLoginLink = document.getElementById('show-login');
+        const googleSignInBtn = document.getElementById('googleSignIn');
+        const googleSignUpBtn = document.getElementById('googleSignUp');
+        const signupAvatar = document.getElementById('signup-avatar');
+        const signupAvatarPreview = document.getElementById('signup-avatar-preview');
+        const userDisplayName = document.getElementById('user-display-name');
+        const userTagElement = document.getElementById('user-tag');
+        const userAvatarImg = document.getElementById('user-avatar-img');
+        const userLogoutBtn = document.getElementById('user-logout-btn');
+        const mainChatUI = document.querySelector('.main-chat-ui');
+
+        // DOM Elements - Server and Channel UI
+        const createServerBtn = document.getElementById('create-server-btn');
+        const createServerModal = document.getElementById('create-server-modal');
+        const cancelCreateServerBtn = document.getElementById('cancel-create-server');
+        const confirmCreateServerBtn = document.getElementById('confirm-create-server');
+        const serverNameInput = document.getElementById('server-name');
+        const serverIconInput = document.getElementById('server-icon-input');
+        const serverIconPreview = document.getElementById('server-icon-preview');
+        const currentServerNameElement = document.getElementById('current-server-name');
+        const addTextChannelBtn = document.getElementById('add-text-channel-btn');
+        const addVoiceChannelBtn = document.getElementById('add-voice-channel-btn');
+        const createChannelModal = document.getElementById('create-channel-modal');
+        const cancelCreateChannelBtn = document.getElementById('cancel-create-channel');
+        const confirmCreateChannelBtn = document.getElementById('confirm-create-channel');
+        const channelNameInput = document.getElementById('channel-name');
+        const textChannelsList = document.getElementById('text-channels-list');
+        const voiceChannelsList = document.getElementById('voice-channels-list');
+        const currentChannelNameElement = document.getElementById('current-channel-name');
+
+        // DOM Elements - Chat UI
+        const channelChatContainer = document.getElementById('channel-chat-container');
+        const dmContainer = document.getElementById('dm-container');
+        const channelMessages = document.getElementById('channel-messages');
+        const dmMessages = document.getElementById('dm-messages');
+        const channelMessageForm = document.getElementById('channel-message-form');
+        const dmMessageForm = document.getElementById('dm-message-form');
+        const channelMessageInput = document.getElementById('channel-message-input');
+        const dmMessageInput = document.getElementById('dm-message-input');
+        const channelEmojiButton = document.getElementById('channel-emoji-button');
+        const dmEmojiButton = document.getElementById('dm-emoji-button');
+        const channelEmojiPicker = document.getElementById('channel-emoji-picker');
+        const dmEmojiPicker = document.getElementById('dm-emoji-picker');
+        const channelUploadButton = document.getElementById('channel-upload-button');
+        const dmUploadButton = document.getElementById('dm-upload-button');
+        const channelFileInput = document.getElementById('channel-file-input');
+        const dmFileInput = document.getElementById('dm-file-input');
+        const channelFilePreview = document.getElementById('channel-file-preview');
+        const dmFilePreview = document.getElementById('dm-file-preview');
+        const channelMembersContainer = document.getElementById('channel-members-container');
+        const channelMembersToggle = document.getElementById('channel-members-toggle');
+        const membersList = document.getElementById('members-list');
+        const membersCount = document.getElementById('members-count');
+        const dmRecipientName = document.getElementById('dm-recipient-name');
+        const dmRecipientAvatar = document.getElementById('dm-recipient-avatar');
+        const closeDMBtn = document.getElementById('close-dm-btn');
+
+        // DOM Elements - Message Actions
+        const editMessageModal = document.getElementById('edit-message-modal');
+        const cancelEditMessageBtn = document.getElementById('cancel-edit-message');
+        const confirmEditMessageBtn = document.getElementById('confirm-edit-message');
+        const editMessageText = document.getElementById('edit-message-text');
+        const deleteMessageModal = document.getElementById('delete-message-modal');
+        const cancelDeleteMessageBtn = document.getElementById('cancel-delete-message');
+        const confirmDeleteMessageBtn = document.getElementById('confirm-delete-message');
+        const reactMessageModal = document.getElementById('react-message-modal');
+        const cancelAddReactionBtn = document.getElementById('cancel-add-reaction');
+        const reactionEmojiPicker = document.getElementById('reaction-emoji-picker');
+
+        // Auth Navigation
+        showSignupLink.addEventListener('click', () => {
+            loginScreen.classList.add('hidden');
+            signupScreen.classList.remove('hidden');
+        });
+
+        showLoginLink.addEventListener('click', () => {
+            signupScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+        });
+
+        // Auth state changed handler
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                currentUser = user;
+                userProfile = {
+                    name: user.displayName || 'User',
+                    photoURL: user.photoURL || 'https://cdn.discordapp.com/embed/avatars/0.png',
+                    email: user.email,
+                    uid: user.uid
+                };
+
+                // Update UI
+                loginScreen.classList.add('hidden');
+                signupScreen.classList.add('hidden');
+                mainChatUI.classList.remove('hidden');
+
+                userDisplayName.textContent = userProfile.name;
+                userTagElement.textContent = `#${generateUserTag(userProfile.uid)}`;
+                userAvatarImg.src = userProfile.photoURL;
+
+                // Set up user's data in Firestore
+                setupUserData(user);
+
+                // Load servers, channels, and messages
+                loadUserServers();
+
+                // Connect to ScaleDrone
+                initializeScaleDrone();
+
+            } else {
+                // User is signed out
+                currentUser = null;
+                userProfile = null;
+                mainChatUI.classList.add('hidden');
+                loginScreen.classList.remove('hidden');
+
+                if (drone) {
+                    drone.close();
+                    drone = null;
+                }
+
+                // Clear any loaded data
+                clearChatData();
+            }
+        });
+
+        // Setup user data in Firestore
+        async function setupUserData(user) {
+            try {
+                const userDocRef = doc(db, "users", user.uid);
+                const userDoc = await getDoc(userDocRef);
+
+                if (!userDoc.exists()) {
+                    // Create new user document
+                    await setDoc(userDocRef, {
+                        displayName: user.displayName || 'User',
+                        email: user.email,
+                        photoURL: user.photoURL || 'https://cdn.discordapp.com/embed/avatars/0.png',
+                        servers: ['starter'],
+                        createdAt: serverTimestamp()
+                    });
+
+                    // Add user to 'starter' server members
+                    const serverMembersRef = doc(db, "servers", "starter", "members", user.uid);
+                    await setDoc(serverMembersRef, {
+                        uid: user.uid,
+                        displayName: user.displayName || 'User',
+                        photoURL: user.photoURL || 'https://cdn.discordapp.com/embed/avatars/0.png',
+                        joinedAt: serverTimestamp()
+                    });
+                }
+            } catch (error) {
+                console.error("Error setting up user data:", error);
+            }
+        }
+
+        // Email/Password Sign Up
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            let photoURL = 'https://cdn.discordapp.com/embed/avatars/0.png';
+
+            try {
+                // 1. Create user with email and password
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. Upload profile image if selected
+                if (fileToUpload) {
+                    photoURL = await uploadProfileImage(fileToUpload, user.uid);
+                }
+
+                // 3. Update user profile with display name and photo URL
+                await updateProfile(user, {
+                    displayName: username,
+                    photoURL: photoURL
+                });
+
+                // 4. Clear form
+                signupForm.reset();
+                fileToUpload = null;
+
+                // 5. Show success message (or automatically redirects due to onAuthStateChanged)
+                alert('Account created successfully!');
+
+            } catch (error) {
+                console.error("Error during signup:", error);
+                alert(`Error: ${error.message}`);
+            }
+        });
+
+        // Email/Password Login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                loginForm.reset();
+            } catch (error) {
+                console.error("Error during login:", error);
+                alert(`Error: ${error.message}`);
+            }
+        });
+
+        // Google Sign In
+        googleSignInBtn.addEventListener('click', () => {
+            signInWithPopup(auth, googleProvider)
+                .catch((error) => {
+                    console.error("Error signing in with Google:", error);
+                    alert("Error: " + error.message);
+                });
+        });
+
+        // Google Sign Up (same as sign in for Google Auth)
+        googleSignUpBtn.addEventListener('click', () => {
+            signInWithPopup(auth, googleProvider)
+                .catch((error) => {
+                    console.error("Error signing up with Google:", error);
+                    alert("Error: " + error.message);
+                });
+        });
+
+        // Sign Out
+        userLogoutBtn.addEventListener('click', () => {
+            signOut(auth).catch((error) => {
+                console.error("Error signing out:", error);
+            });
+        });
+
+        // Profile image preview on signup
+        signupAvatar.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                fileToUpload = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    signupAvatarPreview.innerHTML = `<img src="${e.target.result}" alt="Avatar Preview">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Upload profile image
+        async function uploadProfileImage(file, userId) {
+            try {
+                const storageRef = ref(storage, `profile_images/${userId}`);
+                await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(storageRef);
+                return downloadURL;
+            } catch (error) {
+                console.error("Error uploading profile image:", error);
+                return 'https://cdn.discordapp.com/embed/avatars/0.png';
+            }
+        }
+
+        // Generate a user tag from UID
+        function generateUserTag(uid) {
+            return uid.substring(0, 4);
+        }
+
+        // Clear chat data
+        function clearChatData() {
+            channelMessages.innerHTML = '';
+            dmMessages.innerHTML = '';
+            textChannelsList.innerHTML = `
+                <li class="channel-item active" data-channel-id="general">
+                    <div class="channel-item-left">
+                        <i class="fa-solid fa-hashtag"></i> general
+                    </div>
+                </li>
+            `;
+            voiceChannelsList.innerHTML = `
+                <li class="channel-item" data-channel-id="general-voice">
+                    <div class="channel-item-left">
+                        <i class="fa-solid fa-volume-high"></i> General Voice
+                    </div>
+                </li>
+            `;
+            membersList.innerHTML = '';
+            membersCount.textContent = '0';
+        }
+    </script>
+</body>
+</html>

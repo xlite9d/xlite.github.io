@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #0a0a14;
+            position: relative;
+            perspective: 1000px;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+
+        .gradient-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at 50% 70%,
+                rgba(90, 68, 255, 0.6) 0%,
+                rgba(40, 30, 120, 0.3) 30%,
+                rgba(15, 15, 40, 0.1) 60%,
+                rgba(10, 10, 20, 0) 80%
+            );
+            transform-style: preserve-3d;
+            transform: translateZ(0);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .depth-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 30% 40%, rgba(80, 60, 255, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 70% 60%, rgba(100, 80, 255, 0.08) 0%, transparent 40%);
+            filter: blur(40px);
+            opacity: 0;
+            animation: depthPulse 12s ease-in-out infinite;
+        }
+
+        .dust-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translateZ(0);
+        }
+
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 150px 60px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+        }
+
+        /* 404 Content Styles */
+        .content-container {
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .error-code {
+            font-size: 9rem; /* Smaller size */
+            font-weight: 700;
+            margin-bottom: 0;
+            line-height: 1;
+            color: transparent;
+            background: linear-gradient(135deg, #5A44FF, #FF44E3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(90, 68, 255, 0.5),
+                         0 0 40px rgba(90, 68, 255, 0.3),
+                         0 0 60px rgba(90, 68, 255, 0.1);
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .error-text {
+            font-size: 1.6rem; /* Smaller size */
+            margin-bottom: 1.5rem; /* Smaller margin */
+            text-shadow: 0 0 10px rgba(90, 68, 255, 0.8);
+            opacity: 0.9;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out 0.5s infinite;
+        }
+
+        .error-description {
+            font-size: 1rem; /* Smaller size */
+            max-width: 500px; /* Smaller width */
+            margin-bottom: 2rem; /* Smaller margin */
+            opacity: 0.7;
+            text-shadow: 0 0 5px rgba(90, 68, 255, 0.5);
+        }
+
+        .home-button {
+            padding: 10px 25px; /* Smaller padding */
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem; /* Smaller font */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: white;
+            background: linear-gradient(135deg, #5A44FF, #8A74FF);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(90, 68, 255, 0.5),
+                        0 0 30px rgba(90, 68, 255, 0.3),
+                        0 0 45px rgba(90, 68, 255, 0.1);
+            transform-style: preserve-3d;
+            animation: floatButton 4s ease-in-out 0.2s infinite;
+        }
+
+        .home-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 20px rgba(90, 68, 255, 0.7),
+                        0 0 40px rgba(90, 68, 255, 0.4),
+                        0 0 60px rgba(90, 68, 255, 0.2);
+        }
+
+        .home-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+
+        .home-button:hover::before {
+            left: 100%;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: var(--opacity);
+        }
+
+        /* Space Objects */
+        .space-shuttle {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            background-image: url('images/404/shuttle.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform-style: preserve-3d;
+            z-index: 5;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
+            animation: shuttleMovement 60s linear infinite;
+        }
+
+        .astronaut {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('images/404/astro.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform-style: preserve-3d;
+            z-index: 5;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+            animation: astronautMovement 60s linear infinite;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 6rem;
+            }
+            .error-text {
+                font-size: 1.3rem;
+            }
+            .error-description {
+                font-size: 0.9rem;
+            }
+            .space-shuttle {
+                width: 60px;
+                height: 30px;
+            }
+            .astronaut {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 4.5rem;
+            }
+            .error-text {
+                font-size: 1rem;
+            }
+            .space-shuttle {
+                width: 50px;
+                height: 25px;
+            }
+            .astronaut {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.6;
+                filter: blur(30px) brightness(0.8);
+                transform: translateZ(-20px) scale(0.9);
+            }
+            50% {
+                opacity: 1;
+                filter: blur(20px) brightness(1.2);
+                transform: translateZ(0) scale(1);
+            }
+        }
+
+        @keyframes depthPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translateZ(-50px);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translateZ(30px);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateZ(0);
+            }
+            50% {
+                transform: translateY(-15px) translateZ(30px);
+            }
+        }
+
+        @keyframes floatButton {
+            0%, 100% {
+                transform: translateY(0) translateZ(0);
+            }
+            50% {
+                transform: translateY(-8px) translateZ(20px);
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: var(--opacity);
+                transform: scale(1);
+            }
+            50% {
+                opacity: var(--opacity-half);
+                transform: scale(1.5);
+            }
+        }
+
+        @keyframes shuttleMovement {
+            0% {
+                left: -10%;
+                top: 15%;
+                transform: translateZ(100px) rotate(20deg);
+            }
+            20% {
+                left: 30%;
+                top: 5%;
+                transform: translateZ(150px) rotate(0deg);
+            }
+            40% {
+                left: 70%;
+                top: 20%;
+                transform: translateZ(50px) rotate(-15deg);
+            }
+            60% {
+                left: 85%;
+                top: 40%;
+                transform: translateZ(200px) rotate(-25deg);
+            }
+            80% {
+                left: 40%;
+                top: 60%;
+                transform: translateZ(100px) rotate(10deg);
+            }
+            100% {
+                left: -10%;
+                top: 15%;
+                transform: translateZ(100px) rotate(20deg);
+            }
+        }
+
+        @keyframes astronautMovement {
+            0% {
+                left: -15%;
+                top: 20%;
+                transform: translateZ(80px) rotate(15deg) scale(0.9);
+            }
+            20% {
+                left: 25%;
+                top: 10%;
+                transform: translateZ(120px) rotate(-5deg) scale(1);
+            }
+            40% {
+                left: 65%;
+                top: 25%;
+                transform: translateZ(40px) rotate(-10deg) scale(0.95);
+            }
+            60% {
+                left: 80%;
+                top: 45%;
+                transform: translateZ(180px) rotate(-20deg) scale(1);
+            }
+            80% {
+                left: 35%;
+                top: 65%;
+                transform: translateZ(90px) rotate(5deg) scale(0.9);
+            }
+            100% {
+                left: -15%;
+                top: 20%;
+                transform: translateZ(80px) rotate(15deg) scale(0.9);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="depth-layer"></div>
+    <div class="dust-particles" id="particles"></div>
+    <div class="vignette"></div>
+
+    <!-- Space objects -->
+    <div class="space-shuttle"></div>
+    <div class="astronaut"></div>
+
+    <!-- 404 Content -->
+    <div class="content-container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-text">No plaza here</h2>
+        <p class="error-description">The page you are looking for was destroyed cus of tariffs</p>
+        <a href="/" class="home-button">Return to America</a>
+    </div>
+
+    <script>
+        // Create random dust particles
+        const particlesContainer = document.getElementById('particles');
+        const numParticles = 100;
+
+        function createParticles() {
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const z = Math.random() * 100 - 50;
+
+                // Random size
+                const size = Math.random() * 3 + 1;
+
+                // Random opacity
+                const opacity = Math.random() * 0.4 + 0.1;
+
+                // Apply styles
+                particle.style.left = `${x}%`;
+                particle.style.top = `${y}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.opacity = opacity;
+                particle.style.transform = `translateZ(${z}px)`;
+
+                // Add animation with random delay
+                const delay = Math.random() * 10;
+                const duration = Math.random() * 10 + 10;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Create star field with twinkling stars
+        function createStars() {
+            const body = document.body;
+            const numStars = 150;
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const z = Math.random() * 200 - 100;
+
+                // Random size and opacity
+                const size = Math.random() * 2 + 0.5;
+                const opacity = Math.random() * 0.8 + 0.2;
+
+                // Random animation duration
+                const duration = Math.random() * 5 + 3;
+
+                // Apply styles
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--opacity', opacity);
+                star.style.setProperty('--opacity-half', opacity * 0.5);
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.transform = `translateZ(${z}px)`;
+
+                body.appendChild(star);
+            }
+        }
+
+        // Create 3D parallax effect
+        function parallaxEffect(e) {
+            const xPos = (window.innerWidth / 2 - e.clientX) / 50;
+            const yPos = (window.innerHeight / 2 - e.clientY) / 50;
+
+            document.querySelector('.gradient-bg').style.transform =
+                `translateZ(0) rotateX(${yPos}deg) rotateY(${-xPos}deg)`;
+
+            document.querySelector('.depth-layer').style.transform =
+                `translateZ(-50px) rotateX(${yPos * 1.5}deg) rotateY(${-xPos * 1.5}deg)`;
+
+            // Add parallax to 404 content
+            document.querySelector('.error-code').style.transform =
+                `translateZ(50px) rotateX(${yPos * 0.5}deg) rotateY(${-xPos * 0.5}deg)`;
+
+            document.querySelector('.error-text').style.transform =
+                `translateZ(30px) rotateX(${yPos * 0.3}deg) rotateY(${-xPos * 0.3}deg)`;
+
+            document.querySelector('.home-button').style.transform =
+                `translateZ(20px) rotateX(${yPos * 0.2}deg) rotateY(${-xPos * 0.2}deg)`;
+
+            // Add subtle parallax to space objects
+            const shuttle = document.querySelector('.space-shuttle');
+            const astronaut = document.querySelector('.astronaut');
+
+            // Get current transform and add parallax effect
+            const shuttleTransform = window.getComputedStyle(shuttle).transform;
+            const astronautTransform = window.getComputedStyle(astronaut).transform;
+
+            // Only add the parallax effect, don't override animations
+            if (shuttleTransform !== 'none') {
+                shuttle.style.transform = `${shuttleTransform} translateX(${-xPos * 3}px) translateY(${-yPos * 3}px)`;
+            }
+
+            if (astronautTransform !== 'none') {
+                astronaut.style.transform = `${astronautTransform} translateX(${-xPos * 2}px) translateY(${-yPos * 2}px)`;
+            }
+        }
+
+        // Create directories if needed
+        function createDirectories() {
+            // This would be a server-side operation, but for demo purposes
+            // we're checking if the images are loaded and handling errors
+            const shuttle = document.querySelector('.space-shuttle');
+            const astronaut = document.querySelector('.astronaut');
+
+            // Error handling for images
+            shuttle.addEventListener('error', function() {
+                console.warn('Shuttle image not found at images/404/shuttle.png');
+                this.style.backgroundColor = 'rgba(100, 100, 255, 0.5)';
+                this.style.borderRadius = '10px 30px 10px 30px';
+            });
+
+            astronaut.addEventListener('error', function() {
+                console.warn('Astronaut image not found at images/404/astro.png');
+                this.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                this.style.borderRadius = '50%';
+            });
+        }
+
+        // Mouse move event for parallax
+        document.addEventListener('mousemove', parallaxEffect);
+
+        // Initialize particles and stars
+        createParticles();
+        createStars();
+        createDirectories();
+
+        // Add gyroscope support for mobile
+        window.addEventListener('deviceorientation', function(e) {
+            if (e.beta && e.gamma) {
+                const xPos = e.gamma / 5; // -90 to 90
+                const yPos = e.beta / 5; // -180 to 180
+
+                document.querySelector('.gradient-bg').style.transform =
+                    `translateZ(0) rotateX(${yPos}deg) rotateY(${-xPos}deg)`;
+
+                document.querySelector('.depth-layer').style.transform =
+                    `translateZ(-50px) rotateX(${yPos * 1.5}deg) rotateY(${-xPos * 1.5}deg)`;
+
+                // Add gyroscope support for 404 content
+                document.querySelector('.error-code').style.transform =
+                    `translateZ(50px) rotateX(${yPos * 0.5}deg) rotateY(${-xPos * 0.5}deg)`;
+
+                document.querySelector('.error-text').style.transform =
+                    `translateZ(30px) rotateX(${yPos * 0.3}deg) rotateY(${-xPos * 0.3}deg)`;
+
+                document.querySelector('.home-button').style.transform =
+                    `translateZ(20px) rotateX(${yPos * 0.2}deg) rotateY(${-xPos * 0.2}deg)`;
+            }
+        });
+    </script>
+</body>
+</html>

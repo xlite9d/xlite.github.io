@@ -1,0 +1,1308 @@
+<link rel="icon" href="/favicons/vplaza.ico">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>VPLAZA</title>
+    <style>
+        :root {
+            --primary-color: #0e0f11;
+            --secondary-color: #121316;
+            --accent-color: #58b7cc;
+            --text-color: #ffffff;
+            --card-bg: rgba(27, 29, 35, 0.7);
+            --hover-color: rgba(44, 46, 54, 0.9);
+            --border-color: rgba(88, 183, 204, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-color);
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(14, 15, 17, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            height: 60px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .subtitle {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: 400;
+            display: block;
+        }
+
+        .header-search {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 20px;
+        }
+
+        .header .search-wrapper {
+            height: 36px;
+            border-radius: 18px;
+            background: rgba(35, 36, 40, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 0;
+        }
+
+        .header .search-input {
+            height: 100%;
+            padding: 0 35px;
+            font-size: 0.9rem;
+        }
+
+        .header .search-icon {
+            left: 12px;
+            font-size: 14px;
+        }
+
+        .header .clear-search {
+            right: 12px;
+            font-size: 14px;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .category-tab {
+            padding: 6px 15px;
+            background: rgba(30, 30, 35, 0.5);
+            border-radius: 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab.active, .category-tab:hover {
+            background: var(--accent-color);
+        }
+
+        .main-content {
+            margin-top: 60px;
+            padding: 0;
+        }
+
+        .featured-game {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, var(--secondary-color) 0%, rgba(18, 19, 22, 0.8) 70%, rgba(18, 19, 22, 0.7) 100%);
+            padding: 40px 5%;
+            min-height: 350px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .featured-content {
+            max-width: 500px;
+            z-index: 2;
+        }
+
+        .featured-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .featured-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .play-now-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 30px;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-now-btn:hover {
+            background: #409bb0;
+            transform: translateY(-2px);
+        }
+
+        .featured-image {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 55%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            filter: brightness(0.8);
+            mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+        }
+
+        .game-section {
+            padding: 40px 5%;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 0 auto;
+        }
+
+        .popular-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        }
+
+        .game {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.35s ease;
+        }
+
+        .game:hover {
+            transform: translateY(-5px);
+            border-color: rgba(88, 183, 204, 0.6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3),
+                        0 0 15px rgba(88, 183, 204, 0.3);
+        }
+
+        .game::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top,
+                        rgba(0, 0, 0, 0.8) 0%,
+                        rgba(0, 0, 0, 0.3) 40%,
+                        transparent 100%);
+            opacity: 0.7;
+            transition: opacity 0.35s ease;
+            z-index: 1;
+        }
+
+        .game:hover::before {
+            opacity: 0.4;
+        }
+
+        .game img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .game:hover img {
+            transform: scale(1.1);
+        }
+
+        .game-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            z-index: 2;
+            transform: translateY(0);
+            transition: transform 0.35s ease;
+        }
+
+        .game:hover .game-name {
+            transform: translateY(-5px);
+        }
+
+        .game-category {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(88, 183, 204, 0.8);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            z-index: 2;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+        }
+
+        .game:hover .game-category {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: rgba(20, 23, 34, 0.95);
+            border-radius: 16px;
+            border: 1px solid rgba(88, 183, 204, 0.3);
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(88, 183, 204, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-game-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-right: 15px;
+            border: 1px solid rgba(88, 183, 204, 0.3);
+        }
+
+        .modal-game-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #58b7cc, #5dade2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            border: none;
+            outline: none;
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #58b7cc, #5dade2);
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(88, 183, 204, 0.3);
+        }
+
+        .play-btn:hover {
+            background: linear-gradient(135deg, #5dade2, #58b7cc);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(88, 183, 204, 0.4);
+        }
+
+        .cancel-btn {
+            background: rgba(40, 40, 40, 0.8);
+            color: #fff;
+            border: 1px solid rgba(88, 183, 204, 0.3);
+        }
+
+        .cancel-btn:hover {
+            background: rgba(60, 60, 60, 0.8);
+            border-color: rgba(88, 183, 204, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(40, 40, 40, 0.8);
+            border: 1px solid rgba(88, 183, 204, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(60, 60, 60, 0.8);
+            border-color: rgba(88, 183, 204, 0.5);
+        }
+
+        .close-modal:before,
+        .close-modal:after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 2px;
+            background: var(--text-color);
+        }
+
+        .close-modal:before {
+            transform: rotate(45deg);
+        }
+
+        .close-modal:after {
+            transform: rotate(-45deg);
+        }
+
+        /* Search container styling */
+        .search-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            max-width: 450px;
+            z-index: 1000;
+            transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .search-container.active {
+            top: 80px;
+            bottom: auto;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            border-radius: 25px;
+            background: rgba(20, 23, 34, 0.7);
+            border: 1px solid rgba(88, 183, 204, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(88, 183, 204, 0.15);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper:hover,
+        .search-wrapper:focus-within {
+            background: rgba(25, 28, 40, 0.9);
+            border-color: rgba(88, 183, 204, 0.5);
+            box-shadow: 0 0 25px rgba(88, 183, 204, 0.25);
+        }
+
+        .search-input {
+            width: 100%;
+            height: 100%;
+            padding: 0 45px;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            background: transparent;
+            border: none;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        /* Proxied Container */
+        .proxied-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .proxied-text {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .checkbox-container {
+            position: relative;
+            width: 24px;
+            height: 24px;
+        }
+
+        .checkbox-container input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 24px;
+            width: 24px;
+            background-color: transparent;
+            border: 2px solid var(--accent-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-container:hover .checkmark {
+            border-color: #5dade2;
+            box-shadow: 0 0 8px rgba(93, 173, 226, 0.5);
+        }
+
+        .checkbox-container input:checked ~ .checkmark {
+            background-color: rgba(93, 173, 226, 0.2);
+            border-color: #5dade2;
+            box-shadow: 0 0 8px rgba(93, 173, 226, 0.5);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .checkbox-container input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .checkbox-container .checkmark:after {
+            left: 8px;
+            top: 3px;
+            width: 6px;
+            height: 12px;
+            border: solid #5dade2;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .category-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .category-btn {
+            background-color: var(--accent-color);
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .category-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .category-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 5px;
+            background-color: rgba(20, 23, 34, 0.95);
+            min-width: 180px;
+            border-radius: 8px;
+            border: 1px solid rgba(88, 183, 204, 0.3);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .category-dropdown:hover .category-menu {
+            display: block;
+        }
+
+        .category-item {
+            padding: 12px 16px;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .category-item:hover {
+            background-color: rgba(88, 183, 204, 0.2);
+        }
+
+        /* New CSS for search icons */
+        .search-icon, .clear-search {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 18px;
+        }
+
+        .search-icon {
+            left: 15px;
+        }
+
+        .clear-search {
+            right: 15px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .clear-search:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .search-container {
+                width: 85%;
+            }
+
+            .search-container.active {
+                top: 110px;
+            }
+
+            .main-content {
+                margin-top: 120px;
+                padding: 15px 3%;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 15px;
+            }
+
+            .game-name {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+
+            .modal-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modal-game-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .modal-title {
+                font-size: 1.5rem;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            .featured-game {
+                flex-direction: column;
+                padding: 30px 5%;
+            }
+
+            .featured-content {
+                max-width: 100%;
+                margin-bottom: 30px;
+                text-align: center;
+            }
+
+            .featured-image {
+                position: relative;
+                width: 100%;
+                height: 200px;
+            }
+
+            .featured-title {
+                font-size: 2rem;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+
+        @media (min-width: 1600px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-container">
+            <a href="/" class="title">VPLAZA<span class="subtitle"></span></a>
+        </div>
+
+        <div class="header-search">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="search-input" placeholder="Search for titles..." autocomplete="off">
+                <i class="fas fa-times clear-search" id="clear-search"></i>
+            </div>
+        </div>
+
+        <div class="category-tabs">
+            <a href="#" class="category-tab active" data-category="all">All</a>
+            <a href="#" class="category-tab" data-category="new">New</a>
+            <a href="#" class="category-tab" data-category="racing">Racing</a>
+            <a href="#" class="category-tab" data-category="action">Action</a>
+            <a href="#" class="category-tab" data-category="puzzle">Puzzle</a>
+        </div>
+    </header>
+
+    <div class="search-container" id="search-container">
+        <div class="search-wrapper">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="search-input" placeholder="Search games or use #category" autocomplete="off">
+            <i class="fas fa-times clear-search" id="clear-search"></i>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <section class="featured-game">
+            <div class="featured-content">
+                <h1 class="featured-title">Snow Rider 3D</h1>
+                <p class="featured-description">Slide down endless slopes, perform tricks, and collect coins in this thrilling 3D snowboarding adventure.</p>
+                <button class="play-now-btn" onclick="openGame('games/snowrider.html', 'Snow Rider 3D')">
+                    <i class="fas fa-play"></i> PLAY NOW
+                </button>
+            </div>
+            <div class="featured-image">
+                <img src="images/snow-rider3d.jpg" alt="Snow Rider 3D">
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2 class="section-title">Popular Titles</h2>
+            <div class="grid popular-grid">
+                <div class="game" data-name="Retro Bowl" data-url="games/retro-bowl" data-category="sports">
+                    <img src="images/retro-bowl.jpg" alt="retrobowl">
+                    <div class="game-name">Retro Bowl</div>
+                    <div class="game-category">Sports</div>
+                </div>
+                <div class="game" data-name="1v1LOL" data-url="games/1v1lol" data-category="action">
+                    <img src="images/1v1lol.jpg" alt="1v1">
+                    <div class="game-name">1v1LOL</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Slope" data-url="games/slope" data-category="arcade">
+                    <img src="images/slope.jpg" alt="slope">
+                    <div class="game-name">Slope</div>
+                    <div class="game-category">Arcade</div>
+                </div>
+                <div class="game" data-name="Subway Surfers" data-url="games/subwaysurfers" data-category="arcade">
+                    <img src="images/subway-surferss.png" alt="subway">
+                    <div class="game-name">Subway Surfers</div>
+                    <div class="game-category">Arcade</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="game-section">
+            <h2 class="section-title">All Titles</h2>
+            <div class="grid" id="game-grid">
+                <div class="game" data-name="Basket Ball Stars" data-url="games/basketball-stars" data-category="sports">
+                    <img src="images/basketball-stars.jpg" alt="BBS">
+                    <div class="game-name">Basket Ball Stars</div>
+                    <div class="game-category">Sports</div>
+                </div>
+                <div class="game" data-name="Drive Mad" data-url="games/drive-mad" data-category="racing">
+                    <img src="images/drive-mad.jpg" alt="DM">
+                    <div class="game-name">Drive Mad</div>
+                    <div class="game-category">Racing</div>
+                </div>
+                <div class="game" data-name="Deathrun 3D" data-url="games/death-run-3d" data-category="action">
+                    <img src="images/death-run-3d.jpg" alt="dr3d">
+                    <div class="game-name">Deathrun 3D</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Basket Random" data-url="games/basket-random" data-category="sports">
+                    <img src="images/basket-random.jpg" alt="Snake">
+                    <div class="game-name">Basket Random</div>
+                    <div class="game-category">Sports</div>
+                </div>
+                <div class="game" data-name="MotoX3M" data-url="games/motox3m2" data-category="racing">
+                    <img src="images/motox3m.jpg" alt="mx3m2">
+                    <div class="game-name">MotoX3M</div>
+                    <div class="game-category">Racing</div>
+                </div>
+                <div class="game" data-name="Bitlife" data-url="games/bitlife" data-category="simulation">
+                    <img src="images/bitlife.jpg" alt="bl">
+                    <div class="game-name">Bitlife</div>
+                    <div class="game-category">Simulation</div>
+                </div>
+                <div class="game" data-name="Getaway Shootout" data-url="games/get-away" data-category="action">
+                    <img src="images/getaway-shootout.jpg" alt="GS">
+                    <div class="game-name">Getaway Shootout</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Just Fall LOL" data-url="games/justfall-lol" data-category="action">
+                    <img src="images/justfall-lol.jpg" alt="jsfall">
+                    <div class="game-name">Just Fall LOL</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Rooftop Snipers" data-url="games/rooftop-snipers" data-category="action">
+                    <img src="images/rooftop-snipers.jpg" alt="jsfall">
+                    <div class="game-name">Rooftop Snipers</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Cookie Clicker" data-url="games/cookieclicker" data-category="puzzle">
+                    <img src="images/cookie-clicker.jpg" alt="jsfall">
+                    <div class="game-name">Cookie Clicker</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="2048" data-url="games/2048" data-category="puzzle">
+                    <img src="images/2048.jpg" alt="2048">
+                    <div class="game-name">2048</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Snowrider3d" data-url="games/snowrider.html" data-category="racing">
+                    <img src="images/snow-rider3d.jpg" alt="2048">
+                    <div class="game-name">Snowrider3d</div>
+                    <div class="game-category">Racing</div>
+                </div>
+                <div class="game minecraft" data-name="Minecraft" data-url="games/eagler" data-category="simulation">
+                    <img src="images/minecraft.jpg" alt="minecraft" class="normal-img">
+                    <img src="images/explodeminecraft.gif" alt="explodeminecraft" class="hover-img">
+                    <div class="game-name">Minecraft</div>
+                    <div class="game-category">Simulation</div>
+                </div>
+                <div class="game" data-name="Learn to Fly" data-url="games/learn-to-fly-2" data-category="simulation">
+                    <img src="images/learn-to-fly-2.jpg" alt="learn-to-fly-2">
+                    <div class="game-name">Learn to Fly</div>
+                    <div class="game-category">Simulation</div>
+                </div>
+                <div class="game" data-name="Idle Mining Empire" data-url="games/idle-mining-empire" data-category="simulation">
+                    <img src="images/idle-mining-empire.jpg" alt="idle-mining-empire">
+                    <div class="game-name">Idle Mining Empire</div>
+                    <div class="game-category">Simulation</div>
+                </div>
+                <div class="game" data-name="Among Us" data-url="games/among-us" data-category="action">
+                    <img src="images/among-us.jpg" alt="among-us">
+                    <div class="game-name">Among Us</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Paper io 2" data-url="games/paper-io-2" data-category="action">
+                    <img src="images/paper-io-2.jpg" alt="paper-io-2">
+                    <div class="game-name">Paper io 2</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Flappy Bird" data-url="games/flappybird" data-category="arcade">
+                    <img src="images/flappy-bird.jpg" alt="flappy-bird">
+                    <div class="game-name">Flappy Bird</div>
+                    <div class="game-category">Arcade</div>
+                </div>
+                <div class="game" data-name="Krunker" data-url="games/krunker" data-category="action">
+                    <img src="images/krunker.jpg" alt="krunker">
+                    <div class="game-name">Krunker</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Geometry Dash (Knockoff)" data-url="games/geometry-dash-knockoff" data-category="action">
+                    <img src="images/geometry-dash.jpg" alt="geometry-dash-knockoff">
+                    <div class="game-name">Geometry Dash</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Baldis Basics" data-url="games/baldis-basics" data-category="puzzle">
+                    <img src="images/baldis-basics.jpg" alt="baldis-basics">
+                    <div class="game-name">Baldis Basics</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Super Hot" data-url="games/superhot" data-category="action">
+                    <img src="images/superhot.jpg" alt="superhot">
+                    <div class="game-name">Super Hot</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Temple Run 2" data-url="games/temple-run-2" data-category="action">
+                    <img src="images/temple-run-2.jpg" alt="temple-run-2">
+                    <div class="game-name">Temple Run 2</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Happy Wheels" data-url="games/happy-wheels" data-category="action">
+                    <img src="images/happy-wheels.jpg" alt="happy-wheels">
+                    <div class="game-name">Happy Wheels</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Crossy Road" data-url="games/crossyroad" data-category="arcade">
+                    <img src="images/crossy-road.jpg" alt="crossy-road">
+                    <div class="game-name">Crossy Road</div>
+                    <div class="game-category">Arcade</div>
+                </div>
+                <div class="game" data-name="Stickman Hook" data-url="games/stickmanhook" data-category="action">
+                    <img src="images/stickmanhook.jpg" alt="stickman">
+                    <div class="game-name">Stickman Hook</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Tag" data-url="games/Tag" data-category="action">
+                    <img src="images/tag.jpg" alt="tag">
+                    <div class="game-name">Tag</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Poly Track" data-url="games/poly-track" data-category="racing">
+                    <img src="images/polytrack.jpg" alt="pt">
+                    <div class="game-name">Poly Track</div>
+                    <div class="game-category">Racing</div>
+                </div>
+                <div class="game" data-name="Tetris" data-url="games/tetris" data-category="puzzle">
+                    <img src="images/tetris.jpg" alt="tetris">
+                    <div class="game-name">Tetris</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Armed Forces" data-url="games/armed-forces" data-category="action">
+                    <img src="images/armed-forces.png" alt="armed forces">
+                    <div class="game-name">Armed Forces</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Counter Strike" data-url="games/counter-strike" data-category="action">
+                    <img src="images/csgo.png" alt="Counter-Strike">
+                    <div class="game-name">Counter Strike</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Tomb of the Mask" data-url="games/tombofthemask.html" data-category="puzzle">
+                    <img src="images/totm.png" alt="tomb-of-the-mask">
+                    <div class="game-name">Tomb Of The Mask</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Super Mario 64" data-url="games/supermario64.html" data-category="action">
+                    <img src="images/supermario64.png" alt="super-mario-64">
+                    <div class="game-name">Super Mario 64</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Geometry Dash" data-url="games/geometry-dash-lite" data-category="action">
+                    <img src="images/geodashlite.png" alt="gdash">
+                    <div class="game-name">Geometry Dash</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Rocket league" data-url="games/rocket-league" data-category="sports">
+                    <img src="images/rocket-league.png" alt="rl">
+                    <div class="game-name">Rocket League</div>
+                    <div class="game-category">Sports</div>
+                </div>
+                <div class="game" data-name="Candy Crush" data-url="games/candycrush" data-category="puzzle">
+                    <img src="images/candycrush.png" alt="cc">
+                    <div class="game-name">Candy Crush</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Helix Jump" data-url="games/helixjump" data-category="arcade">
+                    <img src="games/helixjump/helixjump.png" alt="HJ">
+                    <div class="game-name">Helix Jump</div>
+                    <div class="game-category">Arcade</div>
+                </div>
+                <div class="game" data-name="yohoho" data-url="games/yohoho" data-category="action">
+                    <img src="images/yohoho.png" alt="yio">
+                    <div class="game-name">YohohoIO</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="drift hunters" data-url="games/drifthunters" data-category="racing">
+                    <img src="images/drifthunters.png" alt="dh">
+                    <div class="game-name">Drift Hunters</div>
+                    <div class="game-category">Racing</div>
+                </div>
+                <div class="game" data-name="little giant" data-url="games/thelittlegiant" data-category="action">
+                    <img src="games/thelittlegiant/thelittlegiant.png" alt="lg">
+                    <div class="game-name">The Little Giant</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="death soul" data-url="games/deathsoul" data-category="action">
+                    <img src="games/deathsoul/deathsoul.png" alt="ds">
+                    <div class="game-name">Death Soul</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="FNAF" data-url="games/FNAF.html" data-category="horror">
+                    <img src="images/fnaf.png" alt="fnaf">
+                    <div class="game-name">Fnaf</div>
+                    <div class="game-category">Horror</div>
+                </div>
+                <div class="game" data-name="FNAW" data-url="games/fnaw.html" data-category="horror">
+                    <img src="images/fnaw.png" alt="fnaw">
+                    <div class="game-name">Fnaw</div>
+                    <div class="game-category">Horror</div>
+                </div>
+                <div class="game" data-name="Bloxorz" data-url="games/bloxorz.html" data-category="puzzle">
+                    <img src="images/bloxorz.png" alt="bz">
+                    <div class="game-name">Bloxorz</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Tiny Fishing" data-url="games/tiny-fishing.html" data-category="simulation">
+                    <img src="images/tiny-fishing.png" alt="tf">
+                    <div class="game-name">Tiny Fishing</div>
+                    <div class="game-category">Simulation</div>
+                </div>
+                <div class="game" data-name="Time Shooter" data-url="games/time-shooter.html" data-category="action">
+                    <img src="images/time-shooter.png" alt="ts">
+                    <div class="game-name">Time Shooter</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Water Mellon" data-url="games/watermelon.html" data-category="simulation">
+                    <img src="images/watermelon.png" alt="wm">
+                    <div class="game-name">Watermelon</div>
+                    <div class="game-category">Simulation</div>
+                </div>
+                <div class="game" data-name="Territorial - for game fans" data-url="games/territory.html" data-category="strategy">
+                    <img src="images/territory.png" alt="ttt">
+                    <div class="game-name">Territorial</div>
+                    <div class="game-category">Strategy</div>
+                </div>
+                <div class="game" data-name="Survival Race | Orbit" data-url="games/survivalrace.html" data-category="racing">
+                    <img src="images/survivalrace.png" alt="sr">
+                    <div class="game-name">Survival Race</div>
+                    <div class="game-category">Racing</div>
+                </div>
+                <div class="game" data-name="Stack" data-url="games/stack.html" data-category="puzzle">
+                    <img src="images/stack.png" alt="st">
+                    <div class="game-name">Stack</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Basket Bros IO" data-url="games/basketbrosio" data-category="sports">
+                    <img src="images/basket-bros.png" alt="bb">
+                    <div class="game-name">Basket Bros</div>
+                    <div class="game-category">Sports</div>
+                </div>
+                <div class="game" data-name="Backrooms" data-url="games/backrooms" data-category="horror">
+                    <img src="images/backrooms.png" alt="br">
+                    <div class="game-name">The Backrooms</div>
+                    <div class="game-category">Horror</div>
+                </div>
+                <div class="game" data-name="Impossible Quiz" data-url="games/impossiblequiz" data-category="puzzle">
+                    <img src="images/impossible.png" alt="iq">
+                    <div class="game-name">The Impossible Quiz</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Block Blast" data-url="games/BlockBlast" data-category="puzzle">
+                    <img src="images/blockblast.png" alt="bb">
+                    <div class="game-name">Block Blast</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="My friend pedro" data-url="games/my-freind-pedro" data-category="action">
+                    <img src="games/my-freind-pedro/my-friend-pedro.png" alt="fp">
+                    <div class="game-name">My Friend Pedro</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Scrambled Eggs" data-url="games/scrambled-eggs" data-category="puzzle">
+                    <img src="games/scrambled-eggs/scrambled-eggs.png" alt="se">
+                    <div class="game-name">Scrambled Eggs</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="RUN 3" data-url="games/run-3" data-category="action">
+                    <img src="images/run.png" alt="rn">
+                    <div class="game-name">RUN</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Impossible Quiz 2!" data-url="games/impossible-quiz2" data-category="puzzle">
+                    <img src="images/iq2.png" alt="iq2">
+                    <div class="game-name">Impossible quiz 2</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Goober World" data-url="games/goober-world" data-category="action">
+                    <img src="games/goober-world/favicon.png" alt="gw">
+                    <div class="game-name">Goober WORLD</div>
+                    <div class="game-category">Action</div>
+                </div>
+                <div class="game" data-name="Core Ball" data-url="games/coreball" data-category="puzzle">
+                    <img src="images/coreball.png" alt="cb">
+                    <div class="game-name">Core Ball</div>
+                    <div class="game-category">Puzzle</div>
+                </div>
+                <div class="game" data-name="Drift Boss" data-url="games/driftboss" data-category="racing">
+                    <img src="images/driftboss.png" alt="db">
+                    <div class="game-name">Drift Boss</div>
+                    <div class="game-category">Racing</div>
+                </div>
+                <div class="game" data-name="Gun Spin" data-url="games/gunspin" data-category="action">
+                    <img src="images/gunspin.png" alt="gs">
+                    <div class="game-name">Gunspin</div>
+                    <div class="game-category">Action</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-overlay" id="game-modal">
+        <div class="modal-content">
+            <div class="close-modal" id="close-modal"></div>
+            <div class="modal-header">
+                <div class="modal-game-icon">
+                    <img id="modal-game-img" src="" alt="Game">
+                </div>
+                <h2 class="modal-title" id="modal-game-title">Game Title</h2>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn play-btn" id="play-game-btn">PLAY NOW</button>
+                <button class="modal-btn cancel-btn" id="cancel-game-btn">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const gameElements = document.querySelectorAll('.game');
+        const gameModal = document.getElementById('game-modal');
+        const modalGameTitle = document.getElementById('modal-game-title');
+        const modalGameImg = document.getElementById('modal-game-img');
+        const closeModalBtn = document.getElementById('close-modal');
+        const playGameBtn = document.getElementById('play-game-btn');
+        const cancelGameBtn = document.getElementById('cancel-game-btn');
+        const clearSearchBtn = document.getElementById('clear-search');
+        const categoryTabs = document.querySelectorAll('.category-tab');
+
+        let selectedGameUrl = '';
+        let selectedGameName = '';
+
+        searchInput.addEventListener('focus', function() {
+            searchInput.placeholder = 'Type game name or #category...';
+        });
+
+        searchInput.addEventListener('blur', function() {
+            if (searchInput.value.trim() === '') {
+                searchInput.placeholder = 'Search for titles...';
+            }
+        });
+
+        clearSearchBtn.addEventListener('click', function() {
+            searchInput.value = '';
+            gameElements.forEach(game => {
+                game.classList.remove('hidden');
+            });
+        });
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let searchCategory = '';
+            let searchName = searchTerm;
+
+            // Check if search is for a category
+            if (searchTerm.startsWith('#')) {
+                searchCategory = searchTerm.substring(1);
+                searchName = '';
+            }
+
+            gameElements.forEach(game => {
+                const gameName = game.getAttribute('data-name').toLowerCase();
+                const gameCategory = game.getAttribute('data-category').toLowerCase();
+
+                let show = true;
+
+                if (searchCategory) {
+                    show = gameCategory === searchCategory;
+                } else if (searchName) {
+                    show = gameName.includes(searchName);
+                }
+
+                if (show) {
+                    game.classList.remove('hidden');
+                } else {
+                    game.classList.add('hidden');
+                }
+            });
+        });
+
+        // Category tabs functionality
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Remove active class from all tabs
+                categoryTabs.forEach(t => t.classList.remove('active'));
+
+                // Add active class to clicked tab
+                this.classList.add('active');
+
+                const category = this.getAttribute('data-category');
+
+                if (category === 'all') {
+                    gameElements.forEach(game => {
+                        game.classList.remove('hidden');
+                    });
+                } else {
+                    gameElements.forEach(game => {
+                        const gameCategory = game.getAttribute('data-category').toLowerCase();
+                        if (gameCategory === category) {
+                            game.classList.remove('hidden');
+                        } else {
+                            game.classList.add('hidden');
+                        }
+                    });
+                }
+            });
+        });
+
+        gameElements.forEach(game => {
+            game.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const gameName = this.getAttribute('data-name');
+                const gameUrl = this.getAttribute('data-url');
+                const gameImg = this.querySelector('img').src;
+                selectedGameUrl = gameUrl;
+                selectedGameName = gameName;
+
+                modalGameTitle.textContent = gameName;
+                modalGameImg.src = gameImg;
+                gameModal.classList.add('active');
+            });
+        });
+
+        function closeModal() {
+            gameModal.classList.remove('active');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelGameBtn.addEventListener('click', closeModal);
+
+        playGameBtn.addEventListener('click', function() {
+            openGame(selectedGameUrl, selectedGameName);
+        });
+
+        function openGame(url, name) {
+            window.location.href = `iframe.html?game=${url}&name=${name}`;
+        }
+    </script>
+</body>
+</html>

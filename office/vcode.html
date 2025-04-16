@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Online HTML Editor</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+			height: 100vh;
+			background-color: #1e1e1e;
+			color: #d4d4d4;
+		}
+
+		.toolbar {
+			background-color: #252526;
+			padding: 10px;
+			display: flex;
+			gap: 10px;
+			border-bottom: 1px solid #333;
+		}
+
+		.toolbar button {
+			background-color: #333;
+			color: #d4d4d4;
+			border: none;
+			padding: 8px 15px;
+			cursor: pointer;
+			border-radius: 5px;
+			display: flex;
+			/* Use flexbox for icon alignment */
+			align-items: center;
+			/* Vertically center icon and text */
+			gap: 4px;
+			/* Add some gap between icon and text */
+		}
+
+		.toolbar button:hover {
+			background-color: #555;
+		}
+
+		.container {
+			display: flex;
+			flex-grow: 1;
+			position: relative;
+		}
+
+		.editor-container,
+		.preview-container {
+			flex: 1;
+			border: 1px solid #333;
+			overflow: auto;
+			display: flex;
+			flex-direction: column;
+		}
+
+		#editor {
+			flex-grow: 1;
+			width: 100%;
+			height: 100%;
+		}
+
+		#previewArea {
+			flex-grow: 1;
+			width: 100%;
+			height: 100%;
+			border: none;
+			box-sizing: border-box;
+			background-color: #ffffff;
+		}
+
+		/* Resizable styles */
+		.container::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 50%;
+			width: 5px;
+			background-color: #555;
+			cursor: col-resize;
+			transform: translateX(-50%);
+		}
+
+		.resizing {
+			cursor: col-resize !important;
+			user-select: none;
+		}
+	</style>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<link rel="stylesheet" data-name="vs/editor/editor.main"
+		href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/editor/editor.main.min.css">
+</head>
+
+<body>
+	<div class="toolbar">
+		<button id="undoBtn" title="Undo">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            <span>Undo</span>
+        </button>
+		<button id="redoBtn" title="Redo">
+            <i class="bi bi-arrow-clockwise"></i>
+            <span>Redo</span>
+        </button>
+		<button id="runBtn" title="Run">
+            <i class="bi bi-play-fill"></i>
+            <span>Run</span>
+        </button>
+		<button id="shareBtn" title="Share">
+            <i class="bi bi-share"></i>
+            <span>Share</span>
+        </button>
+	</div>
+	<div class="container">
+		<div class="editor-container">
+			<div id="editor"></div>
+		</div>
+		<div class="preview-container">
+			<iframe id="previewArea"></iframe>
+		</div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs/loader.min.js"></script>
+	<script>
+		require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.1/min/vs' }});
+        require(['vs/editor/editor.main'], function () {
+            const editor = monaco.editor.create(document.getElementById('editor'), {
+                value: '',
+                language: 'html',
+                theme: 'vs-dark',
+                automaticLayout: true
+            });
+
+            const previewArea = document.getElementById('previewArea');
+            const runBtn = document.getElementById('runBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            const undoBtn = document.getElementById('undoBtn');
+            const redoBtn = document.getElementById('redoBtn');
+            const container = document.querySelector('.container');
+
+            let history = [""];
+            let historyIndex = 0;
+
+            function updatePreview() {
+                const htmlCode = editor.getValue();
+                previewArea.srcdoc = htmlCode;
+            }
+
+            runBtn.addEventListener('click', updatePreview);
+
+            shareBtn.addEventListener('click', () => {
+                const htmlCode = editor.getValue();
+                const base64Code = btoa(htmlCode);
+                const dataUrl = `data:text/html;base64,${base64Code}`;
+                navigator.clipboard.writeText(dataUrl).then(() => {
+                    alert('Link copied to clipboard!');
+                }).catch(err => {
+                    alert(`Failed to copy. Here is the link: ${dataUrl}`);
+                });
+            });
+
+            // Undo/Redo functionality
+            editor.onDidChangeModelContent(() => {
+                const currentValue = editor.getValue();
+                if (history[historyIndex] !== currentValue) {
+                    history = history.slice(0, historyIndex + 1);
+                    history.push(currentValue);
+                    historyIndex = history.length - 1;
+                    updateUndoRedoButtons();
+                }
+            });
+
+            undoBtn.addEventListener('click', () => {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    editor.setValue(history[historyIndex]);
+                    updatePreview();
+                    updateUndoRedoButtons();
+                }
+            });
+
+            redoBtn.addEventListener('click', () => {
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    editor.setValue(history[historyIndex]);
+                    updatePreview();
+                    updateUndoRedoButtons();
+                }
+            });
+
+            function updateUndoRedoButtons() {
+                undoBtn.disabled = historyIndex === 0;
+                redoBtn.disabled = historyIndex === history.length - 1;
+            }
+
+            // Initial state
+            updatePreview();
+            updateUndoRedoButtons();
+
+            // Resizable functionality
+            let isResizing = false;
+            let startX;
+
+            container.addEventListener('mousedown', (e) => {
+                if (Math.abs(e.clientX - container.offsetLeft - container.offsetWidth / 2) < 5) {
+                    isResizing = true;
+                    startX = e.clientX;
+                    container.classList.add('resizing');
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+
+                const dx = e.clientX - startX;
+                const editorWidth = (container.offsetWidth / 2) + dx;
+                const previewWidth = container.offsetWidth - editorWidth;
+
+                const editorContainer = document.querySelector('.editor-container');
+                const previewContainer = document.querySelector('.preview-container');
+
+                editorContainer.style.flexBasis = `${editorWidth}px`;
+                previewContainer.style.flexBasis = `${previewWidth}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    container.classList.remove('resizing');
+                }
+            });
+        });
+	</script>
+</body>
+
+</html>
