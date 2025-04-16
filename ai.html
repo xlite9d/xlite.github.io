@@ -37,18 +37,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
     <style>
         :root {
-            --text-primary: #e0e0e0;
-            --text-secondary: #9ca3af;
-            --surface-primary: #1a1a1a;
-            --surface-secondary: #2d2d2d;
-            --border-light: #3f3f3f;
-            --brand-color: #3b82f6;
-            --brand-hover: #2563eb;
-            --code-bg: #2b2b2b;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --surface-primary: #121212;
+            --surface-secondary: #1e1e1e;
+            --border-light: #333333;
+            --brand-color: #ff3a3a;
+            --brand-hover: #ff6b6b;
+            --code-bg: #2d2d2d;
             --sidebar-width: 260px;
             --sidebar-collapsed-width: 0px;
-            --glow-color: rgba(59, 130, 246, 0.5);
-            --hover-color: #333333;
+            --glow-color: rgba(255, 58, 58, 0.5);
+            --hover-color: #252525;
             --danger-color: #e74c3c;
         }
 
@@ -56,6 +56,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            transition: all 0.2s ease;
         }
 
         body, html {
@@ -172,7 +173,7 @@
         }
 
         .chat-item.active {
-            background-color: rgba(59, 130, 246, 0.2);
+            background-color: rgba(255, 58, 58, 0.2);
             border-left: 3px solid var(--brand-color);
         }
 
@@ -638,7 +639,7 @@
 
         .suggestion-item:hover {
             border-color: var(--brand-color);
-            background-color: rgba(59, 130, 246, 0.1);
+            background-color: rgba(255, 58, 58, 0.1);
         }
 
         /* Controls */
@@ -722,7 +723,7 @@
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: rgba(59, 130, 246, 0.9);
+            background-color: rgba(255, 58, 58, 0.9);
             color: white;
             padding: 8px 16px;
             border-radius: 4px;
@@ -815,7 +816,7 @@
 
             <div class="chat-container">
                 <div class="welcome-screen" id="welcome-screen">
-                    <img class="welcome-image" src="https://placehold.co/200/3b82f6/FFFFFF.png?text=VAI" alt="VAI Logo">
+                    <img class="welcome-image" src="https://placehold.co/200/ff3a3a/FFFFFF.png?text=VAI" alt="VAI Logo">
                     <h1>What can I help with?</h1>
                     <div class="welcome-suggestions">
                         <div class="suggestion-item">Explain quantum computing</div>
