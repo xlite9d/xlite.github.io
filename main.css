@@ -8,13 +8,11 @@ body {
     overflow-x: hidden;
 }
 
-/* Create proper stacking context for elements */
 .page-wrapper {
     position: relative;
     z-index: 1;
 }
 
-/* Custom cursor effect */
 .cursor-follow {
     position: fixed;
     width: 300px;
@@ -33,7 +31,6 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Fixed z-index stacking context for the entire page */
 body::before {
     content: '';
     position: fixed;
@@ -48,7 +45,6 @@ body::before {
     background-attachment: fixed;
 }
 
-/* Red background effect that appears on hover */
 body::after {
     content: '';
     position: fixed;
@@ -68,7 +64,6 @@ body.game-hover::after {
     opacity: 1;
 }
 
-/* Navbar section with extremely high z-index */
 .navbar {
     font-family: 'Inter', sans-serif;
     color: white;
@@ -76,7 +71,7 @@ body.game-hover::after {
     flex-direction: column;
     align-items: center;
     position: relative;
-    z-index: 9999999; /* Extremely high z-index */
+    z-index: 9999999;
 }
 
 header {
@@ -88,7 +83,7 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 12px 30px;
-    z-index: 9999999; /* Extremely high z-index */
+    z-index: 9999999;
     background-color: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 18px;
@@ -118,12 +113,11 @@ header {
     font-size: 18px;
 }
 
-/* Make sure search container is also on top */
 .search-container {
     margin-left: auto;
     padding: 0 10px;
     position: relative;
-    z-index: 9999999; /* Extremely high z-index */
+    z-index: 9999999;
 }
 
 .search-bar {
@@ -146,13 +140,12 @@ header {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Games section */
 .games-section {
     padding: 120px 40px 40px;
     color: white;
     font-family: 'Inter', sans-serif;
     position: relative;
-    z-index: 5; /* Higher than background effects but lower than navbar */
+    z-index: 5;
 }
 
 .section {
@@ -174,7 +167,6 @@ header {
     gap: 24px;
 }
 
-/* Game card styles */
 .game-card {
     background-color: rgba(255, 255, 255, 0.04);
     border-radius: 20px;
@@ -184,7 +176,7 @@ header {
     transition: transform 0.4s ease, box-shadow 0.3s ease, background-color 0.5s ease, border 0.3s ease;
     cursor: pointer;
     position: relative;
-    z-index: auto; /* Set to lower z-index */
+    z-index: auto;
 }
 
 .game-card:hover {
@@ -192,7 +184,7 @@ header {
     box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
     background-color: rgba(255, 0, 0, 0.3);
     border: 1px solid rgba(255, 0, 0, 0.4);
-    z-index: 50; /* Higher than default game-card to appear above other cards */
+    z-index: 50;
 }
 
 .game-card:hover::after {
@@ -205,7 +197,7 @@ header {
     background: radial-gradient(circle at center, rgba(255, 0, 0, 0.8) 0%, rgba(255, 0, 0, 0) 70%);
     pointer-events: none;
     opacity: 0.4;
-    z-index: 2; /* Adjusted z-index for proper layering */
+    z-index: 2;
     animation: pulse 2s infinite;
     border-radius: 20px;
 }
@@ -241,7 +233,7 @@ header {
 .game-info {
     padding: 16px 16px;
     position: relative;
-    z-index: 3; /* Adjusted z-index for proper layering */
+    z-index: 3;
 }
 
 .game-info h3 {
@@ -262,12 +254,10 @@ header {
     margin-top: 4px;
 }
 
-/* Add a subtler red glow for the overall page when hovering */
 body.game-hover {
     background-color: #000000;
 }
 
-/* No need to set z-index on these again as they inherit from their parent elements */
 body.game-hover .navbar,
 body.game-hover .games-section {
     position: relative;
