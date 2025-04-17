@@ -1,14 +1,18 @@
+<link rel="shortcut icon" type="image/png" href="https://i.ibb.co/2FwztDC/nexus.png">
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VPlaza Chat</title>
+    <link rel="manifest" href="manifest.json"> <!-- Manifest file -->
+    <title>vplaza Chat Rooms</title>
     <link rel="icon" type="image/png" href="https://i.ibb.co/2FwztDC/nexus.png">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         /* Global styles */
@@ -20,28 +24,37 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             height: 100vh;
             overflow: hidden;
             position: relative;
-            background-color: #000000;
-            color: #ffffff;
+            background-color: #1c1c1c; /* Default background color */
+        }
+
+        .particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
         }
 
         /* Custom scrollbar styles */
         ::-webkit-scrollbar {
-            width: 8px;
-            background-color: #0a0a0a;
+            width: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         ::-webkit-scrollbar-thumb {
             background-color: #ff0000;
-            border-radius: 4px;
-            box-shadow: 0 0 10px #ff0000;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
         }
 
         ::-webkit-scrollbar-thumb:hover {
             background-color: #ff3333;
+            box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
         }
 
         /* Container and header styles */
@@ -51,65 +64,27 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            padding: 10px 20px;
+            padding: 20px;
         }
 
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #111111;
-            border-radius: 8px 8px 0 0;
-            padding: 15px 20px;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-            border: 1px solid #ff0000;
-            margin-bottom: 5px;
+            text-align: center;
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.6);
         }
 
         .header h1 {
-            font-size: 20px;
-            color: #ff0000;
-            font-weight: 700;
-            text-shadow: 0 0 5px #ff0000;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            color: #cccccc;
-            text-shadow: 0 0 2px #cccccc;
-        }
-
-        #userNameDisplay {
-            font-weight: 600;
+            font-size: 28px;
             color: #ffffff;
-            margin-left: 5px;
-            text-shadow: 0 0 3px #ffffff;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
         }
 
-        #logoutButton {
-            margin-left: 10px;
-            background: #ff0000;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-            box-shadow: 0 0 10px #ff0000;
-            transition: all 0.2s;
-        }
-
-        #logoutButton:hover {
-            background: #ff3333;
-            box-shadow: 0 0 15px #ff3333;
+        .header p {
+            font-size: 14px;
+            color: #bbb;
         }
 
         /* Messages and input styles */
@@ -117,40 +92,41 @@
             flex-grow: 1;
             overflow-y: auto;
             padding: 20px;
-            background: #0a0a0a;
-            border: 1px solid #ff0000;
+            background: rgba(40, 40, 40, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            margin-bottom: 5px;
-            box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.3);
+            gap: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ff0000;
         }
 
         .message {
-            padding: 10px 15px;
-            border-radius: 4px;
-            max-width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            background: #2a2a2a;
+            max-width: 90%;
             display: flex;
             align-items: flex-start;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
             position: relative;
-            transition: background 0.1s;
-            background: #111111;
-            box-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
         }
 
-        .message:hover {
-            background: #1a1a1a;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        .message.self {
+            background: #ff0000;
+            margin-left: auto;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.9);
         }
 
         .message-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            margin-right: 15px;
+            margin-right: 12px;
+            background-color: #333;
             overflow: hidden;
-            border: 2px solid #ff0000;
-            box-shadow: 0 0 8px rgba(255, 0, 0, 0.6);
         }
 
         .message-avatar img {
@@ -166,146 +142,94 @@
         .message-header {
             display: flex;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
-        .message-username {
-            font-weight: 700;
-            color: #ff0000;
-            font-size: 16px;
-            margin-right: 10px;
-            text-shadow: 0 0 5px #ff0000;
+        .message.self .message-header {
+            color: #ffffff;
         }
 
-        .message-timestamp {
+        .message-sender {
+            font-weight: bold;
+            color: #ff9999;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+
+        .message.self .message-sender {
+            color: #ffffff;
+        }
+
+        .timestamp {
             font-size: 12px;
-            color: #999999;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: 4px;
         }
 
         .message-text {
+            margin: 0;
             color: #ffffff;
-            font-size: 14px;
+            word-break: break-word;
+            font-size: 15px;
             line-height: 1.4;
-            word-wrap: break-word;
-            text-shadow: 0 0 1px #ffffff;
         }
 
-        .message-text .mention {
-            background-color: rgba(255, 0, 0, 0.2);
-            color: #ff3333;
-            border-radius: 3px;
-            padding: 0 2px;
-            font-weight: 600;
-            text-shadow: 0 0 5px #ff0000;
-        }
-
-        .input-area {
+        /* Profile upload styles */
+        .profile-upload {
+            margin-top: 10px;
             display: flex;
             align-items: center;
-            padding: 10px;
-            background: #111111;
-            border-radius: 0 0 8px 8px;
-            border: 1px solid #ff0000;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
         }
 
-        .input-container {
-            position: relative;
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            background: #0a0a0a;
-            border-radius: 20px;
-            padding: 0 15px;
-            border: 1px solid #ff0000;
-            box-shadow: inset 0 0 5px rgba(255, 0, 0, 0.5);
-        }
-
-        .input-area input[type="text"] {
-            flex-grow: 1;
-            border: none;
-            padding: 12px 0;
-            background: transparent;
-            color: #ffffff;
-            font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .input-area input[type="text"]:focus {
-            outline: none;
-        }
-
-        .input-area input[type="text"]::placeholder {
-            color: #999999;
-        }
-
-        .input-actions {
-            display: flex;
-            align-items: center;
-            margin-left: 10px;
-        }
-
-        .action-button {
-            background: none;
-            border: none;
-            color: #ff0000;
-            font-size: 20px;
-            padding: 5px;
+        .profile-upload-label {
             cursor: pointer;
-            margin-left: 5px;
-            transition: color 0.2s;
-            text-shadow: 0 0 5px #ff0000;
-        }
-
-        .action-button:hover {
-            color: #ff3333;
-            text-shadow: 0 0 10px #ff3333;
-        }
-
-        .send-button {
-            background: #ff0000;
-            color: #ffffff;
-            border: none;
-            border-radius: 20px;
-            padding: 10px 15px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-left: 10px;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
-        }
-
-        .send-button:hover {
-            background: #ff3333;
-            box-shadow: 0 0 15px rgba(255, 51, 51, 0.8);
-        }
-
-        /* Join notification styles */
-        .join-notification {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            background: #111111;
+            padding: 8px 12px;
+            background: rgba(255, 0, 0, 0.3);
             color: white;
-            padding: 10px 15px;
-            border-radius: 4px;
-            z-index: 20;
-            display: none; /* Hidden initially */
-            animation: slideIn 0.3s ease;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-            border: 1px solid #ff0000;
+            border-radius: 5px;
+            margin-right: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            font-size: 12px;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .profile-upload-label:hover {
+            background: rgba(255, 0, 0, 0.5);
         }
 
-        @keyframes glowing {
-            0% { box-shadow: 0 0 5px #ff0000; }
-            50% { box-shadow: 0 0 20px #ff0000; }
-            100% { box-shadow: 0 0 5px #ff0000; }
+        .profile-upload-label i {
+            margin-right: 6px;
+        }
+
+        .profile-upload-input {
+            display: none;
+        }
+
+        .profile-preview {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #ff0000;
+        }
+
+        .profile-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .default-avatar {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            width: 100%;
+            height: 100%;
         }
 
         /* Modal styles */
@@ -319,723 +243,434 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 10;
         }
 
         .modal-content {
-            background: #0a0a0a;
+            background: #23272a;
             padding: 30px;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
-            border: 1px solid #ff0000;
-            animation: glowing 2s infinite;
-        }
-
-        .modal-content h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #ff0000;
-            font-weight: 700;
-            text-shadow: 0 0 10px #ff0000;
-        }
-
-        .modal-content h3 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #cccccc;
-            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.8);
         }
 
         .modal-content input[type="text"] {
             margin: 10px 0;
-            padding: 12px 15px;
+            padding: 15px;
             width: 100%;
-            border: 1px solid #ff0000;
-            border-radius: 4px;
-            background: #111111;
-            color: #ffffff;
-            font-family: 'Poppins', sans-serif;
-            box-shadow: inset 0 0 5px rgba(255, 0, 0, 0.5);
+            border: none;
+            border-radius: 5px;
+            background: #2f3136;
+            color: white;
+            transition: background 0.3s;
         }
 
         .modal-content input[type="text"]:focus {
-            outline: none;
-            box-shadow: inset 0 0 8px rgba(255, 0, 0, 0.7);
+            background: #3c3f44;
+            box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
         }
 
         .modal-content button {
-            padding: 12px 20px;
+            padding: 15px 25px;
             background: #ff0000;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             width: 100%;
-            transition: all 0.2s;
-            margin-top: 15px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
         }
 
         .modal-content button:hover {
             background: #ff3333;
-            box-shadow: 0 0 15px rgba(255, 51, 51, 0.8);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
         }
 
-        /* Profile picture upload */
-        .profile-upload {
-            margin: 15px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .profile-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: #111111;
-            margin-bottom: 15px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #ff0000;
-            font-size: 30px;
-            border: 1px solid #ff0000;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-        }
-
-        .profile-preview img {
+        /* Error screen styles */
+        .error-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-        }
-
-        .upload-button {
-            background: #111111;
-            color: #ffffff;
-            border: 1px solid #ff0000;
-            border-radius: 4px;
-            padding: 8px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
-        }
-
-        .upload-button:hover {
-            background: #1a1a1a;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
-        }
-
-        /* Emoji Picker styles */
-        .emoji-picker {
-            position: absolute;
-            bottom: 80px;
-            right: 20px;
-            width: 340px;
-            background: #1e1e1e;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
-            border: 1px solid #ff0000;
-            z-index: 100;
+            background: rgba(0, 0, 0, 0.9);
             display: none;
-            overflow: hidden;
-            flex-direction: column;
-            animation: fadeIn 0.2s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .emoji-picker-tabs {
-            display: flex;
-            border-bottom: 1px solid #2f2f2f;
-            padding: 10px;
-        }
-
-        .emoji-picker-tab {
-            padding: 8px 16px;
-            color: #b9bbbe;
-            cursor: pointer;
-            margin-right: 5px;
-            border-radius: 4px 4px 0 0;
-            transition: background 0.2s;
-        }
-
-        .emoji-picker-tab.active {
-            color: #fff;
-            background: #36393f;
-        }
-
-        .emoji-picker-search {
-            padding: 10px;
-            position: relative;
-        }
-
-        .emoji-picker-search input {
-            width: 100%;
-            padding: 10px 40px 10px 10px;
-            border-radius: 8px;
-            border: none;
-            background: #36393f;
-            color: #fff;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .emoji-picker-search input:focus {
-            outline: none;
-        }
-
-        .emoji-picker-search .search-icon {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #b9bbbe;
-        }
-
-        .emoji-section-title {
-            padding: 8px 12px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #b9bbbe;
-            display: flex;
             align-items: center;
-            border-bottom: 1px solid #2f2f2f;
-        }
-
-        .emoji-section-title .section-icon {
-            margin-right: 8px;
-            color: #b9bbbe;
-        }
-
-        .emoji-section-title .dropdown-arrow {
-            margin-left: 8px;
-            font-size: 12px;
-            color: #b9bbbe;
-        }
-
-        .emoji-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            padding: 12px;
-            overflow-y: auto;
-            max-height: 300px;
-            background-color: #2f2f2f;
-        }
-
-        .emoji-item {
-            width: 48px;
-            height: 48px;
-            display: flex;
             justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .emoji-item:hover {
-            background: #36393f;
-        }
-
-        .emoji-categories {
-            display: flex;
-            padding: 5px 10px;
-            background: #2c2c2c;
-            border-top: 1px solid #2f2f2f;
-        }
-
-        .emoji-category {
-            padding: 8px;
-            color: #b9bbbe;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-
-        .emoji-category:hover {
-            color: #fff;
-            background: #36393f;
-        }
-
-        .emoji-picker-footer {
-            display: flex;
-            justify-content: flex-end;
-            padding: 8px;
-            background: #2c2c2c;
-            border-top: 1px solid #2f2f2f;
-        }
-
-        .emoji-picker-btn {
-            padding: 6px 12px;
-            background: #ff0000;
             color: white;
+            z-index: 30;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .input-area input[type="text"] {
+                margin-bottom: 10px;
+                width: auto;
+            }
+
+            .input-area input[type="submit"] {
+                width: 100%;
+            }
+        }
+
+        /* Microphone button styles */
+        .mic-button {
+            background: none;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: background 0.2s;
+            color: #ffffff;
+            font-size: 24px;
+            margin-left: 10px;
+            margin-right: 10px;
         }
 
-        .emoji-picker-btn:hover {
+        .mic-button:disabled {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Input area styles */
+        .input-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 10px;
+        }
+
+        .input-area input[type="text"] {
+            flex-grow: 1;
+            border: none;
+            padding: 15px;
+            background: rgba(75, 0, 0, 0.5);
+            color: #ffffff;
+            border-radius: 20px;
+            font-size: 16px;
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+
+        .input-area input[type="text"]:focus {
+            background: rgba(75, 0, 0, 0.8);
+            outline: none;
+            box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        }
+
+        .input-area input[type="submit"] {
+            padding: 15px 20px;
+            background: #ff0000;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        }
+
+        .input-area input[type="submit"]:hover {
             background: #ff3333;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
         }
 
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                padding: 10px 15px;
-            }
-
-            .header h1 {
-                font-size: 16px;
-            }
-
-            .message-avatar {
-                width: 35px;
-                height: 35px;
-            }
-
-            .message-username {
-                font-size: 14px;
-            }
-
-            .message-text {
-                font-size: 13px;
-            }
-
-            .top-buttons {
-                top: 10px;
-                right: 10px;
-            }
-
-            .top-button {
-                width: 35px;
-                height: 35px;
-                font-size: 16px;
-            }
+        /* Join notification styles */
+        .join-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(75, 0, 0, 0.8);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 20;
+            display: none; /* Hidden initially */
+            animation: fadeIn 0.5s ease;
         }
     </style>
 </head>
 
 <body>
-    <!-- Login modal -->
-    <div class="modal" id="loginModal" style="display: flex;">
+    <div id="particles-js" class="particles-js"></div>
+
+    <div class="modal" id="roomModal">
         <div class="modal-content">
-            <h2>WELCOME TO VPLAZA</h2>
-            <h3>Create your profile</h3>
+            <h2>Join a Room</h2>
+            <input type="text" id="roomCodeInput" placeholder="Room Code" required aria-label="Room Code">
+            <input type="text" id="usernameInput" placeholder="Your Name" required aria-label="Your Name">
 
             <div class="profile-upload">
-                <div class="profile-preview" id="profilePreview">
-                    <i class="fas fa-user"></i>
+                <label for="profilePicInput" class="profile-upload-label">
+                    <i class="fas fa-upload"></i> Upload Profile Picture
+                </label>
+                <input type="file" id="profilePicInput" class="profile-upload-input" accept="image/*">
+                <div class="profile-preview">
+                    <div class="default-avatar" id="defaultAvatar"></div>
+                    <img id="profilePreview" style="display: none;">
                 </div>
-                <input type="file" id="profilePicture" accept="image/*" style="display: none;">
-                <button class="upload-button" onclick="document.getElementById('profilePicture').click()">
-                    <i class="fas fa-upload"></i> Upload Avatar
-                </button>
             </div>
 
-            <input type="text" id="usernameInput" placeholder="Enter your username" required aria-label="Your Name">
-            <button onclick="setUsername()">START CHATTING</button>
+            <button onclick="joinRoom()">Join</button>
         </div>
     </div>
 
-    <!-- Chat container -->
     <div class="container" id="chatContainer" style="display: none;">
         <div class="header">
-            <h1>VPLAZA CHAT</h1>
-            <div class="user-info">
-                Logged in as: <span id="userNameDisplay"></span>
-                <button id="logoutButton">Logout</button>
-                <button id="settingsButton" style="margin-left: 10px; background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 700; box-shadow: 0 0 10px #ff0000; transition: all 0.2s;">Settings</button>
-            </div>
+            <h1 id="roomName">Room</h1>
+            <p id="userInfo">Logged in as: <span id="userNameDisplay"></span></p>
         </div>
         <div class="messages" id="messages"></div>
         <form class="input-area" onsubmit="return false;">
-            <div class="input-container">
-                <input id="messageInput" placeholder="Type a message..." type="text" required aria-label="Message Input" />
-            </div>
-            <div class="input-actions">
-                <button class="action-button" type="button" id="emojiButton" aria-label="Add Emoji">
-                    <i class="far fa-smile"></i>
-                </button>
-                <button class="action-button" type="button" id="micButton" aria-label="Voice Input">
-                    <i id="micIcon" class="fas fa-microphone-slash"></i>
-                </button>
-            </div>
-            <button type="button" class="send-button" onclick="sendMessage()" aria-label="Send Message">
-                <i class="fas fa-paper-plane"></i>
+            <input id="messageInput" placeholder="Type a message..." type="text" required aria-label="Message Input" />
+            <button class="mic-button" type="button" id="micButton" aria-label="Voice Input">
+                <i class="fas fa-microphone-slash" id="micIcon"></i>
             </button>
+            <input type="submit" value="Send" aria-label="Send Message">
         </form>
-
-        <!-- Emoji Picker -->
-        <div class="emoji-picker" id="emojiPicker">
-            <div class="emoji-picker-tabs">
-                <div class="emoji-picker-tab active">GIFs</div>
-                <div class="emoji-picker-tab">Stickers</div>
-                <div class="emoji-picker-tab">Emoji</div>
-            </div>
-            <div class="emoji-picker-search">
-                <input type="text" placeholder="Find the perfect emoji">
-                <div class="search-icon">
-                    <i class="fas fa-search"></i>
-                </div>
-            </div>
-            <div class="emoji-section-title">
-                <span class="section-icon"><i class="fas fa-trophy"></i></span>
-                TOP EMOJI IN »——Vplaza——▶ | HOME SERVER
-                <span class="dropdown-arrow"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="emoji-grid">
-                <div class="emoji-item" onclick="addEmoji('🔴')">🔴</div>
-                <div class="emoji-item" onclick="addEmoji('⚡')">⚡</div>
-                <div class="emoji-item" onclick="addEmoji('🧢')">🧢</div>
-                <div class="emoji-item" onclick="addEmoji('🟪')">🟪</div>
-                <div class="emoji-item" onclick="addEmoji('⬛')">⬛</div>
-                <div class="emoji-item" onclick="addEmoji('🇻')">🇻</div>
-                <div class="emoji-item" onclick="addEmoji('🐊')">🐊</div>
-                <div class="emoji-item" onclick="addEmoji('✅')">✅</div>
-                <div class="emoji-item" onclick="addEmoji('❤️')">❤️</div>
-                <div class="emoji-item" onclick="addEmoji('🆕')">🆕</div>
-            </div>
-            <div class="emoji-section-title">
-                <span class="section-icon"><i class="fas fa-star"></i></span>
-                FAVORITES
-                <span class="dropdown-arrow"><i class="fas fa-chevron-down"></i></span>
-            </div>
-            <div class="emoji-grid">
-                <div class="emoji-item" onclick="addEmoji('👤')">👤</div>
-                <div class="emoji-item" onclick="addEmoji('✅')">✅</div>
-                <div class="emoji-item" onclick="addEmoji('🎮')">🎮</div>
-                <div class="emoji-item" onclick="addEmoji('🔒')">🔒</div>
-                <div class="emoji-item" onclick="addEmoji('🔓')">🔓</div>
-                <div class="emoji-item" onclick="addEmoji('🟣')">🟣</div>
-                <div class="emoji-item" onclick="addEmoji('🟧')">🟧</div>
-            </div>
-            <div class="emoji-categories">
-                <div class="emoji-category"><i class="fas fa-clock"></i></div>
-                <div class="emoji-category"><i class="fas fa-smile"></i></div>
-                <div class="emoji-category"><i class="fas fa-flag"></i></div>
-                <div class="emoji-category"><i class="fas fa-paw"></i></div>
-                <div class="emoji-category"><i class="fas fa-hamburger"></i></div>
-                <div class="emoji-category"><i class="fas fa-volleyball-ball"></i></div>
-                <div class="emoji-category"><i class="fas fa-train"></i></div>
-            </div>
-            <div class="emoji-picker-footer">
-                <button class="emoji-picker-btn">POPULAR</button>
-            </div>
-        </div>
+        <div class="join-notification" id="joinNotification"></div>
     </div>
 
-    <!-- Notification for new joined users -->
-    <div class="join-notification" id="joinNotification"></div>
-
-    <!-- Theme selection modal -->
-    <div class="modal" id="themeModal" style="display: none;">
-        <div class="modal-content">
-            <h2>Settings</h2>
-            <button class="close-button" onclick="closeThemeModal()" style="position: absolute; top: 10px; right: 10px; background: #ff0000; border: none; color: white; width: 25px; height: 25px; border-radius: 50%; font-size: 14px; line-height: 25px; text-align: center; cursor: pointer; box-shadow: 0 0 10px #ff0000;">×</button>
-
-            <h3 style="color: #cccccc; margin-top: 10px; font-size: 16px;">Interface Settings</h3>
-            <div style="margin-top: 15px; text-align: left; color: #cccccc;">
-                <p>These settings are just for show. The real magic is in the chat!</p>
-            </div>
-        </div>
+    <div class="error-screen" id="errorScreen">
+        <h1>404 ERROR FOUND</h1>
+        <p>vplaza chat cannot allow access to your device as you are too zoomed in!</p>
+        <button onclick="resizeScreen()">Reload or shrink your screen size!</button>
     </div>
 
-    <!-- Hidden mention notification sound -->
-    <audio id="mentionSound" src="audio/chatapp/ping.wav" preload="auto"></audio>
+    <div class="join-notification" id="joinNotification" style="display: none;">
+        <h2 id="joinMessage"></h2>
+    </div>
 
     <script>
         const CLIENT_ID = 'aSEKMcR4GsEZONob';
-        let drone;
+        const drone = new ScaleDrone(CLIENT_ID);
         let room;
         let userName = '';
-        let userAvatar = null;
-        const roomCode = 'vplaza'; // Fixed room code
+        let roomCode = '';
+        let userProfilePic = ''; // Base64 encoded profile picture
         const userNames = {};
+        const userProfiles = {}; // Store user profile pics
         let isRecording = false; // Track voice recording status
         let recognition; // Speech recognition instance
-        let connectionRetries = 0;
-        const MAX_RETRIES = 3;
 
-        // Check for profile image upload
-        document.getElementById('profilePicture').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    userAvatar = e.target.result;
-                    document.getElementById('profilePreview').innerHTML = `<img src="${userAvatar}" alt="Profile Preview">`;
-                };
-                reader.readAsDataURL(file);
+        // Check screen size function
+        function checkScreenSize() {
+            if (window.innerWidth < 500) {
+                document.getElementById("errorScreen").style.display = "flex";
+                document.getElementById("chatContainer").style.display = "none";
+                return false;
             }
-        });
+            document.getElementById("errorScreen").style.display = "none";
+            return true;
+        }
 
-        // Check for saved username in localStorage
-        window.onload = function() {
-            const savedUserName = localStorage.getItem('vplazaUsername');
-            const savedAvatar = localStorage.getItem('vplazaUserAvatar');
+        function resizeScreen() {
+            window.location.reload();
+        }
 
-            if (savedUserName) {
-                userName = savedUserName;
-                if (savedAvatar) {
-                    userAvatar = savedAvatar;
+        window.onload = function () {
+            checkScreenSize();
+
+            // Set up profile picture preview
+            const profilePicInput = document.getElementById('profilePicInput');
+            const profilePreview = document.getElementById('profilePreview');
+            const defaultAvatar = document.getElementById('defaultAvatar');
+
+            profilePicInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        userProfilePic = event.target.result;
+                        profilePreview.src = userProfilePic;
+                        profilePreview.style.display = 'block';
+                        defaultAvatar.style.display = 'none';
+                    };
+                    reader.readAsDataURL(file);
                 }
-                connectToChat();
-            } else {
-                document.getElementById('loginModal').style.display = 'flex';
-            }
+            });
+
+            // Initialize default avatar with first letter of username
+            document.getElementById('usernameInput').addEventListener('input', function(e) {
+                const firstLetter = e.target.value.trim().charAt(0).toUpperCase();
+                defaultAvatar.textContent = firstLetter || '?';
+            });
         };
 
-        // Function to open theme modal
-        document.getElementById('settingsButton').addEventListener('click', function() {
-            document.getElementById('themeModal').style.display = 'flex';
-        });
+        window.onresize = function () {
+            checkScreenSize();
+        };
 
-        function setUsername() {
+        function joinRoom() {
             userName = document.getElementById('usernameInput').value.trim();
+            roomCode = document.getElementById('roomCodeInput').value.trim();
 
-            if (!userName) {
-                alert('Please enter a username!');
+            if (!userName || !roomCode) {
+                alert('Please enter a username and room code!');
                 return;
             }
 
-            // Save username and avatar to localStorage
-            localStorage.setItem('vplazaUsername', userName);
-            if (userAvatar) {
-                localStorage.setItem('vplazaUserAvatar', userAvatar);
+            if (/[^a-zA-Z0-9 ]/.test(userName)) {
+                alert('Username can only contain letters, numbers, and spaces.');
+                return;
             }
 
-            connectToChat();
-        }
-
-        function connectToChat() {
-            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('roomModal').style.display = 'none';
             document.getElementById('chatContainer').style.display = 'flex';
             document.getElementById('userNameDisplay').textContent = userName;
+            document.getElementById('roomName').textContent = `${roomCode}`;
 
-            // Initialize Scaledrone with error handling
-            try {
-                drone = new ScaleDrone(CLIENT_ID);
-
-                drone.on('open', error => {
-                    if (error) {
-                        console.error('Error connecting to Scaledrone:', error);
-                        handleConnectionError();
-                        return;
-                    }
-                    console.log('Successfully connected to Scaledrone');
-                    connectionRetries = 0; // Reset retries on successful connection
-                    subscribeToRoom();
-                });
-
-                drone.on('error', error => {
-                    console.error('Scaledrone connection error:', error);
-                    handleConnectionError();
-                });
-
-                drone.on('close', event => {
-                    console.log('Connection closed:', event);
-                    if (event.code !== 1000) {
-                        // Attempt to reconnect if not a normal closure
-                        handleConnectionError();
-                    }
-                });
-            } catch (error) {
-                console.error('Failed to initialize Scaledrone:', error);
-                alert('Failed to connect to chat service. Please try again later.');
-            }
+            connectToRoom();
         }
 
-        function handleConnectionError() {
-            connectionRetries++;
-            if (connectionRetries <= MAX_RETRIES) {
-                console.log(`Retrying connection (attempt ${connectionRetries}/${MAX_RETRIES})...`);
-                setTimeout(() => {
-                    connectToChat();
-                }, 2000); // Wait 2 seconds before retrying
-            } else {
-                alert('Failed to connect after multiple attempts. Please check your internet connection and try again later.');
-            }
-        }
-
-        function subscribeToRoom() {
-            // Connect to Scaledrone room
+        function connectToRoom() {
             try {
+                // Attempt to close previous room if it exists
+                if (room) {
+                    try {
+                        room.unsubscribe();
+                    } catch (e) {
+                        console.log('Error unsubscribing from previous room:', e);
+                    }
+                }
+
+                userNames[userName] = { clientId: drone.clientId };
+                userProfiles[userName] = userProfilePic; // Save profile picture
+
+                // Subscribe to the room
                 room = drone.subscribe(`observable-${roomCode}`);
+
+                room.on('error', error => {
+                    console.error('Error connecting to room:', error);
+                    alert('Error connecting to the chat room. Please try again.');
+                    document.getElementById('roomModal').style.display = 'flex';
+                    document.getElementById('chatContainer').style.display = 'none';
+                });
 
                 room.on('open', error => {
                     if (error) {
-                        console.error('Error connecting to Scaledrone room:', error);
+                        console.error('Error opening room:', error);
+                        alert('Error connecting to the chat room. Please try again.');
                         return;
                     }
-                    console.log('Successfully connected to Scaledrone room');
+                    console.log('Connected to room successfully');
 
-                    // Send a join message after successful connection
+                    // Announce user has joined with profile pic
                     setTimeout(() => {
-                        sendMessage("Just joined the chat!");
-                    }, 1000);
+                        drone.publish({
+                            room: `observable-${roomCode}`,
+                            message: {
+                                type: 'join',
+                                name: userName,
+                                profilePic: userProfilePic
+                            }
+                        });
+                    }, 1000); // Short delay to ensure connection is stable
                 });
 
-                room.on('error', error => {
-                    console.error('Scaledrone room error:', error);
-                });
-
-                room.on('members', members => {
-                    console.log('Current members:', members);
-                });
-
-                room.on('member_join', member => {
-                    console.log('Member joined:', member);
-                });
-
-                // Handle incoming messages
                 room.on('data', (data, member) => {
-                    console.log('Received message:', data, 'from member:', member);
-                    if (data && data.text && data.name) {
-                        addMessageToList(data.text, data.name, member.id === drone.clientId, data.timestamp, data.avatar);
+                    if (!data) return;
 
-                        // Store user information for future reference
-                        // Only show join notification for actual join messages, not regular chat
-                        if (!userNames[data.name]) {
-                            userNames[data.name] = {
-                                clientId: member.id,
-                                avatar: data.avatar
-                            };
-
-                            // Only show join notification if this is a specific join message
-                            if (data.text === "Just joined the chat!") {
-                                showJoinNotification(data.name);
-                            }
-                        } else {
-                            // Update the avatar if it changed
-                            if (data.avatar && data.avatar !== userNames[data.name].avatar) {
-                                userNames[data.name].avatar = data.avatar;
-                            }
+                    if (data.type === 'join') {
+                        // Store user profile pic
+                        userProfiles[data.name] = data.profilePic;
+                        userNames[data.name] = { clientId: member.id };
+                        showJoinNotification(data.name);
+                    } else if (data.text) {
+                        // If we don't have the profile pic yet
+                        if (!userProfiles[data.name] && data.profilePic) {
+                            userProfiles[data.name] = data.profilePic;
                         }
-
-                        // Check for mentions - play sound if current user is mentioned
-                        if (member.id !== drone.clientId && data.text.includes(`@${userName}`)) {
-                            playMentionSound();
-                        }
+                        addMessageToList(data.text, data.name, member.id === drone.clientId, data.timestamp);
                     }
                 });
+
+                // Clear messages when joining a new room
+                document.getElementById('messages').innerHTML = '';
+
             } catch (error) {
-                console.error('Error subscribing to room:', error);
-                alert('Failed to join chat room. Please try again later.');
+                console.error('Error in connectToRoom:', error);
+                alert('Unable to connect to the chat room. Please refresh and try again.');
             }
         }
 
-        function sendMessage(text) {
+        function sendMessage() {
             const messageInput = document.getElementById('messageInput');
-            // If text is provided from speech recognition, use it, otherwise get from input field
-            const messageText = text || messageInput.value.trim();
-            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const messageText = messageInput.value.trim();
 
             if (messageText === '') return;
 
-            messageInput.value = ''; // Clear input field
+            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-            console.log('Sending message:', messageText);
-
-            // Check if drone and room are initialized properly
-            if (!drone || !room) {
-                console.error('Chat connection not established');
-                alert('Chat connection lost. Please refresh the page and try again.');
-                return;
-            }
+            messageInput.value = ''; // Clear input field if sending manually
 
             try {
-                // Publish message to the room
                 drone.publish({
                     room: `observable-${roomCode}`,
                     message: {
                         text: messageText,
                         name: userName,
-                        timestamp,
-                        avatar: userAvatar
+                        timestamp: timestamp,
+                        profilePic: userProfiles[userName]
                     }
                 });
-
-                // Only add the message locally for normal messages, not join messages
-                // (join messages will come back through the data event)
-                if (messageText !== "Just joined the chat!") {
-                    addMessageToList(messageText, userName, true, timestamp, userAvatar);
-                }
             } catch (error) {
                 console.error('Error sending message:', error);
-                alert('Failed to send message. Please try again.');
+                alert('Failed to send message. Please check your connection and try again.');
             }
         }
 
-        function formatText(text) {
-            // Format links
-            text = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" class="link" target="_blank" style="color: #ff6666; text-decoration: underline;">$1</a>');
-
-            // Format mentions
-            text = text.replace(/@(\w+)/g, '<span class="mention">@$1</span>');
-
-            return text;
+        function formatLinks(text) {
+            const urlPattern = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlPattern, '<a href="$1" class="link" target="_blank">$1</a>');
         }
 
-        function addMessageToList(text, name, isSelf, timestamp, avatar) {
-            console.log('Adding message to list:', text, name, isSelf, timestamp);
+        function getInitials(name) {
+            return name.charAt(0).toUpperCase();
+        }
 
+        function addMessageToList(text, name, isSelf, timestamp) {
             const messages = document.getElementById('messages');
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
-
-            // Check if this user has been seen before and we have their avatar in userNames
-            if (!avatar && userNames[name] && userNames[name].avatar) {
-                avatar = userNames[name].avatar;
+            if (isSelf) {
+                messageDiv.classList.add('self');
             }
 
-            // Default avatar placeholder
-            let avatarHtml = '<i class="fas fa-user"></i>';
+            // Use provided timestamp or create new one
+            const messageTime = timestamp || new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-            // If user has avatar, use it
-            if (avatar) {
-                avatarHtml = `<img src="${avatar}" alt="${name}'s Avatar">`;
+            // Get profile pic or use initials as fallback
+            const profilePic = userProfiles[name] || '';
 
-                // If not the current user, store their avatar for future reference
-                if (!isSelf && userNames[name]) {
-                    userNames[name].avatar = avatar;
-                }
+            let avatarHtml;
+            if (profilePic) {
+                avatarHtml = `<img src="${profilePic}" alt="${name}'s avatar">`;
+            } else {
+                avatarHtml = `<div class="default-avatar">${getInitials(name)}</div>`;
             }
 
-            // Get current time if timestamp is not provided
-            const messageTime = timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            // Discord-style formatting
             messageDiv.innerHTML = `
                 <div class="message-avatar">
                     ${avatarHtml}
                 </div>
                 <div class="message-content">
                     <div class="message-header">
-                        <span class="message-username">${name}</span>
-                        <span class="message-timestamp">${messageTime}</span>
+                        <span class="message-sender">${name}</span>
+                        <span class="timestamp">${messageTime}</span>
                     </div>
-                    <div class="message-text">${formatText(text)}</div>
+                    <p class="message-text">${formatLinks(text)}</p>
                 </div>`;
 
             messages.appendChild(messageDiv);
@@ -1043,25 +678,12 @@
         }
 
         function showJoinNotification(name) {
-            // Don't show notifications for the current user
-            if (name === userName) return;
-
             const joinNotification = document.getElementById('joinNotification');
-            joinNotification.textContent = `${name} has joined the chat`;
+            joinNotification.textContent = `${name} has joined the chatroom.`;
             joinNotification.style.display = 'block';
             setTimeout(() => {
                 joinNotification.style.display = 'none';
             }, 3000);
-        }
-
-        function playMentionSound() {
-            const mentionSound = document.getElementById('mentionSound');
-            if (mentionSound) {
-                mentionSound.volume = 0.5;
-                mentionSound.play().catch(error => {
-                    console.error('Audio playback failed:', error);
-                });
-            }
         }
 
         function startRecording() {
@@ -1084,8 +706,8 @@
             recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
                 document.getElementById('messageInput').value = transcript;
-                sendMessage(transcript);
-                stopRecording();
+                sendMessage();
+                stopRecording(); // Stop recording once a message is sent
             };
 
             recognition.onend = () => {
@@ -1108,7 +730,7 @@
             }
         }
 
-        document.getElementById('micButton').onclick = function() {
+        document.getElementById('micButton').onclick = function () {
             if (isRecording) {
                 stopRecording();
             } else {
@@ -1123,51 +745,104 @@
             }
         };
 
-        // Handle logout
-        document.getElementById('logoutButton').addEventListener('click', function() {
-            localStorage.removeItem('vplazaUsername');
-            localStorage.removeItem('vplazaUserAvatar');
-            document.getElementById('loginModal').style.display = 'flex';
-            document.getElementById('chatContainer').style.display = 'none';
-            userName = '';
-            userAvatar = null;
-            document.getElementById('usernameInput').value = '';
-            document.getElementById('profilePreview').innerHTML = '<i class="fas fa-user"></i>';
+        // particlesJS setup with red particles
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 300,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#ff0000"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false
+                },
+                "size": {
+                    "value": 4,
+                    "random": true
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ff0000",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 5,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false
+                }
+            },
+            "interactivity": {
+                "detect_on": "window",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": false,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 130,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
         });
 
-        function closeThemeModal() {
-            document.getElementById('themeModal').style.display = 'none';
-        }
-
-        // Allow sending message with Enter key
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
+        // Add event listener for Enter key in message input
+        document.getElementById('messageInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 sendMessage();
             }
         });
-
-        // Handle emoji picker functionality
-        document.getElementById('emojiButton').addEventListener('click', function() {
-            const emojiPicker = document.getElementById('emojiPicker');
-            emojiPicker.style.display = emojiPicker.style.display === 'flex' ? 'none' : 'flex';
-        });
-
-        // Close emoji picker when clicking outside
-        document.addEventListener('click', function(event) {
-            const emojiPicker = document.getElementById('emojiPicker');
-            const emojiButton = document.getElementById('emojiButton');
-
-            if (!emojiPicker.contains(event.target) && event.target !== emojiButton && !emojiButton.contains(event.target)) {
-                emojiPicker.style.display = 'none';
-            }
-        });
-
-        // Add emoji to message input
-        function addEmoji(emoji) {
-            const messageInput = document.getElementById('messageInput');
-            messageInput.value += emoji;
-            messageInput.focus();
-        }
     </script>
 </body>
+
 </html>
