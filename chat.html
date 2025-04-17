@@ -665,6 +665,7 @@
             <div class="user-info">
                 Logged in as: <span id="userNameDisplay"></span>
                 <button id="logoutButton">Logout</button>
+                <button id="settingsButton" style="margin-left: 10px; background: #ff0000; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 700; box-shadow: 0 0 10px #ff0000; transition: all 0.2s;">Settings</button>
             </div>
         </div>
         <div class="messages" id="messages"></div>
@@ -675,6 +676,9 @@
             <div class="input-actions">
                 <button class="action-button" type="button" id="emojiButton" aria-label="Add Emoji">
                     <i class="far fa-smile"></i>
+                </button>
+                <button class="action-button" type="button" id="micButton" aria-label="Voice Input">
+                    <i id="micIcon" class="fas fa-microphone-slash"></i>
                 </button>
             </div>
             <button type="button" class="send-button" onclick="sendMessage()" aria-label="Send Message">
@@ -762,7 +766,7 @@
 
     <script>
         const CLIENT_ID = 'aSEKMcR4GsEZONob';
-        const drone = new ScaleDrone(CLIENT_ID);
+        let drone;
         let room;
         let userName = '';
         let userAvatar = null;
@@ -770,6 +774,8 @@
         const userNames = {};
         let isRecording = false; // Track voice recording status
         let recognition; // Speech recognition instance
+        let connectionRetries = 0;
+        const MAX_RETRIES = 3;
 
         // Check for profile image upload
         document.getElementById('profilePicture').addEventListener('change', function(event) {
@@ -827,55 +833,116 @@
             document.getElementById('chatContainer').style.display = 'flex';
             document.getElementById('userNameDisplay').textContent = userName;
 
-            // Connect to Scaledrone
-            room = drone.subscribe(`observable-${roomCode}`);
+            // Initialize Scaledrone with error handling
+            try {
+                drone = new ScaleDrone(CLIENT_ID);
 
-            room.on('open', error => {
-                if (error) {
-                    console.error('Error connecting to Scaledrone room:', error);
-                    return;
-                }
-                console.log('Successfully connected to Scaledrone room');
+                drone.on('open', error => {
+                    if (error) {
+                        console.error('Error connecting to Scaledrone:', error);
+                        handleConnectionError();
+                        return;
+                    }
+                    console.log('Successfully connected to Scaledrone');
+                    connectionRetries = 0; // Reset retries on successful connection
+                    subscribeToRoom();
+                });
 
-                // Send a join message after successful connection
+                drone.on('error', error => {
+                    console.error('Scaledrone connection error:', error);
+                    handleConnectionError();
+                });
+
+                drone.on('close', event => {
+                    console.log('Connection closed:', event);
+                    if (event.code !== 1000) {
+                        // Attempt to reconnect if not a normal closure
+                        handleConnectionError();
+                    }
+                });
+            } catch (error) {
+                console.error('Failed to initialize Scaledrone:', error);
+                alert('Failed to connect to chat service. Please try again later.');
+            }
+        }
+
+        function handleConnectionError() {
+            connectionRetries++;
+            if (connectionRetries <= MAX_RETRIES) {
+                console.log(`Retrying connection (attempt ${connectionRetries}/${MAX_RETRIES})...`);
                 setTimeout(() => {
-                    sendMessage("Just joined the chat!");
-                }, 1000);
-            });
+                    connectToChat();
+                }, 2000); // Wait 2 seconds before retrying
+            } else {
+                alert('Failed to connect after multiple attempts. Please check your internet connection and try again later.');
+            }
+        }
 
-            room.on('error', error => {
-                console.error('Scaledrone error:', error);
-            });
+        function subscribeToRoom() {
+            // Connect to Scaledrone room
+            try {
+                room = drone.subscribe(`observable-${roomCode}`);
 
-            room.on('members', members => {
-                console.log('Current members:', members);
-            });
-
-            room.on('member_join', member => {
-                console.log('Member joined:', member);
-            });
-
-            // Handle incoming messages
-            room.on('data', (data, member) => {
-                console.log('Received message:', data, 'from member:', member);
-                if (data) {
-                    addMessageToList(data.text, data.name, member.id === drone.clientId, data.timestamp, data.avatar);
-
-                    // Store user information for future reference
-                    if (!userNames[data.name]) {
-                        userNames[data.name] = {
-                            clientId: member.id,
-                            avatar: data.avatar
-                        };
-                        showJoinNotification(data.name);
+                room.on('open', error => {
+                    if (error) {
+                        console.error('Error connecting to Scaledrone room:', error);
+                        return;
                     }
+                    console.log('Successfully connected to Scaledrone room');
 
-                    // Check for mentions - play sound if current user is mentioned
-                    if (member.id !== drone.clientId && data.text.includes(`@${userName}`)) {
-                        playMentionSound();
+                    // Send a join message after successful connection
+                    setTimeout(() => {
+                        sendMessage("Just joined the chat!");
+                    }, 1000);
+                });
+
+                room.on('error', error => {
+                    console.error('Scaledrone room error:', error);
+                });
+
+                room.on('members', members => {
+                    console.log('Current members:', members);
+                });
+
+                room.on('member_join', member => {
+                    console.log('Member joined:', member);
+                });
+
+                // Handle incoming messages
+                room.on('data', (data, member) => {
+                    console.log('Received message:', data, 'from member:', member);
+                    if (data && data.text && data.name) {
+                        addMessageToList(data.text, data.name, member.id === drone.clientId, data.timestamp, data.avatar);
+
+                        // Store user information for future reference
+                        // Only show join notification for actual join messages, not regular chat
+                        if (!userNames[data.name]) {
+                            userNames[data.name] = {
+                                clientId: member.id,
+                                avatar: data.avatar
+                            };
+
+                            // Only show join notification if this is a specific join message
+                            if (data.text === "Just joined the chat!") {
+                                showJoinNotification(data.name);
+                            }
+                        } else {
+                            // Update the avatar if it changed
+                            if (data.avatar && data.avatar !== userNames[data.name].avatar) {
+                                userNames[data.name].avatar = data.avatar;
+                            }
+                        }
+
+                        // Check for mentions - play sound if current user is mentioned
+                        if (member.id !== drone.clientId && data.text.includes(`@${userName}`)) {
+                            playMentionSound();
+                        }
                     }
-                }
-            });
+                });
+            } catch (error) {
+                console.error('Error subscribing to room:', error);
+                alert('Failed to join chat room. Please try again later.');
+            }
         }
 
         function sendMessage(text) {
@@ -890,16 +957,34 @@
 
             console.log('Sending message:', messageText);
 
-            // Publish message to the room
-            drone.publish({
-                room: `observable-${roomCode}`,
-                message: {
-                    text: messageText,
-                    name: userName,
-                    timestamp,
-                    avatar: userAvatar
+            // Check if drone and room are initialized properly
+            if (!drone || !room) {
+                console.error('Chat connection not established');
+                alert('Chat connection lost. Please refresh the page and try again.');
+                return;
+            }
+
+            try {
+                // Publish message to the room
+                drone.publish({
+                    room: `observable-${roomCode}`,
+                    message: {
+                        text: messageText,
+                        name: userName,
+                        timestamp,
+                        avatar: userAvatar
+                    }
+                });
+
+                // Only add the message locally for normal messages, not join messages
+                // (join messages will come back through the data event)
+                if (messageText !== "Just joined the chat!") {
+                    addMessageToList(messageText, userName, true, timestamp, userAvatar);
                 }
-            });
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
+            }
         }
 
         function formatText(text) {
@@ -919,12 +1004,22 @@
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message');
 
+            // Check if this user has been seen before and we have their avatar in userNames
+            if (!avatar && userNames[name] && userNames[name].avatar) {
+                avatar = userNames[name].avatar;
+            }
+
             // Default avatar placeholder
             let avatarHtml = '<i class="fas fa-user"></i>';
 
             // If user has avatar, use it
             if (avatar) {
                 avatarHtml = `<img src="${avatar}" alt="${name}'s Avatar">`;
+
+                // If not the current user, store their avatar for future reference
+                if (!isSelf && userNames[name]) {
+                    userNames[name].avatar = avatar;
+                }
             }
 
             // Get current time if timestamp is not provided
@@ -948,6 +1043,9 @@
         }
 
         function showJoinNotification(name) {
+            // Don't show notifications for the current user
+            if (name === userName) return;
+
             const joinNotification = document.getElementById('joinNotification');
             joinNotification.textContent = `${name} has joined the chat`;
             joinNotification.style.display = 'block';
