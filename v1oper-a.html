@@ -1355,6 +1355,20 @@
                 }
             });
         });
+
+        const officialDomains = [
+    "vplaza.org",
+    "vplaza.mollypornstar.com/"
+  ];
+
+  const currentHost = window.location.hostname;
+
+  if (officialDomains.includes(currentHost)) {
+    alert(":) You are on an official Vplaza link!");
+  } else if (currentHost.includes("vplaza")) {
+    alert(":( You are on an *unofficial* link for Vplaza. Be careful!");
+  }
+
     </script>
 </body>
 </html>
