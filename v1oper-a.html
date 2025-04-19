@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -717,7 +717,7 @@
                 <div class="sidebar-icon" data-url="/active/embed.html?url=https://www.twitch.tv">
                     <i class="fa-brands fa-twitch"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/gamepagev1.html">
+                <div class="sidebar-icon" data-url="/gamepagev1">
                     <i class="fa-solid fa-gamepad"></i>
                 </div>
                 <div class="sidebar-icon" data-url="/active/embed.html?url=https://play.geforcenow.com">
@@ -731,16 +731,16 @@
             <div class="sidebar-divider"></div>
 
             <div class="sidebar-section">
-                <div class="sidebar-icon" data-url="/v-ai.html">
+                <div class="sidebar-icon" data-url="/v-ai">
                     <i class="bi bi-phone"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/ai.html">
+                <div class="sidebar-icon" data-url="/ai">
                     <i class="bi bi-robot"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/a.html">
+                <div class="sidebar-icon" data-url="/a">
                     <i class="bi bi-grid-3x3-gap-fill"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/chat.html">
+                <div class="sidebar-icon" data-url="/chat">
                     <i class="bi bi-chat-fill"></i>
                 </div>
                 <div class="sidebar-icon" data-url="/audio">
@@ -897,7 +897,7 @@
         }
 
         const initialTabs = [
-            { id: 0, title: 'New Tab', url: '/landin.html', icon: 'fa-home' }
+            { id: 0, title: 'New Tab', url: '/landin', icon: 'fa-home' }
         ];
 
         function initializeTabs() {
@@ -1033,7 +1033,7 @@
             const newTabData = {
                 id: tabId,
                 title: 'New Tab',
-                url: '/landin.html',
+                url: '/landin',
                 icon: 'fa-globe'
             };
 
@@ -1161,7 +1161,7 @@
                 loadingBarContainer.style.display = 'block';
                 activeFrame.dataset.isLoading = 'true';
 
-                const internalPaths = ['/tutorials', '/gamepagev1.html', '/ai.html', '/v-ai.html', '/a.html', '/landin.html'];
+                const internalPaths = ['/tutorials', '/gamepagev1', '/ai', '/v-ai', '/a', '/landin'];
 
                 let processedUrl = url;
                 if (internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
