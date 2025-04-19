@@ -717,7 +717,7 @@
                 <div class="sidebar-icon" data-url="/active/embed.html?url=https://www.twitch.tv">
                     <i class="fa-brands fa-twitch"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/gamepagev1">
+                <div class="sidebar-icon" data-url="/gamepagev1.html">
                     <i class="fa-solid fa-gamepad"></i>
                 </div>
                 <div class="sidebar-icon" data-url="/active/embed.html?url=https://play.geforcenow.com">
@@ -731,16 +731,16 @@
             <div class="sidebar-divider"></div>
 
             <div class="sidebar-section">
-                <div class="sidebar-icon" data-url="/v-ai">
+                <div class="sidebar-icon" data-url="/v-ai.html">
                     <i class="bi bi-phone"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/ai">
+                <div class="sidebar-icon" data-url="/ai.html">
                     <i class="bi bi-robot"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/a">
+                <div class="sidebar-icon" data-url="/a.html">
                     <i class="bi bi-grid-3x3-gap-fill"></i>
                 </div>
-                <div class="sidebar-icon" data-url="/chat">
+                <div class="sidebar-icon" data-url="/chat.html">
                     <i class="bi bi-chat-fill"></i>
                 </div>
             </div>
@@ -894,7 +894,7 @@
         }
 
         const initialTabs = [
-            { id: 0, title: 'New Tab', url: '/landin', icon: 'fa-home' }
+            { id: 0, title: 'New Tab', url: '/landin.html', icon: 'fa-home' }
         ];
 
         function initializeTabs() {
@@ -1014,22 +1014,23 @@
                 updateUrlBar(frameUrl);
             }
         }
-
         function updateUrlBar(url) {
-            if (url.includes('/active/embed.html?url=')) {
+            // Check if the URL is the specific landing page path
+            if (url.toLowerCase().includes('vplaza') || url.toLowerCase().includes('file://')) {
+                urlBar.value = '(hidden)';
+            } else if (url.includes('/active/embed.html?url=')) {
                 const actualUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
                 urlBar.value = actualUrl;
             } else {
                 urlBar.value = url;
             }
         }
-
         function createNewTab() {
             const tabId = tabCounter++;
             const newTabData = {
                 id: tabId,
                 title: 'New Tab',
-                url: '/landin',
+                url: '/landin.html',
                 icon: 'fa-globe'
             };
 
@@ -1157,7 +1158,7 @@
                 loadingBarContainer.style.display = 'block';
                 activeFrame.dataset.isLoading = 'true';
 
-                const internalPaths = ['/tutorials', '/gamepagev1', '/ai', '/v-ai', '/a', '/landin'];
+                const internalPaths = ['/tutorials', '/gamepagev1.html', '/ai.html', '/v-ai.html', '/a.html', '/landin.html'];
 
                 let processedUrl = url;
                 if (internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
