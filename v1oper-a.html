@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1015,16 +1014,17 @@
                 updateUrlBar(frameUrl);
             }
         }
-
         function updateUrlBar(url) {
-            if (url.includes('/active/embed.html?url=')) {
+            // Check if the URL is the specific landing page path
+            if (url.toLowerCase().includes('vplaza') || url.toLowerCase().includes('file://')) {
+                urlBar.value = '(hidden)';
+            } else if (url.includes('/active/embed.html?url=')) {
                 const actualUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
                 urlBar.value = actualUrl;
             } else {
                 urlBar.value = url;
             }
         }
-
         function createNewTab() {
             const tabId = tabCounter++;
             const newTabData = {
