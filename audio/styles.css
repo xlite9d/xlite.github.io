@@ -75,7 +75,7 @@ header {
     color: rgba(200, 200, 200, 0.7) !important;
 }
 
-#search-button {
+#search-button, #toggle-video-button {
     background: none;
     border: none;
     color: white;
@@ -84,6 +84,10 @@ header {
     padding: 10px;
     position: relative;
     z-index: 1001;
+}
+
+#toggle-video-button {
+    margin-left: 5px;
 }
 
 /* Tabs with high z-index */
@@ -162,6 +166,25 @@ footer {
     background-color: rgba(10, 10, 10, 0.9);
     padding: 12px 0;
     z-index: 50; /* Highest z-index to stay on top */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#toggle-ui-button {
+    position: absolute;
+    left: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 51; /* Above footer */
+}
+
+#toggle-ui-button:hover {
+    transform: scale(1.1);
 }
 
 #player-controls {
