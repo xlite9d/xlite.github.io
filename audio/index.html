@@ -1,4 +1,3 @@
-
 <link rel="icon" href="/headset.png">
 
 <!DOCTYPE html>
@@ -19,6 +18,9 @@
 			<input type="text" id="search-bar" placeholder="Search for music...">
 			<button id="search-button">
 				<i class="bi bi-search"></i>
+			</button>
+			<button id="toggle-video-button">
+				<i class="bi bi-tv"></i>
 			</button>
 		</header>
 
@@ -54,6 +56,9 @@
 					<span id="duration-time">0:00</span>
 				</div>
 			</div>
+			<button id="toggle-ui-button">
+				<i class="bi bi-eye"></i>
+			</button>
 		</footer>
 		<div id="video-container" class="hidden">
 			<div id="youtube-player"></div>
@@ -69,6 +74,8 @@
         let currentSearchResults = [];
         let currentVideoIndex = -1;
         let likedSongs = [];
+        let isVideoHidden = false;
+        let isUIHidden = false;
 
         // Load liked songs from localStorage on page load
         function loadLikedSongs() {
@@ -117,6 +124,12 @@
             document.getElementById('search-button').addEventListener('click', () => {
                 searchMusic(document.getElementById('search-bar').value);
             });
+
+            // Toggle video button
+            document.getElementById('toggle-video-button').addEventListener('click', toggleVideoVisibility);
+
+            // Toggle UI button
+            document.getElementById('toggle-ui-button').addEventListener('click', toggleUIVisibility);
 
             // Tab switching
             document.querySelectorAll('.tab-button').forEach(tab => {
@@ -646,6 +659,53 @@
                 loopButton.classList.add('loop-active');
             } else {
                 loopButton.classList.remove('loop-active');
+            }
+        }
+
+        // Toggle video visibility
+        function toggleVideoVisibility() {
+            isVideoHidden = !isVideoHidden;
+
+            const videoContainer = document.getElementById('video-container');
+            if (isVideoHidden) {
+                videoContainer.classList.add('hidden');
+            } else {
+                videoContainer.classList.remove('hidden');
+            }
+        }
+
+        // Toggle UI visibility
+        function toggleUIVisibility() {
+            isUIHidden = !isUIHidden;
+
+            // Elements to toggle
+            const header = document.querySelector('header');
+            const tabs = document.querySelector('.tabs');
+            const main = document.querySelector('main');
+            const playerControls = document.getElementById('player-controls');
+
+            if (isUIHidden) {
+                header.classList.add('hidden');
+                tabs.classList.add('hidden');
+                main.classList.add('hidden');
+                playerControls.classList.add('hidden');
+
+                // Make sure video is visible when UI is hidden
+                document.getElementById('video-container').classList.remove('hidden');
+                isVideoHidden = false;
+
+                // Change eye icon to crossed eye
+                document.querySelector('#toggle-ui-button i').classList.remove('bi-eye');
+                document.querySelector('#toggle-ui-button i').classList.add('bi-eye-slash');
+            } else {
+                header.classList.remove('hidden');
+                tabs.classList.remove('hidden');
+                main.classList.remove('hidden');
+                playerControls.classList.remove('hidden');
+
+                // Change icon back
+                document.querySelector('#toggle-ui-button i').classList.remove('bi-eye-slash');
+                document.querySelector('#toggle-ui-button i').classList.add('bi-eye');
             }
         }
 
