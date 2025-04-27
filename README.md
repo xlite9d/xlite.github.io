@@ -1,5 +1,5 @@
 ![image](https://github.com/user-attachments/assets/189c6bd8-30f3-4b69-a0dc-95d735fdf138)<div align="center">
-  <img src="vplazavx.png" alt="vplaza-logo" style="width: 300px; height: auto; object-fit: contain;">
+  <img src="O (6).png" alt="vplaza-logo" style="width: 300px; height: auto; object-fit: contain;">
 </div>
 
 
