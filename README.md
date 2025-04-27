@@ -1,4 +1,4 @@
-  <img src="O (6).png" alt="vplaza-logo" style="width: 300px; height: auto; object-fit: contain;">
+<center>  <img src="O (6).png" alt="vplaza-logo" style="width: 300px; height: auto; object-fit: contain;">
 </div>
 
 
