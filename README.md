@@ -7,7 +7,7 @@
 <div align="center">
   <code style="color : blue">Vplaza V1</code>
   <h1>It's time!</h1>  
-  <p>Vplaza | <strong></strong>. Completely built with <strong>HTML, CSS, and JavaScript</strong>, we've created a <strong>fully functional</strong> game website.</p>
+  <p>Vplaza | <strong></strong> Completely built with <strong>HTML, CSS, and JavaScript</strong>, we've created a <strong>fully functional</strong> game website.</p>
   <p>From the creators of Orbit, Hush, Bliss-Cloud, Beenshub, etc... we are...</p>
   <strong>Vplaza</strong>
 
