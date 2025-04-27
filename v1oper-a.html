@@ -77,14 +77,14 @@
         }
 
         .sidebar::-webkit-scrollbar-thumb {
-            background: #ff0044;
+            background: #000000;
             border-radius: 50px;
             border: 2px solid #111111;
         }
 
         .sidebar::-webkit-scrollbar-thumb:hover {
-            background: #ff0066;
-            box-shadow: 0 0 5px rgba(255, 0, 102, 0.5);
+            background: #000000;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
 
         .sidebar::-webkit-scrollbar-corner {
@@ -286,7 +286,7 @@
 
         .sidebar-icon:hover {
             background-color: rgba(255, 255, 255, 0.05);
-            color: #ff0000;
+            color: #ffffff;
         }
 
         .sidebar-icon.active {
@@ -447,10 +447,10 @@
         iframe {
             width: 100%;
             height: 100%;
-            border-left: 3px solid rgb(255, 0, 119);
-            border-top: 3px solid rgb(255, 0, 119);
-            border-right: 3px solid rgb(255, 0, 119);
-            border-bottom: 0.5px solid rgb(255, 0, 119);
+            border-left: 3px solid rgb(9, 0, 4);
+            border-top: 3px solid rgb(0, 0, 0);
+            border-right: 3px solid rgb(0, 0, 0);
+            border-bottom: 0.5px solid rgb(0, 0, 0);
             border-top-left-radius: 20px;
             display: block;
             margin: 0;
@@ -473,7 +473,7 @@
         .loading-bar {
             height: 100%;
             width: 0;
-            background-color: #ff0000;
+            background-color: #380000;
             animation: loading 2s ease-in-out infinite;
         }
 
@@ -530,10 +530,10 @@
             top: 94px;
             left: 58px;
             width: 400px;
-            max-height: 600px;
-            background-color: rgba(0, 0, 0, 0.799);
+            max-height: 800px;
+            background-color: rgba(46, 1, 1, 0.595);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
+            border-radius: 17px;
             color: rgb(255, 255, 255);
             font-family: 'Poppins', sans-serif;
             padding: 20px;
@@ -559,7 +559,7 @@
             padding: 5px;
             border-radius: 8px;
             transition: all 0.2s;
-            color: rgb(255, 0, 85);
+            color: rgb(0, 0, 0);
         }
 
         .history-item:hover {
@@ -567,7 +567,7 @@
         }
 
         .history-item-icon {
-            color: rgb(255, 0, 72);
+            color: rgb(0, 0, 0);
             font-size: 16px;
             margin-right: 10px;
         }
@@ -575,7 +575,7 @@
         .history-item-time {
             font-size: 14px;
             font-weight: 600;
-            color: rgb(255, 0, 106);
+            color: rgb(0, 0, 0);
             margin-right: 12px;
             min-width: 45px;
         }
@@ -600,7 +600,7 @@
             font-size: 28px;
             font-weight: 700;
             text-transform: uppercase;
-            color: rgb(255, 0, 123);
+            color: rgb(0, 0, 0);
         }
 
         .history-item-url {
@@ -719,16 +719,16 @@
 
             <div class="sidebar-section">
                 <div class="sidebar-icon" data-url="/active/embed.html?url=https://www.twitch.tv">
-                    <i class="fa-brands fa-twitch"></i>
+                    <ion-icon name="logo-twitch"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/gamepagev1">
-                    <ion-icon name="game-controller-sharp"></ion-icon>
+                    <ion-icon name="game-controller"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/active/embed.html?url=https://play.geforcenow.com">
-                    <i class="fa-solid fa-cube"></i>
+                    <ion-icon name="happy-outline"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/tutorials">
-                    <i class="fa-solid fa-play"></i>
+                    <ion-icon name="eye-outline"></ion-icon>
                 </div>
             </div>
 
@@ -736,19 +736,19 @@
 
             <div class="sidebar-section">
                 <div class="sidebar-icon" data-url="/v-ai">
-                    <i class="bi bi-phone"></i>
+                    <ion-icon name="call-outline"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/ai">
-                    <i class="bi bi-robot"></i>
+                    <ion-icon name="logo-ionitron"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/a">
-                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                    <ion-icon name="logo-apple-appstore"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/chat">
-                    <i class="bi bi-chat-fill"></i>
+                    <ion-icon name="chatbubble"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/audio">
-                    <i class="bi bi-music-player-fill"></i>
+                    <ion-icon name="headset"></ion-icon>
                 </div>
             </div>
 
@@ -757,11 +757,11 @@
             <div class="sidebar-bottom">
                 <div class="sidebar-divider"></div>
                 <div class="sidebar-icon" id="history-btn">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNsb2NrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCI+PC9jaXJjbGU+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCI+PC9wb2x5bGluZT48L3N2Zz4=" alt="History" width="20" height="20">
+                    <ion-icon name="alarm"></ion-icon>
                 </div>
 
                 <div class="sidebar-icon" data-url="/active/embed.html?url=https://www.dropbox.com">
-                    <i class="fa-solid fa-cube"></i>
+                    <ion-icon name="logo-dropbox"></ion-icon>
                 </div>
             </div>
         </div>
@@ -931,7 +931,7 @@
 
             tab.innerHTML = `
                 <div class="tab-icon">
-                    ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<i class="fa-solid ${icon || 'fa-globe'}"></i>`}
+                    ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<ion-icon name="planet"></ion-icon>`}
                 </div>
                 <div class="tab-title">${title}</div>
                 <div class="tab-close">
@@ -1403,6 +1403,12 @@
   } else if (currentHost.includes("vplaza")) {
     alert(":( You are on an *unofficial* link for Vplaza. Be careful!");
   }
+
+  if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js").then(() => {
+    console.log("Service Worker registered");
+  });
+}
 
     </script>
 </body>
