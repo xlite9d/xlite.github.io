@@ -47,7 +47,7 @@
             border: 2px solid black;
             border-radius: 10px;
             padding: 5px 10px;
-            display: flex;
+            display: none; /* Start hidden */
             align-items: center;
             justify-content: center;
             cursor: pointer;
@@ -91,10 +91,28 @@
             }
         }
 
+        // Show or hide the ESC button based on fullscreen state
+        function toggleEscButtonVisibility() {
+            const escButton = document.getElementById('esc-button');
+            if (document.fullscreenElement && document.fullscreenElement.tagName === 'IFRAME') {
+                escButton.style.display = 'flex'; // Show the button
+            } else {
+                escButton.style.display = 'none'; // Hide the button
+            }
+        }
+
+        // Listen for full-screen change events
+        document.addEventListener('fullscreenchange', toggleEscButtonVisibility);
+        document.addEventListener('webkitfullscreenchange', toggleEscButtonVisibility); // For Safari
+        
         // Hide message and show iframe after 2 seconds
         setTimeout(() => {
             document.getElementById('message').style.display = 'none';
-            document.querySelector('iframe').style.display = 'block';
+            const iframe = document.querySelector('iframe');
+            iframe.style.display = 'block';
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen(); // Attempt to enter fullscreen mode
+            }
         }, 2000);
     </script>
 </body>
