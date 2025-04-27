@@ -1,7 +1,7 @@
 self.addEventListener("install", (event) => {
     event.waitUntil(
       caches.open("app-cache").then((cache) => {
-        return cache.addAll(["/", "/style.css", "/script.js"]);
+        return cache.addAll(["/v1oper-a.html", "/style.css", "/script.js"]);
       })
     );
   });
