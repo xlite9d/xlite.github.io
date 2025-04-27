@@ -1,21 +1,22 @@
+
 {
-    "name": "Vplaza - 2025 future education",
-    "short_name": "Vplaza",
-    "start_url": "/v1oper-a.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#007bff",
-    "icons": [
-      {
-        "src": "/images/vplazav1.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "/images/vplazav1.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
-  
+  "name": "Vplaza",
+  "short_name": "Vplaza",
+  "start_url": "https://vplaza.org/v1oper-a.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "description": "Play games using GeForce Now.",
+  "icons": [
+    {
+      "src": "images/vplazav1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/vplazav1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
