@@ -80,17 +80,14 @@
         function sendEscapeToIframe() {
             const iframe = document.querySelector('iframe');
             if (iframe && iframe.contentWindow) {
-                // Ensure the iframe is fully loaded before dispatching the event
-                iframe.contentWindow.document.addEventListener('DOMContentLoaded', () => {
-                    const escEvent = new KeyboardEvent('keydown', {
-                        key: 'Escape',
-                        code: 'Escape',
-                        keyCode: 27,
-                        bubbles: true,
-                        cancelable: true
-                    });
-                    iframe.contentWindow.dispatchEvent(escEvent);
+                const escEvent = new KeyboardEvent('keydown', {
+                    key: 'Escape',
+                    code: 'Escape',
+                    keyCode: 27,
+                    bubbles: true,
+                    cancelable: true
                 });
+                iframe.contentWindow.document.dispatchEvent(escEvent);
             }
         }
 
