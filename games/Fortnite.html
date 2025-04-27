@@ -47,13 +47,14 @@
             border: 2px solid black;
             border-radius: 10px;
             padding: 5px 10px;
-            display: none; /* Start hidden */
+            display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             font-family: Arial, sans-serif;
             font-weight: bold;
+            display: none; /* Initially hide the button */
         }
         #esc-button:hover {
             background-color: rgba(255, 255, 255, 1);
@@ -69,7 +70,7 @@
         <img src="froggies.gif" alt="Froggie">
         <p>Thanks for all the support and setting this up LupineVault (RWH) & Froggies Arcade!! Check them out here: <a href="https://lupinevault.com/info/index.html">LV Partner's page</a>.</p>
     </div>
-    <iframe src="/active/go/hvtrs8%2F-pna%7B.eedopcgnmw%2Ccmm-gcmgs%3Dgcmg-kd%3F44bda%6004-f844%2F445f-%3Be76%2F2f9g47cfeg0c%26nalg%3Fel_WS%24aqsgt%2Fif%3D21%5D7644f78f-2d12%2F46f2-%604f0%2Fcdea563c5423"></iframe>
+    <iframe id="iframeContent" src="/active/go/hvtrs8%2F-pna%7B.eedopcgnmw%2Ccmm-gcmgs%3Dgcmg-kd%3F44bda%6004-f844%2F445f-%3Be76%2F2f9g47cfeg0c%26nalg%3Fel_WS%24aqsgt%2Fif%3D21%5D7644f78f-2d12%2F46f2-%604f0%2Fcdea563c5423"></iframe>
 
     <div id="esc-button" onclick="sendEscapeToIframe()">
         ESC <i class="fas fa-door-open"></i>
@@ -78,7 +79,7 @@
     <script>
         // Function to simulate pressing the Escape key in the iframe
         function sendEscapeToIframe() {
-            const iframe = document.querySelector('iframe');
+            const iframe = document.getElementById('iframeContent');
             if (iframe && iframe.contentWindow) {
                 const escEvent = new KeyboardEvent('keydown', {
                     key: 'Escape',
@@ -91,27 +92,37 @@
             }
         }
 
-        // Show or hide the ESC button based on fullscreen state
-        function toggleEscButtonVisibility() {
+        // Show/hide the ESC button based on fullscreen state
+        function handleFullscreenChange() {
             const escButton = document.getElementById('esc-button');
-            if (document.fullscreenElement && document.fullscreenElement.tagName === 'IFRAME') {
-                escButton.style.display = 'flex'; // Show the button
+            if (document.fullscreenElement) { // Check if any element is in full-screen mode
+                escButton.style.display = 'flex'; // Show ESC button
             } else {
-                escButton.style.display = 'none'; // Hide the button
+                escButton.style.display = 'none'; // Hide ESC button
             }
         }
 
-        // Listen for full-screen change events
-        document.addEventListener('fullscreenchange', toggleEscButtonVisibility);
-        document.addEventListener('webkitfullscreenchange', toggleEscButtonVisibility); // For Safari
-        
-        // Hide message and show iframe after 2 seconds
+        // Add the fullscreen change event listener to the document
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Safari compatibility
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange); // Firefox compatibility
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange); // IE compatibility
+
+        // Hide message and show iframe after a 2-second delay
         setTimeout(() => {
             document.getElementById('message').style.display = 'none';
-            const iframe = document.querySelector('iframe');
+            const iframe = document.getElementById('iframeContent');
             iframe.style.display = 'block';
+
+            // Automatically request fullscreen for the iframe
             if (iframe.requestFullscreen) {
-                iframe.requestFullscreen(); // Attempt to enter fullscreen mode
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari, Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
             }
         }, 2000);
     </script>
