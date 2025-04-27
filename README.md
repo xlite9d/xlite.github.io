@@ -16,12 +16,12 @@
 |-------------------------|------------------------------------------------------------|
 | Tons of Unblocked Games | Access a wide variety of unlocked games.                  |
 | Easy Accessibility      | Vplaza is super easy to clone or fork, this can be hosted anywhere, even static site hosts! You can now even do <strong>BYOD</strong>|
-| PR_XY | A cool, sleek, modern web pr_xy for 2025!                  |
+| Proxy | A sleek, modern web proxy designed like Opera GX for 2025-26!                  |
 |Music | A brand-new, youtube based music player with no ads |
-|Movies & Tv Shows | With our updated version of Bliss Cloud's Streamstar, we are ready for 2025 |
+|Movies & Tv Shows | With our updated version of Bliss Cloud's, and Orbit's movie player, we are ready for 2025 |
 |Discrete file paths | Due to the rise of directory blocking, this has been made to specifically bypass that |
 |Live TV | Plenty of live Tv from around the world |
-|Chat | with our modern and sleek chat app, you can talk no matter where you are |
+|Chat | With our modern and <strong>sleek chat app</strong>, you can talk no matter where you are, <strong>Even in school</strong> |
 
 
 
