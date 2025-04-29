@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VTV - Movies</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <style>
@@ -982,16 +983,21 @@
             opacity: 1;
         }
 
-        .row-nav ion-icon {
-            font-size: 3.2rem;
+        .row-nav i {
+            font-size: 2.5rem;
             filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.8));
             transition: transform 0.15s ease, filter 0.2s ease;
             background-color: rgba(20, 20, 20, 0.5);
             border-radius: 50%;
-            padding: 6px;
+            padding: 10px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .row-nav:hover ion-icon {
+        .row-nav:hover i {
             transform: scale(1.1);
             filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.8));
             background-color: rgba(40, 40, 40, 0.7);
@@ -1006,9 +1012,11 @@
                 width: 40px;
             }
 
-            .row-nav ion-icon {
-                font-size: 2.2rem;
-                padding: 4px;
+            .row-nav i {
+                font-size: 1.8rem;
+                padding: 8px;
+                width: 36px;
+                height: 36px;
             }
         }
     </style>
@@ -1041,7 +1049,7 @@
                 </div>
             </div>
             <div class="profile">
-                <img src="https://occ-0-1339-1340.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABbg8b9gDW0a4RFGqOBZRBpEFMgOGszoL5DUDCpw5fgOGiCQANHQz-GJxXtIYKJNF5SXrWxdFmc3pnJ4LlDAMdBwN9MQbeqY.png" alt="Profile">
+                <img src="vplazax.png" alt="Profile">
             </div>
         </div>
     </header>
@@ -1455,32 +1463,27 @@
             });
         }
 
-        // Row navigation arrows
         function initializeRowNavigation() {
-            // Add navigation arrows to each row
             document.querySelectorAll('.category').forEach(category => {
                 const row = category.querySelector('.row');
                 if (!row) return;
 
-                // Create navigation arrows
                 const leftNav = document.createElement('div');
                 leftNav.classList.add('row-nav', 'row-nav-left');
-                leftNav.innerHTML = '<ion-icon name="chevron-back"></ion-icon>';
+                leftNav.innerHTML = '<i class="fas fa-chevron-left"></i>';
 
                 const rightNav = document.createElement('div');
                 rightNav.classList.add('row-nav', 'row-nav-right');
-                rightNav.innerHTML = '<ion-icon name="chevron-forward"></ion-icon>';
+                rightNav.innerHTML = '<i class="fas fa-chevron-right"></i>';
 
-                // Add navigation arrows to category
                 category.style.position = 'relative';
                 category.appendChild(leftNav);
                 category.appendChild(rightNav);
 
-                // Handle left navigation click
                 leftNav.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const cardWidth = row.querySelector('.movie-card')?.offsetWidth || 230;
-                    const gap = 4; // gap between cards
+                    const gap = 4;
                     const scrollAmount = cardWidth + gap;
                     row.scrollBy({
                         left: -scrollAmount,
@@ -1488,11 +1491,10 @@
                     });
                 });
 
-                // Handle right navigation click
                 rightNav.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const cardWidth = row.querySelector('.movie-card')?.offsetWidth || 230;
-                    const gap = 4; // gap between cards
+                    const gap = 4;
                     const scrollAmount = cardWidth + gap;
                     row.scrollBy({
                         left: scrollAmount,
@@ -1500,7 +1502,6 @@
                     });
                 });
 
-                // Show/hide arrows based on scroll position
                 row.addEventListener('scroll', () => {
                     // Show left arrow only if scrolled right
                     leftNav.style.opacity = row.scrollLeft > 0 ? '1' : '0';
