@@ -1019,11 +1019,83 @@
                 height: 36px;
             }
         }
+
+        /* TV Mode Styles */
+        .tv-focused {
+            outline: 3px solid white;
+            outline-offset: 3px;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .movie-card.tv-focused {
+            transform: scale(1.08);
+        }
+
+        .notifications.tv-focused, .profile.tv-focused {
+            border-radius: 50%;
+        }
+
+        .search-container.tv-focused {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+        }
+
+        /* Ensure transitions work for TV focus */
+        .movie-card, .profile, .notifications, .search-container, #billboard-play, #billboard-info {
+            transition: outline 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Billboard buttons TV focus styles */
+        #billboard-play.tv-focused, #billboard-info.tv-focused {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            transform: scale(1.05);
+        }
+
+        /* Additional accessibility styles for TV mode */
+        @media (hover: none) {
+            .category:hover .row-nav {
+                opacity: 1;
+            }
+
+            .tv-focused .movie-info {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+        }
+
+        /* Instructions Banner for TV Mode */
+        .tv-mode-instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        body.tv-mode-active .tv-mode-instructions {
+            opacity: 1;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue&display=swap" rel="stylesheet">
 </head>
 
 <body>
+    <!-- TV Mode Instructions Banner -->
+    <div class="tv-mode-instructions">
+        TV Mode: Use Dpad to move around the site • Center; D-pad to select • Escape/Back arrow to go back • Click anywhere to exit TV mode (on computer)
+    </div>
+
     <header id="header">
         <div class="header-left">
             <div class="logo">VTV</div>
@@ -1395,11 +1467,13 @@
                 if (isInMyList(movieId)) {
                     removeFromMyList(movieId);
                     actionButton.innerHTML = '<ion-icon name="add-outline"></ion-icon>';
+                    actionButton.title = 'Add to My List';
                 } else {
                     const foundMovie = findMovieById(movieId);
                     if (foundMovie) {
                         addToMyList(foundMovie);
                         actionButton.innerHTML = '<ion-icon name="remove-outline"></ion-icon>';
+                        actionButton.title = 'Remove from My List';
                     }
                 }
             } else if (actionButton.classList.contains('info') ||
@@ -1774,6 +1848,383 @@
             }
         });
 
+        // TV Remote Control Navigation
+        function initializeTVMode() {
+            let currentFocusElement = null;
+            let inMoviePlayback = false;
+            let isSearchActive = false;
+            let tvModeActive = true; // Track if TV mode is active
+
+            // TV Mode selectable elements selector
+            const SELECTABLE_ELEMENTS = '.movie-card, .notifications, .profile, .search-container, #billboard-play, #billboard-info';
+
+            // Initialize TV mode
+            function setInitialFocus() {
+                const firstMovie = document.querySelector('.movie-card');
+                if (firstMovie) {
+                    setFocus(firstMovie);
+                }
+            }
+
+            // Set focus to an element
+            function setFocus(element) {
+                if (!tvModeActive) return; // Don't set focus if TV mode is inactive
+
+                if (currentFocusElement) {
+                    currentFocusElement.classList.remove('tv-focused');
+                }
+                currentFocusElement = element;
+                element.classList.add('tv-focused');
+
+                // Scroll element into view if needed
+                if (element.classList.contains('movie-card')) {
+                    const row = element.closest('.row');
+                    if (row) {
+                        const rowRect = row.getBoundingClientRect();
+                        const elementRect = element.getBoundingClientRect();
+
+                        if (elementRect.left < rowRect.left) {
+                            row.scrollBy({
+                                left: elementRect.left - rowRect.left - 20,
+                                behavior: 'smooth'
+                            });
+                        } else if (elementRect.right > rowRect.right) {
+                            row.scrollBy({
+                                left: elementRect.right - rowRect.right + 20,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+
+                    // Ensure row is visible vertically
+                    element.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                }
+            }
+
+            // Remove focus
+            function removeFocus() {
+                if (currentFocusElement) {
+                    currentFocusElement.classList.remove('tv-focused');
+                    currentFocusElement = null;
+                }
+            }
+
+            // Toggle TV mode on/off
+            function toggleTVMode() {
+                tvModeActive = !tvModeActive;
+
+                if (tvModeActive) {
+                    setInitialFocus();
+                    document.body.classList.add('tv-mode-active');
+                } else {
+                    removeFocus();
+                    document.body.classList.remove('tv-mode-active');
+                }
+            }
+
+            // Disable TV mode
+            function disableTVMode() {
+                if (tvModeActive) {
+                    tvModeActive = false;
+                    removeFocus();
+                    document.body.classList.remove('tv-mode-active');
+                }
+            }
+
+            // Enable TV mode
+            function enableTVMode() {
+                if (!tvModeActive) {
+                    tvModeActive = true;
+                    setInitialFocus();
+                    document.body.classList.add('tv-mode-active');
+                }
+            }
+
+            // Find the next focusable element in a given direction
+            function findNextFocusElement(direction) {
+                if (!tvModeActive) return; // Don't navigate if TV mode is inactive
+
+                if (!currentFocusElement) {
+                    setInitialFocus();
+                    return;
+                }
+
+                const allElements = Array.from(document.querySelectorAll(SELECTABLE_ELEMENTS));
+                const currentRect = currentFocusElement.getBoundingClientRect();
+                const currentIndex = allElements.indexOf(currentFocusElement);
+                let nextElement = null;
+
+                // Handle navigation within a row
+                if (currentFocusElement.classList.contains('movie-card')) {
+                    const row = currentFocusElement.closest('.row');
+                    const rowCards = Array.from(row.querySelectorAll('.movie-card'));
+                    const currentRowIndex = rowCards.indexOf(currentFocusElement);
+
+                    if (direction === 'left' && currentRowIndex > 0) {
+                        nextElement = rowCards[currentRowIndex - 1];
+                    } else if (direction === 'right' && currentRowIndex < rowCards.length - 1) {
+                        nextElement = rowCards[currentRowIndex + 1];
+                    }
+                }
+
+                // Handle navigation between rows and UI elements
+                if (!nextElement) {
+                    if (direction === 'up' || direction === 'down') {
+                        const centerX = currentRect.left + currentRect.width / 2;
+                        const potentialElements = allElements.filter(element => {
+                            if (element === currentFocusElement) return false;
+
+                            const rect = element.getBoundingClientRect();
+                            const elementCenterX = rect.left + rect.width / 2;
+
+                            if (direction === 'up') {
+                                return rect.bottom <= currentRect.top &&
+                                      Math.abs(centerX - elementCenterX) < rect.width;
+                            } else {
+                                return rect.top >= currentRect.bottom &&
+                                      Math.abs(centerX - elementCenterX) < rect.width;
+                            }
+                        });
+
+                        if (potentialElements.length > 0) {
+                            // Find closest element in the specified direction
+                            nextElement = potentialElements.reduce((closest, current) => {
+                                const closestRect = closest.getBoundingClientRect();
+                                const currentRect2 = current.getBoundingClientRect();
+
+                                if (direction === 'up') {
+                                    return currentRect2.bottom > closestRect.bottom ? current : closest;
+                                } else {
+                                    return currentRect2.top < closestRect.top ? current : closest;
+                                }
+                            });
+                        }
+                    } else if (direction === 'left' || direction === 'right') {
+                        // This handles left/right outside of a row
+                        const centerY = currentRect.top + currentRect.height / 2;
+                        const potentialElements = allElements.filter(element => {
+                            if (element === currentFocusElement) return false;
+
+                            const rect = element.getBoundingClientRect();
+                            const elementCenterY = rect.top + rect.height / 2;
+
+                            if (direction === 'left') {
+                                return rect.right <= currentRect.left &&
+                                      Math.abs(centerY - elementCenterY) < rect.height * 1.5;
+                            } else {
+                                return rect.left >= currentRect.right &&
+                                      Math.abs(centerY - elementCenterY) < rect.height * 1.5;
+                            }
+                        });
+
+                        if (potentialElements.length > 0) {
+                            nextElement = potentialElements.reduce((closest, current) => {
+                                const closestRect = closest.getBoundingClientRect();
+                                const currentRect2 = current.getBoundingClientRect();
+
+                                if (direction === 'left') {
+                                    return currentRect2.right > closestRect.right ? current : closest;
+                                } else {
+                                    return currentRect2.left < closestRect.left ? current : closest;
+                                }
+                            });
+                        }
+                    }
+                }
+
+                if (nextElement) {
+                    setFocus(nextElement);
+                }
+            }
+
+            // Handle key presses for TV navigation
+            function handleKeyPress(e) {
+                // Always enable TV mode when keyboard navigation is used
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) {
+                    enableTVMode();
+                }
+
+                // Don't intercept normal typing in the search input
+                if (document.activeElement === document.getElementById('search-input')) {
+                    isSearchActive = true;
+                    // Only handle Escape to exit search
+                    if (e.key === 'Escape' || e.key === 'Back') {
+                        document.getElementById('search-input').blur();
+                        isSearchActive = false;
+                        if (currentFocusElement && tvModeActive) setFocus(currentFocusElement);
+                        e.preventDefault();
+                    }
+                    return;
+                }
+
+                if (inMoviePlayback) {
+                    // When in movie playback, only handle Back/Escape key
+                    if (e.key === 'Escape' || e.key === 'Backspace' || e.key === 'Back') {
+                        closePlayer();
+                        inMoviePlayback = false;
+                        // Restore focus
+                        if (currentFocusElement && tvModeActive) {
+                            setFocus(currentFocusElement);
+                        } else if (tvModeActive) {
+                            setInitialFocus();
+                        }
+                        e.preventDefault();
+                    }
+                    return;
+                }
+
+                // Search activation - use Play/Pause button to start search
+                if (e.key === ' ' || e.key === 'MediaPlayPause' || e.key === 'Play') {
+                    if (!isSearchActive) {
+                        document.getElementById('search-input').focus();
+                        isSearchActive = true;
+                        e.preventDefault();
+                    }
+                    return;
+                }
+
+                if (!tvModeActive) return; // Skip TV navigation if TV mode is disabled
+
+                // Normal navigation
+                switch (e.key) {
+                    case 'ArrowUp':
+                        findNextFocusElement('up');
+                        e.preventDefault();
+                        break;
+                    case 'ArrowDown':
+                        findNextFocusElement('down');
+                        e.preventDefault();
+                        break;
+                    case 'ArrowLeft':
+                        findNextFocusElement('left');
+                        e.preventDefault();
+                        break;
+                    case 'ArrowRight':
+                        findNextFocusElement('right');
+                        e.preventDefault();
+                        break;
+                    case 'Enter':
+                        if (currentFocusElement) {
+                            if (currentFocusElement.classList.contains('movie-card')) {
+                                // Play the movie
+                                const movieId = currentFocusElement.dataset.movieId;
+                                if (movieId) {
+                                    openPlayer(movieId);
+                                    inMoviePlayback = true;
+                                }
+                            } else if (currentFocusElement.classList.contains('notifications')) {
+                                // Toggle notifications dropdown
+                                notificationsDropdown.classList.toggle('show');
+                            } else if (currentFocusElement.id === 'billboard-play') {
+                                // Play the billboard movie
+                                if (featuredMovie) {
+                                    openPlayer(featuredMovie.id);
+                                    inMoviePlayback = true;
+                                }
+                            } else if (currentFocusElement.id === 'billboard-info') {
+                                // Show more info about the billboard movie
+                                if (featuredMovie) {
+                                    showMovieDetail(featuredMovie.id);
+                                }
+                            } else if (currentFocusElement.classList.contains('search-container')) {
+                                document.getElementById('search-input').focus();
+                                isSearchActive = true;
+                            }
+                            e.preventDefault();
+                        }
+                        break;
+                    case 'Menu':
+                    case 'ContextMenu':
+                    case 'Info':
+                        // Show notifications when info button is pressed
+                        notificationsDropdown.classList.toggle('show');
+                        e.preventDefault();
+                        break;
+                    case 'Escape':
+                    case 'Backspace':
+                    case 'Back':
+                        // Close any open modals or dropdowns
+                        if (notificationsDropdown.classList.contains('show')) {
+                            notificationsDropdown.classList.remove('show');
+                        } else {
+                            closeMovieDetail();
+                        }
+                        e.preventDefault();
+                        break;
+                }
+            }
+
+            // Listen for click events to handle "add to watch list" functionality
+            document.addEventListener('click', (event) => {
+                // Disable TV mode on click anywhere except action buttons
+                const actionButton = event.target.closest('.action-button');
+                if (!actionButton) {
+                    disableTVMode();
+                    return;
+                }
+
+                // Special handling to ensure add/remove buttons work in TV mode
+                if (actionButton.querySelector('ion-icon[name="add-outline"]') ||
+                    actionButton.querySelector('ion-icon[name="remove-outline"]')) {
+                    event.stopPropagation(); // Prevent other click handlers
+
+                    const card = actionButton.closest('.movie-card');
+                    if (card) {
+                        const movieId = Number(card.dataset.movieId);
+                        if (isInMyList(movieId)) {
+                            removeFromMyList(movieId);
+                            actionButton.innerHTML = '<ion-icon name="add-outline"></ion-icon>';
+                            actionButton.title = 'Add to My List';
+                        } else {
+                            const foundMovie = findMovieById(movieId);
+                            if (foundMovie) {
+                                addToMyList(foundMovie);
+                                actionButton.innerHTML = '<ion-icon name="remove-outline"></ion-icon>';
+                                actionButton.title = 'Remove from My List';
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Mouse movement should disable TV mode
+            let mouseTimeout;
+            document.addEventListener('mousemove', () => {
+                clearTimeout(mouseTimeout);
+                mouseTimeout = setTimeout(() => {
+                    disableTVMode();
+                }, 100);
+            }, { passive: true });
+
+            // Initialize TV mode
+            document.addEventListener('keydown', handleKeyPress);
+            window.addEventListener('load', () => {
+                // Check if this is likely a TV
+                const isTVBrowser = /\b(smart-tv|smarttv|googletv|webos|hbbtv|tizen|roku)\b/i.test(navigator.userAgent);
+                const isBigScreen = window.matchMedia('(min-width: 1200px) and (min-height: 800px)').matches;
+
+                // Start in TV mode only if it seems like a TV
+                if (isTVBrowser || window.location.search.includes('tv=true')) {
+                    enableTVMode();
+                } else {
+                    disableTVMode();
+                }
+            });
+
+            // Handle focus/blur on search input
+            document.getElementById('search-input').addEventListener('focus', () => {
+                isSearchActive = true;
+            });
+
+            document.getElementById('search-input').addEventListener('blur', () => {
+                isSearchActive = false;
+            });
+        }
+
         async function initializePage() {
             await fetchTrendingMovies();
             await fetchPopularMovies();
@@ -1782,6 +2233,7 @@
             await fetchNotificationMovies(); // Fetch notification movies
             updateMyListRow();
             initializeRowNavigation(); // Initialize row navigation arrows
+            initializeTVMode(); // Initialize TV mode navigation
         }
 
         initializePage();
