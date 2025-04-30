@@ -1,3 +1,4 @@
+
 <link rel="icon" type="image/x-icon" href="/v1/files/v1-info/images/vplazav1.png">
 
 <!DOCTYPE html>
@@ -40,9 +41,9 @@
 
         .text-white {
             color: #ffffff;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.9);
             font-weight: 700;
-            font-size: 2.8rem;
+            font-size: 1.8rem;
             letter-spacing: 1px;
             display: inline-block;
             margin-right: 15px;
@@ -52,7 +53,7 @@
             color: #ff2d2d;
             text-shadow: 0 0 15px rgba(255, 45, 45, 0.9);
             font-weight: 700;
-            font-size: 2.8rem;
+            font-size: 1.8rem;
             letter-spacing: 1px;
             display: inline-block;
             margin-right: 15px;
@@ -65,8 +66,8 @@
         .brand-name {
             color: #ff2d2d;
             text-shadow: 0 0 15px rgba(255, 45, 45, 0.9);
-            font-size: 4.5rem;
-            font-weight: 800;
+            font-size: 1.5rem;
+            font-weight: 200;
             letter-spacing: 2px;
             margin: 10px 0 40px 0;
             display: block;
@@ -78,7 +79,7 @@
             align-items: center;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50px;
+            border-radius: 10px;
             padding: 12px 40px;
             cursor: pointer;
             position: relative;
@@ -105,7 +106,7 @@
         }
 
         .enter-button:hover:after {
-            animation: shine 1.5s ease-in-out;
+            animation: shine 5.5s ease-in-out;
         }
 
         .enter-button span {
@@ -118,10 +119,10 @@
             right: 10%;
             transform: translateY(-50%);
             z-index: 1;
-            width: 40%;
+            width: 20%;
             max-width: 500px;
             filter: drop-shadow(0 0 30px rgba(255, 45, 45, 0.5));
-            animation: float 6s ease-in-out infinite;
+            animation: float 100s ease-in-out infinite;
         }
 
         .custom-image {
@@ -197,7 +198,7 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1px) {
             body {
                 flex-direction: column;
                 justify-content: center;
@@ -242,16 +243,16 @@
     <div class="content-container">
         <div class="headline">
             <span class="text-white hoverable">YOU'VE</span>
-            <span class="text-red hoverable">CAME</span>
+            <span class="text-red hoverable">COME</span>
             <span class="text-white hoverable">TO</span>
             <span class="text-red hoverable">SUCCEED</span>
         </div>
 
-        <h1 class="brand-name hoverable">VPLAZA V1</h1>
+        <h1 class="brand-name hoverable">Welcome back or welcome to Vplaza</h1>
 
         <a href="v1oper-a.html" class="enter-button" id="enter-btn">
-            <span class="text-white">LETS</span>
-            <span class="text-red">ENTER</span>
+            <span class="text-white">Lets</span>
+            <span class="text-red">Enter</span>
         </a>
     </div>
 
@@ -259,7 +260,7 @@
         <img src="images/vplazav1.png" alt="vplazav1" class="custom-image">
     </div>
 
-    <p class="instructions">Thank You For Using Vplaza!</p>
+    <p class="instructions">Thank You For Using Vplaza! Click "Lets Enter" to continue!</p>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
