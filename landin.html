@@ -25,7 +25,6 @@ body {
     overflow: hidden;
     position: relative;
 }
-/* Removing the overlay background that was causing the issue */
 .container {
     width: 100%;
     height: 100%;
@@ -292,7 +291,6 @@ body {
     </svg>
 </div>
 
-<!-- Settings Panel -->
 <div class="settings-panel" id="settingsPanel">
     <div class="settings-header">
         <h2>WALL PAPER STYLE</h2>
@@ -301,7 +299,7 @@ body {
 
     <div class="settings-section">
         <div class="background-options" id="backgroundOptions">
-            <!-- Background options -->
+
             <div class="bg-option" data-bg="images/bg.png" onclick="selectBackground(this)">
                 <img src="images/bg.png" alt="Background Option">
             </div>
@@ -317,15 +315,16 @@ body {
             <div class="bg-option" data-bg="images/trees.png" onclick="selectBackground(this)">
                 <img src="images/trees.png" alt="Background Option">
             </div>
+            <div class="bg-option" data-bg="images/bgsmoke.png" onclick="selectBackground(this)">
+                <img src="images/bgsmoke.png" alt="Background Option">
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Overlay for closing settings panel -->
 <div class="overlay" id="overlay" onclick="closeSettingsPanel()"></div>
 
 <script>
-// Handle search functionality
 document.getElementById('searchInput').addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
         const query = this.value.trim();
@@ -352,14 +351,12 @@ function isValidUrl(string) {
     return pattern.test(string);
 }
 
-// Load saved background from localStorage
 window.addEventListener('DOMContentLoaded', function() {
     const savedBg = localStorage.getItem('backgroundImage');
 
     if (savedBg) {
         document.body.style.backgroundImage = `url('${savedBg}')`;
 
-        // Mark the selected background option
         const bgOptions = document.querySelectorAll('.bg-option');
         bgOptions.forEach(option => {
             if (option.dataset.bg === savedBg) {
@@ -367,7 +364,7 @@ window.addEventListener('DOMContentLoaded', function() {
             }
         });
     } else {
-        // Set default background if none is saved
+
         document.body.style.backgroundImage = `url('images/bgnt.png')`;
         const defaultOption = document.querySelector('.bg-option[data-bg="images/bg.png"]');
         if (defaultOption) {
@@ -376,7 +373,6 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Toggle settings panel
 function toggleSettings() {
     console.log('Toggle settings clicked');
     const settingsPanel = document.getElementById('settingsPanel');
@@ -385,7 +381,6 @@ function toggleSettings() {
     overlay.classList.add('open');
 }
 
-// Close settings panel
 function closeSettingsPanel() {
     const settingsPanel = document.getElementById('settingsPanel');
     const overlay = document.getElementById('overlay');
@@ -393,22 +388,16 @@ function closeSettingsPanel() {
     overlay.classList.remove('open');
 }
 
-// Select background
 function selectBackground(element) {
-    // Remove selected class from all options
     const bgOptions = document.querySelectorAll('.bg-option');
     bgOptions.forEach(option => option.classList.remove('selected'));
 
-    // Add selected class to clicked option
     element.classList.add('selected');
 
-    // Get background URL
     const bgUrl = element.dataset.bg;
 
-    // Apply background
     document.body.style.backgroundImage = `url('${bgUrl}')`;
 
-    // Save to localStorage
     localStorage.setItem('backgroundImage', bgUrl);
 }
 </script>
