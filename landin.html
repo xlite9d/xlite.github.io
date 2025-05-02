@@ -243,6 +243,145 @@ body {
     object-fit: cover;
 }
 
+/* Add Upload Button Styles */
+.bg-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease;
+}
+
+.bg-upload:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.bg-upload .plus-icon {
+    font-size: 36px;
+    color: #ffffff;
+    opacity: 0.7;
+}
+
+/* Upload Modal Styles */
+.upload-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    background-color: #2c2e3e;
+    border-radius: 12px;
+    z-index: 110;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.upload-modal.open {
+    display: flex;
+}
+
+.upload-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.upload-header h3 {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.close-upload {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.close-upload:hover {
+    opacity: 1;
+}
+
+.upload-content {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.upload-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.upload-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 6px;
+    padding: 12px 15px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.upload-button svg {
+    width: 24px;
+    height: 24px;
+    fill: #ffffff;
+}
+
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.image-item {
+    position: relative;
+    height: 100px;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.image-item:hover {
+    transform: scale(1.05);
+}
+
+.image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.custom-wallpapers {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
 .overlay {
     position: fixed;
     top: 0;
@@ -283,7 +422,7 @@ body {
         </div>
     </div>
 </div>
-    
+
 <div class="settings-icon" id="settingsIcon" onclick="toggleSettings()">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"></path>
@@ -326,11 +465,45 @@ body {
             <div class="bg-option" data-bg="images/bgfog.png" onclick="selectBackground(this)">
                 <img src="images/bgfog.png" alt="Background Option">
             </div>
+            <!-- Add Upload Wallpaper Button -->
+            <div class="bg-option bg-upload" onclick="openUploadModal()">
+                <span class="plus-icon">+</span>
+            </div>
+        </div>
+
+        <!-- Custom Wallpapers Section -->
+        <div class="settings-section" id="customWallpapersSection" style="display: none;">
+            <h3>YOUR WALLPAPERS</h3>
+            <div class="custom-wallpapers" id="customWallpapers">
+                <!-- Custom wallpapers will be loaded here -->
+            </div>
         </div>
     </div>
 </div>
 
 <div class="overlay" id="overlay" onclick="closeSettingsPanel()"></div>
+
+<!-- Upload Modal -->
+<div class="upload-modal" id="uploadModal">
+    <div class="upload-header">
+        <h3>Add Wallpaper</h3>
+        <button class="close-upload" id="closeUpload" onclick="closeUploadModal()">×</button>
+    </div>
+    <div class="upload-content">
+        <div class="upload-options">
+            <button class="upload-button" onclick="document.getElementById('fileInput').click()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                Choose from your device
+            </button>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+        </div>
+        <div id="selectedImagesContainer" class="images-grid">
+            <!-- Selected images will appear here -->
+        </div>
+    </div>
+</div>
 
 <script>
 document.getElementById('searchInput').addEventListener('keypress', function(event) {
@@ -365,20 +538,36 @@ window.addEventListener('DOMContentLoaded', function() {
     if (savedBg) {
         document.body.style.backgroundImage = `url('${savedBg}')`;
 
-        const bgOptions = document.querySelectorAll('.bg-option');
+        const bgOptions = document.querySelectorAll('.bg-option:not(.bg-upload)');
+        let foundPreset = false;
+
         bgOptions.forEach(option => {
             if (option.dataset.bg === savedBg) {
                 option.classList.add('selected');
+                foundPreset = true;
             }
         });
-    } else {
 
+        // If not a preset background, check if it's a custom one
+        if (!foundPreset) {
+            const customWallpapers = getCustomWallpapers();
+            customWallpapers.forEach(wallpaper => {
+                if (wallpaper.dataUrl === savedBg) {
+                    // It's a custom background
+                    displayCustomWallpapers();
+                }
+            });
+        }
+    } else {
         document.body.style.backgroundImage = `url('images/bgnt.png')`;
         const defaultOption = document.querySelector('.bg-option[data-bg="images/bg.png"]');
         if (defaultOption) {
             defaultOption.classList.add('selected');
         }
     }
+
+    // Load custom wallpapers
+    displayCustomWallpapers();
 });
 
 function toggleSettings() {
@@ -394,6 +583,7 @@ function closeSettingsPanel() {
     const overlay = document.getElementById('overlay');
     settingsPanel.classList.remove('open');
     overlay.classList.remove('open');
+    closeUploadModal();
 }
 
 function selectBackground(element) {
@@ -406,6 +596,148 @@ function selectBackground(element) {
 
     document.body.style.backgroundImage = `url('${bgUrl}')`;
 
+    localStorage.setItem('backgroundImage', bgUrl);
+}
+
+// Functions for wallpaper upload and custom wallpapers
+function openUploadModal() {
+    const uploadModal = document.getElementById('uploadModal');
+    uploadModal.classList.add('open');
+}
+
+function closeUploadModal() {
+    const uploadModal = document.getElementById('uploadModal');
+    uploadModal.classList.remove('open');
+
+    // Clear selected images
+    document.getElementById('selectedImagesContainer').innerHTML = '';
+    document.getElementById('fileInput').value = '';
+}
+
+function handleFileSelect(event) {
+    const files = event.target.files;
+
+    if (files && files.length > 0) {
+        const selectedImagesContainer = document.getElementById('selectedImagesContainer');
+        selectedImagesContainer.innerHTML = ''; // Clear previous selections
+
+        Array.from(files).forEach(file => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const imageDataUrl = e.target.result;
+
+                    // Create image preview element
+                    const imageDiv = document.createElement('div');
+                    imageDiv.className = 'image-item';
+                    imageDiv.onclick = function() {
+                        saveCustomWallpaper(imageDataUrl, file.name);
+                    };
+
+                    const img = document.createElement('img');
+                    img.src = imageDataUrl;
+                    img.alt = 'Selected Image';
+
+                    imageDiv.appendChild(img);
+                    selectedImagesContainer.appendChild(imageDiv);
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+}
+
+function saveCustomWallpaper(dataUrl, filename) {
+    // Get existing custom wallpapers
+    const customWallpapers = getCustomWallpapers();
+
+    // Add new wallpaper
+    const newWallpaper = {
+        id: Date.now().toString(),
+        dataUrl: dataUrl,
+        name: filename
+    };
+
+    customWallpapers.push(newWallpaper);
+
+    // Save to localStorage
+    localStorage.setItem('customWallpapers', JSON.stringify(customWallpapers));
+
+    // Set as current wallpaper
+    document.body.style.backgroundImage = `url('${dataUrl}')`;
+    localStorage.setItem('backgroundImage', dataUrl);
+
+    // Update UI
+    displayCustomWallpapers();
+
+    // Close the upload modal
+    closeUploadModal();
+
+    // Remove selection from preset wallpapers
+    const bgOptions = document.querySelectorAll('.bg-option');
+    bgOptions.forEach(option => option.classList.remove('selected'));
+}
+
+function getCustomWallpapers() {
+    const savedWallpapers = localStorage.getItem('customWallpapers');
+    return savedWallpapers ? JSON.parse(savedWallpapers) : [];
+}
+
+function displayCustomWallpapers() {
+    const customWallpapers = getCustomWallpapers();
+    const customWallpapersContainer = document.getElementById('customWallpapers');
+    const customWallpapersSection = document.getElementById('customWallpapersSection');
+
+    // Clear current wallpapers
+    customWallpapersContainer.innerHTML = '';
+
+    if (customWallpapers.length > 0) {
+        // Show the section
+        customWallpapersSection.style.display = 'block';
+
+        // Add each wallpaper
+        customWallpapers.forEach(wallpaper => {
+            const wallpaperDiv = document.createElement('div');
+            wallpaperDiv.className = 'bg-option';
+            wallpaperDiv.dataset.bg = wallpaper.dataUrl;
+            wallpaperDiv.onclick = function() {
+                selectCustomBackground(this);
+            };
+
+            const img = document.createElement('img');
+            img.src = wallpaper.dataUrl;
+            img.alt = 'Custom Wallpaper';
+
+            wallpaperDiv.appendChild(img);
+            customWallpapersContainer.appendChild(wallpaperDiv);
+
+            // Check if this is the currently selected wallpaper
+            const currentBg = localStorage.getItem('backgroundImage');
+            if (currentBg === wallpaper.dataUrl) {
+                wallpaperDiv.classList.add('selected');
+            }
+        });
+    } else {
+        // Hide the section if no custom wallpapers
+        customWallpapersSection.style.display = 'none';
+    }
+}
+
+function selectCustomBackground(element) {
+    // Remove selected class from all bg options
+    const allOptions = document.querySelectorAll('.bg-option');
+    allOptions.forEach(option => option.classList.remove('selected'));
+
+    // Add selected class to clicked element
+    element.classList.add('selected');
+
+    // Set background
+    const bgUrl = element.dataset.bg;
+    document.body.style.backgroundImage = `url('${bgUrl}')`;
+
+    // Save to localStorage
     localStorage.setItem('backgroundImage', bgUrl);
 }
 </script>
