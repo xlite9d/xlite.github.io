@@ -291,7 +291,7 @@
             box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
         }
 
-        /* Error screen styles */
+        /* Error screen styles - now used only for optional warning */
         .error-screen {
             position: fixed;
             top: 0;
@@ -304,8 +304,22 @@
             justify-content: center;
             color: white;
             z-index: 30;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
         }
 
+        .error-screen button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Enhanced responsive styles */
         @media (max-width: 600px) {
             .header h1 {
                 font-size: 22px;
@@ -317,11 +331,45 @@
 
             .input-area input[type="text"] {
                 margin-bottom: 10px;
-                width: auto;
+                width: 100%;
             }
 
             .input-area input[type="submit"] {
                 width: 100%;
+            }
+
+            .message {
+                max-width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .messages {
+                padding: 10px;
+            }
+        }
+
+        /* Additional mobile styles for very small screens */
+        @media (max-width: 400px) {
+            .header {
+                padding: 10px;
+                margin: 10px 0;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .message-avatar {
+                width: 30px;
+                height: 30px;
+            }
+
+            .message-text {
+                font-size: 14px;
             }
         }
 
@@ -443,9 +491,9 @@
     </div>
 
     <div class="error-screen" id="errorScreen">
-        <h1>404 ERROR FOUND</h1>
-        <p>vplaza chat cannot allow access to your device as you are too zoomed in!</p>
-        <button onclick="resizeScreen()">Reload or shrink your screen size!</button>
+        <h1>Small Screen Warning</h1>
+        <p>vplaza chat works best on larger screens. Some features might be difficult to use on mobile.</p>
+        <button onclick="resizeScreen()">I understand, continue anyway</button>
     </div>
 
     <div class="join-notification" id="joinNotification" style="display: none;">
@@ -464,19 +512,21 @@
         let isRecording = false; // Track voice recording status
         let recognition; // Speech recognition instance
 
-        // Check screen size function
+        // Check screen size function - now just shows warning but doesn't block
         function checkScreenSize() {
             if (window.innerWidth < 500) {
+                // Show optional warning but don't block access
                 document.getElementById("errorScreen").style.display = "flex";
-                document.getElementById("chatContainer").style.display = "none";
-                return false;
+                // Don't hide the chat container
+                return true;
             }
             document.getElementById("errorScreen").style.display = "none";
             return true;
         }
 
         function resizeScreen() {
-            window.location.reload();
+            // Just hide the warning instead of reloading
+            document.getElementById("errorScreen").style.display = "none";
         }
 
         window.onload = function () {
