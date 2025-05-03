@@ -817,7 +817,7 @@
             height: 100%;
             overflow: hidden;
             transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-            z-index: 9999;
+            z-index: 100000;
             backdrop-filter: blur(10px);
         }
 
@@ -845,6 +845,7 @@
             overflow: hidden;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
             border-left: 3px solid rgba(0, 128, 255, 0.7);
+            z-index: 9999;
         }
 
         .chat-header {
@@ -930,12 +931,12 @@
             flex-grow: 1;
             position: relative;
             height: calc(100% - 118px); /* Adjust for header and close button */
-            background-color: #1e1e1e;
+            background-color: transparent;
             overflow: hidden;
             border-radius: 8px;
             margin: 10px;
             border: 1px solid rgba(0, 128, 255, 0.4);
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
         }
 
         .chat-iframe {
@@ -944,8 +945,9 @@
             border: none;
             display: block;
             border-radius: 8px;
-            opacity: 0;
-            animation: fade-in 0.4s forwards 0.3s;
+            opacity: 1;
+            position: relative;
+            z-index: 10;
             background-color: #121212;
         }
 
@@ -1799,20 +1801,20 @@
                     const chatContainer = document.getElementById('chat-container');
                     const chatIframeContainer = document.getElementById('chat-iframe-container');
 
-                    // Check if iframe already exists
-                    let iframe = document.getElementById('chat-iframe');
-                    if (!iframe) {
-                        // Create iframe if it doesn't exist
-                        iframe = document.createElement('iframe');
-                        iframe.src = "chat.html";
-                        iframe.id = "chat-iframe";
-                        iframe.className = "chat-iframe";
+                    // Always clear and recreate the iframe
+                    chatIframeContainer.innerHTML = '';
 
-                        // Add transition effect class
-                        setTimeout(() => {
-                            chatIframeContainer.appendChild(iframe);
-                        }, 100);
-                    }
+                    const iframe = document.createElement('iframe');
+                    iframe.src = "chat.html";
+                    iframe.id = "chat-iframe";
+                    iframe.className = "chat-iframe";
+                    iframe.style.width = "100%";
+                    iframe.style.height = "100%";
+                    iframe.style.border = "none";
+                    iframe.style.zIndex = "10000";
+
+                    // Add iframe immediately
+                    chatIframeContainer.appendChild(iframe);
 
                     // Toggle visibility with smooth animation
                     if (chatContainer.classList.contains('open')) {
@@ -1871,20 +1873,18 @@
             e.preventDefault();
             e.stopPropagation();
 
-            // Get the chat container and iframe
+            // Get the chat container
             const chatContainer = document.getElementById('chat-container');
-            const iframe = document.getElementById('chat-iframe');
+            const chatIframeContainer = document.getElementById('chat-iframe-container');
 
             // Add closing transition
             chatContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
             chatContainer.classList.remove('open');
 
-            // Remove iframe to stop chat with a small delay
-            if (iframe && iframe.parentNode) {
-                setTimeout(() => {
-                    iframe.parentNode.removeChild(iframe);
-                }, 300);
-            }
+            // Clear the iframe container with a small delay
+            setTimeout(() => {
+                chatIframeContainer.innerHTML = '';
+            }, 300);
         });
 
         // Close player (but keep playing) when clicking outside
