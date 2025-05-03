@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -808,6 +807,185 @@
         #music-player-btn:hover ion-icon {
             transform: scale(1.2);
         }
+
+        /* Chat Container Styles - Similar to Music Player */
+        .chat-container {
+            position: fixed;
+            top: 0;
+            left: 56px;
+            width: 0;
+            height: 100%;
+            overflow: hidden;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-container.open {
+            width: 490px;
+            animation: chat-glow 2s infinite alternate;
+        }
+
+        @keyframes chat-glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 128, 255, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(0, 128, 255, 0.6);
+            }
+        }
+
+        .chat-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+            border-left: 3px solid rgba(0, 128, 255, 0.7);
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            height: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(0, 128, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(0, 128, 255, 0.7), transparent);
+            animation: header-glow 3s infinite alternate;
+        }
+
+        .chat-title {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, rgba(0, 128, 255, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: text-shimmer 3s infinite;
+            background-size: 200% 100%;
+        }
+
+        .chat-close {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            cursor: pointer;
+            color: white;
+            font-weight: 800;
+            background-color: #000;
+            text-align: center;
+            padding: 18px 0;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            border-top: 1px solid rgba(0, 128, 255, 0.7);
+            overflow: hidden;
+        }
+
+        .chat-close:hover {
+            background-color: rgba(0, 128, 255, 0.8);
+            letter-spacing: 3px;
+        }
+
+        .chat-close::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 128, 255, 0.3), transparent);
+            transition: all 0.5s;
+        }
+
+        .chat-close:hover::before {
+            left: 100%;
+            transition: all 0.5s;
+        }
+
+        .chat-iframe-container {
+            flex-grow: 1;
+            position: relative;
+            height: calc(100% - 118px); /* Adjust for header and close button */
+            background-color: #1e1e1e;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 10px;
+            border: 1px solid rgba(0, 128, 255, 0.4);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .chat-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            border-radius: 8px;
+            opacity: 0;
+            animation: fade-in 0.4s forwards 0.3s;
+            background-color: #121212;
+        }
+
+        /* Style the chat icon specifically */
+        #chat-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #chat-btn:hover {
+            color: rgba(0, 128, 255, 0.9) !important;
+        }
+
+        #chat-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 128, 255, 0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 50%;
+            transform: scale(0.85);
+        }
+
+        #chat-btn:hover::before {
+            opacity: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        #chat-btn ion-icon {
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+
+        #chat-btn:hover ion-icon {
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body>
@@ -856,7 +1034,7 @@
                 <div class="sidebar-icon" data-url="/a">
                     <ion-icon name="logo-apple-appstore"></ion-icon>
                 </div>
-                <div class="sidebar-icon" data-url="/chat">
+                <div class="sidebar-icon" id="chat-btn" data-url="/chat">
                     <ion-icon name="chatbubble"></ion-icon>
                 </div>
                 <div class="sidebar-icon" id="music-player-btn" data-url="/audio">
@@ -948,6 +1126,22 @@
             </div>
             <div class="music-player-close" id="music-player-close">
                 CLOSE PLAYER <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chat-container">
+        <div class="chat-content" id="chat-content">
+            <div class="chat-header">
+                <span class="chat-title">Vplaza Chat</span>
+                <a>Chat with friends!</a>
+            </div>
+            <div class="chat-iframe-container" id="chat-iframe-container">
+                <!-- Empty div that will be populated with an iframe when needed -->
+            </div>
+            <div class="chat-close" id="chat-close">
+                CLOSE CHAT <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
             </div>
         </div>
     </div>
@@ -1486,8 +1680,8 @@
             icon.addEventListener('click', function() {
                 const url = this.getAttribute('data-url');
                 if (url) {
-                    // Don't navigate for the music player button
-                    if (this.id === 'music-player-btn') return;
+                    // Don't navigate for the music player button or chat button
+                    if (this.id === 'music-player-btn' || this.id === 'chat-btn') return;
                     navigateToUrl(url);
                 }
             });
@@ -1595,6 +1789,60 @@
                     this.style.transform = "";
                 });
             }
+            // Chat button logic
+            if (icon.id === 'chat-btn') {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Get the chat container
+                    const chatContainer = document.getElementById('chat-container');
+                    const chatIframeContainer = document.getElementById('chat-iframe-container');
+
+                    // Check if iframe already exists
+                    let iframe = document.getElementById('chat-iframe');
+                    if (!iframe) {
+                        // Create iframe if it doesn't exist
+                        iframe = document.createElement('iframe');
+                        iframe.src = "chat.html";
+                        iframe.id = "chat-iframe";
+                        iframe.className = "chat-iframe";
+
+                        // Add transition effect class
+                        setTimeout(() => {
+                            chatIframeContainer.appendChild(iframe);
+                        }, 100);
+                    }
+
+                    // Toggle visibility with smooth animation
+                    if (chatContainer.classList.contains('open')) {
+                        chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
+                        chatContainer.classList.remove('open');
+                    } else {
+                        chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
+                        chatContainer.classList.add('open');
+                    }
+                });
+
+                // Remove data-url to prevent normal navigation
+                if (icon.hasAttribute('data-url')) {
+                    icon.removeAttribute('data-url');
+                }
+
+                // Add hover effect
+                icon.addEventListener('mouseenter', function() {
+                    this.style.textShadow = "0 0 10px rgba(0, 128, 255, 0.7)";
+                    this.style.color = "rgba(0, 128, 255, 0.9)";
+                    this.style.transform = "scale(1.1)";
+                    this.style.transition = "all 0.3s ease";
+                });
+
+                icon.addEventListener('mouseleave', function() {
+                    this.style.textShadow = "";
+                    this.style.color = "";
+                    this.style.transform = "";
+                });
+            }
         });
 
         // Close music player when X is clicked
@@ -1618,10 +1866,33 @@
             }
         });
 
+        // Close chat when X is clicked
+        document.getElementById('chat-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Get the chat container and iframe
+            const chatContainer = document.getElementById('chat-container');
+            const iframe = document.getElementById('chat-iframe');
+
+            // Add closing transition
+            chatContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
+            chatContainer.classList.remove('open');
+
+            // Remove iframe to stop chat with a small delay
+            if (iframe && iframe.parentNode) {
+                setTimeout(() => {
+                    iframe.parentNode.removeChild(iframe);
+                }, 300);
+            }
+        });
+
         // Close player (but keep playing) when clicking outside
         document.addEventListener('click', function(e) {
             const musicPlayerContainer = document.getElementById('music-player-container');
             const musicPlayerBtn = document.getElementById('music-player-btn');
+            const chatContainer = document.getElementById('chat-container');
+            const chatBtn = document.getElementById('chat-btn');
 
             if (
                 musicPlayerContainer &&
@@ -1634,6 +1905,19 @@
                 musicPlayerContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
                 musicPlayerContainer.classList.remove('open');
                 // Note: We don't remove the iframe here, so music continues playing
+            }
+
+            if (
+                chatContainer &&
+                chatContainer.classList.contains('open') &&
+                !chatContainer.contains(e.target) &&
+                e.target !== chatBtn &&
+                !chatBtn.contains(e.target)
+            ) {
+                // Smooth transition out
+                chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+                chatContainer.classList.remove('open');
+                // Note: We don't remove the iframe here, so chat session can persist if needed
             }
         });
     </script>
