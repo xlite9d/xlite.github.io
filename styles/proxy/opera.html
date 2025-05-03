@@ -1801,20 +1801,21 @@
                     const chatContainer = document.getElementById('chat-container');
                     const chatIframeContainer = document.getElementById('chat-iframe-container');
 
-                    // Always clear and recreate the iframe
-                    chatIframeContainer.innerHTML = '';
+                    // Only create the iframe if it doesn't already exist
+                    let iframe = document.getElementById('chat-iframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.src = "chat.html";
+                        iframe.id = "chat-iframe";
+                        iframe.className = "chat-iframe";
+                        iframe.style.width = "100%";
+                        iframe.style.height = "100%";
+                        iframe.style.border = "none";
+                        iframe.style.zIndex = "10000";
 
-                    const iframe = document.createElement('iframe');
-                    iframe.src = "/chat.html";
-                    iframe.id = "chat-iframe";
-                    iframe.className = "chat-iframe";
-                    iframe.style.width = "100%";
-                    iframe.style.height = "100%";
-                    iframe.style.border = "none";
-                    iframe.style.zIndex = "10000";
-
-                    // Add iframe immediately
-                    chatIframeContainer.appendChild(iframe);
+                        // Add iframe immediately
+                        chatIframeContainer.appendChild(iframe);
+                    }
 
                     // Toggle visibility with smooth animation
                     if (chatContainer.classList.contains('open')) {
@@ -1868,7 +1869,7 @@
             }
         });
 
-        // Close chat when X is clicked
+        // Close chat ONLY when the Close Chat button is clicked
         document.getElementById('chat-close').addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -1881,7 +1882,8 @@
             chatContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
             chatContainer.classList.remove('open');
 
-            // Clear the iframe container with a small delay
+            // When the Close Chat button is clicked, we actually destroy the iframe
+            // to completely close the chat session
             setTimeout(() => {
                 chatIframeContainer.innerHTML = '';
             }, 300);
@@ -1914,10 +1916,10 @@
                 e.target !== chatBtn &&
                 !chatBtn.contains(e.target)
             ) {
-                // Smooth transition out
+                // Smooth transition out to hide the chat (but don't destroy the iframe)
                 chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
                 chatContainer.classList.remove('open');
-                // Note: We don't remove the iframe here, so chat session can persist if needed
+                // Important: We don't remove the iframe here, so chat session persists
             }
         });
     </script>
