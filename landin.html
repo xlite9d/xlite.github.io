@@ -25,6 +25,13 @@ body {
     overflow: hidden;
     position: relative;
 }
+
+/* Add styles for animated wallpapers */
+body[data-wallpaper-type="animated"] {
+    background-size: cover;
+    background-position: center;
+}
+
 .container {
     width: 100%;
     height: 100%;
@@ -206,6 +213,11 @@ body {
     margin-bottom: 25px;
 }
 
+/* Add more margin to custom wallpaper section */
+#customWallpapersSection {
+    margin-top: 40px;
+}
+
 .settings-section h3 {
     color: #ffffff;
     font-size: 1.2rem;
@@ -227,6 +239,20 @@ body {
     border: 2px solid transparent;
     transition: all 0.2s ease;
     position: relative;
+}
+
+/* Add indicator for animated wallpapers */
+.bg-option.animated::after {
+    content: "GIF";
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-weight: bold;
 }
 
 .bg-option:hover {
@@ -497,7 +523,7 @@ body {
                 </svg>
                 Choose from your device
             </button>
-            <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+            <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.gif,.svg,image/jpeg,image/png,image/gif,image/svg+xml" style="display: none;" onchange="handleFileSelect(event)">
         </div>
         <div id="selectedImagesContainer" class="images-grid">
             <!-- Selected images will appear here -->
@@ -534,9 +560,17 @@ function isValidUrl(string) {
 
 window.addEventListener('DOMContentLoaded', function() {
     const savedBg = localStorage.getItem('backgroundImage');
+    const isAnimated = localStorage.getItem('isAnimatedWallpaper') === 'true';
 
     if (savedBg) {
         document.body.style.backgroundImage = `url('${savedBg}')`;
+
+        // Set animated attribute if needed
+        if (isAnimated) {
+            document.body.setAttribute('data-wallpaper-type', 'animated');
+        } else {
+            document.body.removeAttribute('data-wallpaper-type');
+        }
 
         const bgOptions = document.querySelectorAll('.bg-option:not(.bg-upload)');
         let foundPreset = false;
@@ -596,7 +630,11 @@ function selectBackground(element) {
 
     document.body.style.backgroundImage = `url('${bgUrl}')`;
 
+    // Remove animated wallpaper attribute since preset wallpapers are not animated
+    document.body.removeAttribute('data-wallpaper-type');
+
     localStorage.setItem('backgroundImage', bgUrl);
+    localStorage.setItem('isAnimatedWallpaper', false);
 }
 
 // Functions for wallpaper upload and custom wallpapers
@@ -622,6 +660,7 @@ function handleFileSelect(event) {
         selectedImagesContainer.innerHTML = ''; // Clear previous selections
 
         Array.from(files).forEach(file => {
+            // Accept all image types including SVG, PNG, JPG, JPEG, and GIF
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
 
@@ -653,11 +692,15 @@ function saveCustomWallpaper(dataUrl, filename) {
     // Get existing custom wallpapers
     const customWallpapers = getCustomWallpapers();
 
+    // Check if it's a GIF
+    const isGif = filename.toLowerCase().endsWith('.gif') || dataUrl.includes('data:image/gif');
+
     // Add new wallpaper
     const newWallpaper = {
         id: Date.now().toString(),
         dataUrl: dataUrl,
-        name: filename
+        name: filename,
+        isAnimated: isGif
     };
 
     customWallpapers.push(newWallpaper);
@@ -667,7 +710,16 @@ function saveCustomWallpaper(dataUrl, filename) {
 
     // Set as current wallpaper
     document.body.style.backgroundImage = `url('${dataUrl}')`;
+
+    // Add data attribute for animated wallpapers
+    if (isGif) {
+        document.body.setAttribute('data-wallpaper-type', 'animated');
+    } else {
+        document.body.removeAttribute('data-wallpaper-type');
+    }
+
     localStorage.setItem('backgroundImage', dataUrl);
+    localStorage.setItem('isAnimatedWallpaper', isGif);
 
     // Update UI
     displayCustomWallpapers();
@@ -701,6 +753,12 @@ function displayCustomWallpapers() {
         customWallpapers.forEach(wallpaper => {
             const wallpaperDiv = document.createElement('div');
             wallpaperDiv.className = 'bg-option';
+
+            // Add animated class for GIFs
+            if (wallpaper.isAnimated) {
+                wallpaperDiv.classList.add('animated');
+            }
+
             wallpaperDiv.dataset.bg = wallpaper.dataUrl;
             wallpaperDiv.onclick = function() {
                 selectCustomBackground(this);
@@ -736,6 +794,18 @@ function selectCustomBackground(element) {
     // Set background
     const bgUrl = element.dataset.bg;
     document.body.style.backgroundImage = `url('${bgUrl}')`;
+
+    // Check if this is an animated wallpaper
+    const customWallpapers = getCustomWallpapers();
+    const selectedWallpaper = customWallpapers.find(wp => wp.dataUrl === bgUrl);
+
+    if (selectedWallpaper && selectedWallpaper.isAnimated) {
+        document.body.setAttribute('data-wallpaper-type', 'animated');
+        localStorage.setItem('isAnimatedWallpaper', true);
+    } else {
+        document.body.removeAttribute('data-wallpaper-type');
+        localStorage.setItem('isAnimatedWallpaper', false);
+    }
 
     // Save to localStorage
     localStorage.setItem('backgroundImage', bgUrl);
