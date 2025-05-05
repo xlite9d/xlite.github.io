@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offline Pages Downloader</title>
+    <title>Website Folder Downloader</title>
     <style>
         * {
             box-sizing: border-box;
@@ -133,19 +133,18 @@
         .checkbox-group {
             margin-top: 10px;
         }
-        .site-info {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f0f8ff;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            display: none;
+        .offline-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Offline Pages Downloader</h1>
+        <h1>Website Folder Downloader</h1>
 
         <div class="input-group">
             <label for="url">Website URL:</label>
@@ -190,11 +189,18 @@
         </div>
 
         <button id="downloadBtn" onclick="startDownload()">Download Website</button>
-        <button id="stopBtn" onclick="stopDownload()" style="display: none; background-color: #e74c3c; margin-top: 10px;">Stop Download</button>
 
-        <div class="site-info" id="siteInfo">
-            <div id="siteInfoContent"></div>
+        <div class="offline-note">
+            <strong>Note:</strong> This tool will download an entire website to a folder structure for offline viewing.
+            Due to browser security restrictions, some resources might not download correctly. For best results:
+            <ul>
+                <li>Use this on sites you own or have permission to download</li>
+                <li>Keep "Stay on the Same Domain" checked to avoid external resources</li>
+                <li>Check the download log for any missing files</li>
+            </ul>
         </div>
+
+        <button id="stopBtn" onclick="stopDownload()" style="display: none; background-color: #e74c3c; margin-top: 10px;">Stop Download</button>
 
         <div class="progress-container" id="progressContainer">
             <div class="status" id="status">Initializing...</div>
@@ -206,7 +212,7 @@
         <div id="log"></div>
 
         <div id="downloadLink">
-            <a href="#" id="downloadFile">Download Offline Package</a>
+            <a href="#" id="downloadFolder">Open Downloaded Website</a>
         </div>
     </div>
 
@@ -218,26 +224,12 @@
         let baseDomain = '';
         let downloading = false;
         let stopRequested = false;
-        let fileBlobs = new Map();
+        let downloadedFiles = new Map();
         let failedURLs = new Set();
         let totalProcessed = 0;
         let totalFiles = 0;
-        let zipWriter = null;
-
-        // Add a better CORS proxy list that we can cycle through if one fails
-        const CORS_PROXIES = [
-            'https://corsproxy.io/?',
-            'https://cors-anywhere.herokuapp.com/',
-            'https://api.allorigins.win/raw?url='
-        ];
-        let currentProxyIndex = 0;
-
-        // New function to get the next proxy from our list
-        function getNextProxy() {
-            const proxy = CORS_PROXIES[currentProxyIndex];
-            currentProxyIndex = (currentProxyIndex + 1) % CORS_PROXIES.length;
-            return proxy;
-        }
+        let mainFolder = null;
+        let rootDirectory = null;
 
         // Toggle advanced settings
         function toggleSettings() {
@@ -330,45 +322,131 @@
             return true;
         }
 
+        // Get a file name from URL with sanitization
+        function getFilenameFromURL(url) {
+            try {
+                const urlObj = new URL(url);
+                let path = urlObj.pathname;
+
+                // If path ends with /, use index.html
+                if (path.endsWith('/') || path === '') {
+                    path += 'index.html';
+                } else if (!path.includes('.')) {
+                    // If path doesn't contain a file extension, add .html
+                    path += '/index.html';
+                }
+
+                // Sanitize the path for file system
+                path = path.replace(/[?#]/g, '');
+
+                return path;
+            } catch (e) {
+                return '/unknown.html';
+            }
+        }
+
+        // Extract folder path from URL
+        function getFolderPathFromURL(url) {
+            try {
+                const filePath = getFilenameFromURL(url);
+                const lastSlashIndex = filePath.lastIndexOf('/');
+
+                if (lastSlashIndex !== -1) {
+                    return filePath.substring(0, lastSlashIndex);
+                }
+
+                return '';
+            } catch (e) {
+                return '';
+            }
+        }
+
+        // Create a directory in the file system
+        async function createDirectory(dirPath) {
+            const parts = dirPath.split('/').filter(p => p.length > 0);
+            let current = rootDirectory;
+
+            for (const part of parts) {
+                try {
+                    current = await getDirectory(current, part);
+                } catch (e) {
+                    log(`Error creating directory ${part}: ${e.message}`, true);
+                    throw e;
+                }
+            }
+
+            return current;
+        }
+
+        // Get a directory, create if it doesn't exist
+        async function getDirectory(root, name) {
+            try {
+                const dirEntry = await root.getDirectoryHandle(name, { create: true });
+                return dirEntry;
+            } catch (e) {
+                log(`Error getting directory ${name}: ${e.message}`, true);
+                throw e;
+            }
+        }
+
+        // Get a file in a directory, create if it doesn't exist
+        async function getFile(directory, name) {
+            try {
+                return await directory.getFileHandle(name, { create: true });
+            } catch (e) {
+                log(`Error getting file ${name}: ${e.message}`, true);
+                throw e;
+            }
+        }
+
+        // Write data to a file
+        async function writeFile(fileHandle, content) {
+            try {
+                const writable = await fileHandle.createWritable();
+                await writable.write(content);
+                await writable.close();
+            } catch (e) {
+                log(`Error writing file: ${e.message}`, true);
+                throw e;
+            }
+        }
+
         // Fetch a URL and return the response
         async function fetchURL(url) {
-            let attempts = 0;
-            const maxAttempts = CORS_PROXIES.length;
+            try {
+                log(`Downloading: ${url}`);
 
-            while (attempts < maxAttempts) {
+                // Direct fetch
+                const response = await fetch(url, {
+                    headers: {
+                        'Accept': '*/*',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                    },
+                    // Increase timeout for large resources
+                    signal: AbortSignal.timeout(20000) // 20 second timeout
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                return response;
+            } catch (error) {
+                // If direct fetch fails, try with no-cors mode as a last resort
                 try {
-                    const proxy = getNextProxy();
-                    // Different proxies handle URLs differently
-                    let corsProxyUrl;
-                    if (proxy === 'https://api.allorigins.win/raw?url=') {
-                        corsProxyUrl = `${proxy}${encodeURIComponent(url)}`;
-                    } else {
-                        corsProxyUrl = `${proxy}${encodeURIComponent(url)}`;
-                    }
-
-                    log(`Trying proxy: ${proxy} for ${url}`);
-
-                    const response = await fetch(corsProxyUrl, {
+                    log(`Retrying with no-cors mode: ${url}`);
+                    const response = await fetch(url, {
+                        mode: 'no-cors',
+                        credentials: 'omit',
+                        cache: 'no-cache',
                         headers: {
                             'Accept': '*/*',
                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-                        },
-                        // Increase timeout for large resources
-                        signal: AbortSignal.timeout(15000) // 15 second timeout
+                        }
                     });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
                     return response;
-                } catch (error) {
-                    attempts++;
-                    log(`Proxy attempt ${attempts}/${maxAttempts} failed: ${error.message}`, true);
-
-                    if (attempts >= maxAttempts) {
-                        throw new Error(`All proxies failed for URL: ${url}`);
-                    }
+                } catch (secondError) {
+                    throw new Error(`Failed to fetch: ${error.message}`);
                 }
             }
         }
@@ -473,205 +551,7 @@
             return Array.from(urls);
         }
 
-        // Convert relative URLs in HTML to absolute
-        function convertToOfflineURLs(html, baseUrl, urlMapping) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-
-            // Update links
-            doc.querySelectorAll('a[href]').forEach(el => {
-                try {
-                    const href = el.getAttribute('href');
-                    if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('mailto:')) {
-                        const absoluteUrl = new URL(href, baseUrl).href;
-                        if (urlMapping.has(absoluteUrl)) {
-                            el.setAttribute('href', urlMapping.get(absoluteUrl));
-                        }
-                    }
-                } catch (e) {}
-            });
-
-            // Update images
-            doc.querySelectorAll('img[src]').forEach(el => {
-                try {
-                    const src = el.getAttribute('src');
-                    if (src) {
-                        const absoluteUrl = new URL(src, baseUrl).href;
-                        if (urlMapping.has(absoluteUrl)) {
-                            el.setAttribute('src', urlMapping.get(absoluteUrl));
-                        }
-                    }
-                } catch (e) {}
-            });
-
-            // Update CSS links
-            doc.querySelectorAll('link[rel="stylesheet"]').forEach(el => {
-                try {
-                    const href = el.getAttribute('href');
-                    if (href) {
-                        const absoluteUrl = new URL(href, baseUrl).href;
-                        if (urlMapping.has(absoluteUrl)) {
-                            el.setAttribute('href', urlMapping.get(absoluteUrl));
-                        }
-                    }
-                } catch (e) {}
-            });
-
-            // Update JS sources
-            doc.querySelectorAll('script[src]').forEach(el => {
-                try {
-                    const src = el.getAttribute('src');
-                    if (src) {
-                        const absoluteUrl = new URL(src, baseUrl).href;
-                        if (urlMapping.has(absoluteUrl)) {
-                            el.setAttribute('src', urlMapping.get(absoluteUrl));
-                        }
-                    }
-                } catch (e) {}
-            });
-
-            return new XMLSerializer().serializeToString(doc);
-        }
-
-        // Get a path/filename from a URL
-        function getPathFromURL(url) {
-            try {
-                const urlObj = new URL(url);
-                let path = urlObj.pathname;
-
-                // If path ends with /, add 'index.html'
-                if (path.endsWith('/')) {
-                    path += 'index.html';
-                } else if (!path.includes('.')) {
-                    // If path doesn't contain a file extension, add .html
-                    path += '/index.html';
-                }
-
-                // Make sure the path starts with a slash
-                if (!path.startsWith('/')) {
-                    path = '/' + path;
-                }
-
-                return path;
-            } catch (e) {
-                return '/unknown';
-            }
-        }
-
-        // Main function to download a website
-        async function startDownload() {
-            try {
-                // Check if the ZIP API is available in this browser
-                if (typeof window.zip === 'undefined') {
-                    log('Loading ZIP library...');
-                    // Load zip.js dynamically
-                    await loadZipJS();
-                }
-
-                // If still not loaded, show error
-                if (typeof window.zip === 'undefined') {
-                    alert('Could not load the ZIP library. Please check your internet connection and try again.');
-                    return;
-                }
-
-                // Reset state
-                downloadQueue = [];
-                processedURLs = new Set();
-                fileBlobs = new Map();
-                failedURLs = new Set();
-                totalProcessed = 0;
-                totalFiles = 0;
-                stopRequested = false;
-                downloading = true;
-
-                // Get input values
-                let inputURL = document.getElementById('url').value.trim();
-                const maxDepth = parseInt(document.getElementById('maxDepth').value, 10);
-                const maxFiles = parseInt(document.getElementById('maxFiles').value, 10);
-
-                // Validate the URL
-                inputURL = normalizeURL(inputURL);
-                if (!inputURL) {
-                    alert('Please enter a valid URL');
-                    return;
-                }
-
-                // Set base URL and domain
-                baseURL = inputURL;
-                try {
-                    baseDomain = new URL(baseURL).hostname;
-                } catch (e) {
-                    alert('Invalid URL');
-                    return;
-                }
-
-                // Update UI
-                document.getElementById('downloadBtn').style.display = 'none';
-                document.getElementById('stopBtn').style.display = 'block';
-                document.getElementById('progressContainer').style.display = 'block';
-                document.getElementById('downloadLink').style.display = 'none';
-                document.getElementById('log').innerHTML = '';
-
-                log(`Starting download of ${baseURL}`);
-                log(`Max depth: ${maxDepth}, Max files: ${maxFiles}`);
-
-                // Create a new ZIP file
-                try {
-                    zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), {
-                        level: 5 // Compression level (0-9)
-                    });
-                } catch (error) {
-                    log(`Error creating ZIP writer: ${error.message}`, true);
-                    document.getElementById('downloadBtn').style.display = 'block';
-                    document.getElementById('stopBtn').style.display = 'none';
-                    downloading = false;
-                    return;
-                }
-
-                // Add the base URL to the download queue with depth 0
-                downloadQueue.push({ url: baseURL, depth: 0 });
-
-                try {
-                    await processQueue(maxDepth, maxFiles);
-
-                    if (!stopRequested) {
-                        log(`Download complete! Downloaded ${fileBlobs.size} files (${failedURLs.size} failed)`);
-
-                        // Create the final ZIP file
-                        const blob = await zipWriter.close();
-                        const url = URL.createObjectURL(blob);
-
-                        // Show download link
-                        document.getElementById('downloadLink').style.display = 'block';
-                        const downloadLink = document.getElementById('downloadFile');
-                        downloadLink.href = url;
-                        downloadLink.download = `${baseDomain}-offline.zip`;
-
-                        // Update status
-                        document.getElementById('status').textContent = 'Download complete!';
-                    } else {
-                        log('Download stopped by user');
-                        await zipWriter.close();
-                    }
-                } catch (error) {
-                    log(`Error during download: ${error.message}`, true);
-                    if (zipWriter) {
-                        await zipWriter.close();
-                    }
-                } finally {
-                    document.getElementById('downloadBtn').style.display = 'block';
-                    document.getElementById('stopBtn').style.display = 'none';
-                    downloading = false;
-                }
-            } catch (error) {
-                log(`Critical error: ${error.message}`, true);
-                document.getElementById('downloadBtn').style.display = 'block';
-                document.getElementById('stopBtn').style.display = 'none';
-                downloading = false;
-            }
-        }
-
-        // Process CSS content to extract URLs
+        // Extract URLs from CSS content
         function extractUrlsFromCSS(css, baseUrl) {
             const urls = new Set();
 
@@ -700,189 +580,355 @@
             return Array.from(urls);
         }
 
-        // Process the download queue
-        async function processQueue(maxDepth, maxFiles) {
-            // Create a URL mapping for offline use
-            const urlMapping = new Map();
+        // Update HTML links to local paths
+        function updateHtmlLinks(html, baseUrl, urlMapping) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
 
-            while (downloadQueue.length > 0 && !stopRequested) {
-                if (totalProcessed >= maxFiles) {
-                    log(`Reached the maximum number of files (${maxFiles})`);
-                    break;
+            // Update links (a tags)
+            doc.querySelectorAll('a[href]').forEach(el => {
+                try {
+                    const href = el.getAttribute('href');
+                    if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('mailto:')) {
+                        const absoluteUrl = new URL(href, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('href', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            // Update images
+            doc.querySelectorAll('img[src]').forEach(el => {
+                try {
+                    const src = el.getAttribute('src');
+                    if (src) {
+                        const absoluteUrl = new URL(src, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('src', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            // Update CSS links
+            doc.querySelectorAll('link[rel="stylesheet"], link[type="text/css"]').forEach(el => {
+                try {
+                    const href = el.getAttribute('href');
+                    if (href) {
+                        const absoluteUrl = new URL(href, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('href', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            // Update JS sources
+            doc.querySelectorAll('script[src]').forEach(el => {
+                try {
+                    const src = el.getAttribute('src');
+                    if (src) {
+                        const absoluteUrl = new URL(src, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('src', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            // Update other elements with src attribute
+            doc.querySelectorAll('video[src], audio[src], source[src], embed[src], iframe[src]').forEach(el => {
+                try {
+                    const src = el.getAttribute('src');
+                    if (src) {
+                        const absoluteUrl = new URL(src, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('src', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            // Update style attributes with url()
+            doc.querySelectorAll('[style]').forEach(el => {
+                try {
+                    const style = el.getAttribute('style');
+                    if (style && style.includes('url(')) {
+                        let newStyle = style;
+                        const urlMatches = style.match(/url\(['"]?([^'")]+)['"]?\)/g);
+                        if (urlMatches) {
+                            urlMatches.forEach(match => {
+                                const url = match.replace(/url\(['"]?([^'")]+)['"]?\)/, '$1');
+                                try {
+                                    const absoluteUrl = new URL(url, baseUrl).href;
+                                    if (urlMapping.has(absoluteUrl)) {
+                                        const newUrl = urlMapping.get(absoluteUrl);
+                                        newStyle = newStyle.replace(url, newUrl);
+                                    }
+                                } catch (e) {}
+                            });
+                            el.setAttribute('style', newStyle);
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            return new XMLSerializer().serializeToString(doc);
+        }
+
+        // Update CSS files to use local paths
+        function updateCssLinks(css, baseUrl, urlMapping) {
+            let updatedCss = css;
+
+            // Update url() patterns
+            const urlRegex = /url\(['"]?([^'")]+)['"]?\)/g;
+            let match;
+            let lastIndex = 0;
+            let result = '';
+
+            while ((match = urlRegex.exec(css)) !== null) {
+                if (match[1] && !match[1].startsWith('data:')) {
+                    try {
+                        const absoluteUrl = new URL(match[1], baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            result += css.substring(lastIndex, match.index);
+                            result += `url("${urlMapping.get(absoluteUrl)}")`;
+                            lastIndex = match.index + match[0].length;
+                        }
+                    } catch (e) {}
                 }
+            }
 
-                const { url, depth } = downloadQueue.shift();
+            if (lastIndex > 0) {
+                result += css.substring(lastIndex);
+                updatedCss = result;
+            }
 
-                // Skip if already processed
-                if (processedURLs.has(url)) {
+            // Update @import rules
+            const importRegex = /@import\s+['"]([^'"]+)['"]/g;
+            lastIndex = 0;
+            result = '';
+
+            while ((match = importRegex.exec(updatedCss)) !== null) {
+                try {
+                    const absoluteUrl = new URL(match[1], baseUrl).href;
+                    if (urlMapping.has(absoluteUrl)) {
+                        result += updatedCss.substring(lastIndex, match.index);
+                        result += `@import "${urlMapping.get(absoluteUrl)}"`;
+                        lastIndex = match.index + match[0].length;
+                    }
+                } catch (e) {}
+            }
+
+            if (lastIndex > 0) {
+                result += updatedCss.substring(lastIndex);
+                updatedCss = result;
+            }
+
+            return updatedCss;
+        }
+
+        // Download logic
+        async function startDownload() {
+            // Reset state
+            downloadQueue = [];
+            processedURLs = new Set();
+            downloadedFiles = new Map();
+            failedURLs = new Set();
+            totalProcessed = 0;
+            totalFiles = 0;
+            stopRequested = false;
+            downloading = true;
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('downloadLink').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'block';
+
+            // Get user input
+            let url = document.getElementById('url').value.trim();
+            url = normalizeURL(url);
+            if (!url) {
+                log('Please enter a valid URL.', true);
+                downloading = false;
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('stopBtn').style.display = 'none';
+                return;
+            }
+            baseURL = url;
+            try {
+                baseDomain = new URL(url).hostname;
+            } catch (e) {
+                log('Invalid base URL.', true);
+                downloading = false;
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('stopBtn').style.display = 'none';
+                return;
+            }
+
+            // Ask user for a folder to save files
+            try {
+                rootDirectory = await window.showDirectoryPicker({ mode: 'readwrite' });
+            } catch (e) {
+                log('You must select a folder to save the website.', true);
+                downloading = false;
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('stopBtn').style.display = 'none';
+                return;
+            }
+
+            // Add the root URL to the queue
+            downloadQueue.push({ url: baseURL, depth: 0 });
+            processedURLs.add(baseURL);
+
+            // Crawl and download
+            const maxDepth = parseInt(document.getElementById('maxDepth').value, 10) || 3;
+            const maxFiles = parseInt(document.getElementById('maxFiles').value, 10) || 500;
+            let urlMapping = new Map();
+
+            while (downloadQueue.length > 0 && totalProcessed < maxFiles && !stopRequested) {
+                const { url: currentUrl, depth } = downloadQueue.shift();
+                if (!shouldDownloadURL(currentUrl)) continue;
+                if (!isSameDomain(currentUrl)) continue;
+
+                let response;
+                try {
+                    response = await fetchURL(currentUrl);
+                } catch (e) {
+                    log(`Failed to download: ${currentUrl} (${e.message})`, true);
+                    failedURLs.add(currentUrl);
+                    totalProcessed++;
+                    updateProgress(totalProcessed, Math.max(totalProcessed, downloadQueue.length + totalProcessed));
                     continue;
                 }
 
-                // Mark as processed to avoid duplicates
-                processedURLs.add(url);
-                totalProcessed++;
-
-                // Update progress
-                updateProgress(totalProcessed, Math.max(totalProcessed, downloadQueue.length + 1));
-
-                // Check domain restriction
-                if (!isSameDomain(url)) {
-                    log(`Skipping external domain: ${url}`);
-                    continue;
-                }
-
-                // Check if we should download this type of file
-                if (!shouldDownloadURL(url)) {
-                    log(`Skipping file type: ${url}`);
-                    continue;
-                }
+                let contentType = response.headers.get('content-type') || '';
+                let fileContent;
+                let isHtml = false;
+                let isCss = false;
 
                 try {
-                    log(`Downloading: ${url}`);
-                    const response = await fetchURL(url);
-                    const contentType = response.headers.get('content-type') || '';
-
-                    // Determine the local file path
-                    const path = getPathFromURL(url);
-                    const filePath = path.substring(1); // Remove leading slash
-
-                    // Store mapping for offline use
-                    urlMapping.set(url, filePath);
-
-                    // Process the file based on content type
                     if (contentType.includes('text/html')) {
-                        const html = await response.text();
-
-                        // Extract and queue new URLs if within max depth
-                        if (depth < maxDepth) {
-                            const extractedURLs = extractURLsFromHTML(html, url);
-                            for (const newURL of extractedURLs) {
-                                if (!processedURLs.has(newURL) && !downloadQueue.some(item => item.url === newURL)) {
-                                    downloadQueue.push({ url: newURL, depth: depth + 1 });
-                                }
-                            }
-                        }
-
-                        // Store the HTML for later processing
-                        fileBlobs.set(url, { content: html, type: 'text/html', path: filePath });
-                    }
-                    else if (contentType.includes('text/css')) {
-                        // Process CSS files to extract more resources
-                        const css = await response.text();
-
-                        // Store the CSS
-                        fileBlobs.set(url, { content: css, type: contentType, path: filePath });
-
-                        // Extract and queue URLs from CSS if within max depth
-                        if (depth < maxDepth && document.getElementById('includeImages').checked) {
-                            const cssURLs = extractUrlsFromCSS(css, url);
-                            for (const cssURL of cssURLs) {
-                                if (!processedURLs.has(cssURL) && !downloadQueue.some(item => item.url === cssURL)) {
-                                    downloadQueue.push({ url: cssURL, depth: depth + 1 });
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        // For non-HTML files, just store the blob
-                        const blob = await response.blob();
-                        fileBlobs.set(url, { content: blob, type: contentType, path: filePath });
-                    }
-                } catch (error) {
-                    log(`Failed to download: ${url} - ${error.message}`, true);
-                    failedURLs.add(url);
-                }
-            }
-
-            // Process all HTML files to update their links to offline paths
-            if (!stopRequested) {
-                log('Processing files for offline use...');
-
-                // First add all non-HTML files to the ZIP
-                const htmlFiles = [];
-
-                for (const [url, { content, type, path }] of fileBlobs.entries()) {
-                    if (type === 'text/html') {
-                        htmlFiles.push([url, { content, type, path }]);
+                        fileContent = await response.text();
+                        isHtml = true;
+                    } else if (contentType.includes('text/css')) {
+                        fileContent = await response.text();
+                        isCss = true;
                     } else {
-                        try {
-                            if (typeof content === 'string') {
-                                await zipWriter.add(path, new zip.TextReader(content));
-                            } else {
-                                await zipWriter.add(path, new zip.BlobReader(content));
-                            }
-                            log(`Added to ZIP: ${path}`);
-                        } catch (error) {
-                            log(`Error adding to ZIP: ${path} - ${error.message}`, true);
+                        fileContent = await response.arrayBuffer();
+                    }
+                } catch (e) {
+                    log(`Failed to read content: ${currentUrl} (${e.message})`, true);
+                    failedURLs.add(currentUrl);
+                    totalProcessed++;
+                    updateProgress(totalProcessed, Math.max(totalProcessed, downloadQueue.length + totalProcessed));
+                    continue;
+                }
+
+                // Save file
+                const filePath = getFilenameFromURL(currentUrl);
+                const folderPath = getFolderPathFromURL(currentUrl);
+                let directory = rootDirectory;
+                if (folderPath) {
+                    try {
+                        directory = await createDirectory(folderPath);
+                    } catch (e) {
+                        log(`Failed to create directory: ${folderPath}`, true);
+                        failedURLs.add(currentUrl);
+                        totalProcessed++;
+                        updateProgress(totalProcessed, Math.max(totalProcessed, downloadQueue.length + totalProcessed));
+                        continue;
+                    }
+                }
+                let fileName = filePath.split('/').pop();
+                let fileHandle;
+                try {
+                    fileHandle = await getFile(directory, fileName);
+                } catch (e) {
+                    log(`Failed to get file handle: ${fileName}`, true);
+                    failedURLs.add(currentUrl);
+                    totalProcessed++;
+                    updateProgress(totalProcessed, Math.max(totalProcessed, downloadQueue.length + totalProcessed));
+                    continue;
+                }
+
+                // For HTML and CSS, update links to local paths after crawling
+                downloadedFiles.set(currentUrl, { fileHandle, filePath, isHtml, isCss, content: fileContent, contentType });
+
+                urlMapping.set(currentUrl, filePath);
+
+                // If HTML, extract more URLs
+                if (isHtml && depth < maxDepth) {
+                    const foundUrls = extractURLsFromHTML(fileContent, currentUrl);
+                    for (const foundUrl of foundUrls) {
+                        if (!processedURLs.has(foundUrl) && shouldDownloadURL(foundUrl) && isSameDomain(foundUrl)) {
+                            downloadQueue.push({ url: foundUrl, depth: depth + 1 });
+                            processedURLs.add(foundUrl);
                         }
                     }
                 }
 
-                // Then process and add all HTML files
-                for (const [url, { content, type, path }] of htmlFiles) {
+                // If CSS, extract URLs from CSS
+                if (isCss) {
+                    const foundUrls = extractUrlsFromCSS(fileContent, currentUrl);
+                    for (const foundUrl of foundUrls) {
+                        if (!processedURLs.has(foundUrl) && shouldDownloadURL(foundUrl) && isSameDomain(foundUrl)) {
+                            downloadQueue.push({ url: foundUrl, depth: depth + 1 });
+                            processedURLs.add(foundUrl);
+                        }
+                    }
+                }
+
+                totalProcessed++;
+                updateProgress(totalProcessed, Math.max(totalProcessed, downloadQueue.length + totalProcessed));
+            }
+
+            // Second pass: update HTML and CSS links to local paths and write files
+            for (const [url, fileObj] of downloadedFiles.entries()) {
+                let contentToWrite = fileObj.content;
+                if (fileObj.isHtml) {
+                    contentToWrite = updateHtmlLinks(contentToWrite, url, urlMapping);
+                } else if (fileObj.isCss) {
+                    contentToWrite = updateCssLinks(contentToWrite, url, urlMapping);
+                }
+                try {
+                    if (fileObj.isHtml || fileObj.isCss) {
+                        await writeFile(fileObj.fileHandle, contentToWrite);
+                    } else {
+                        await writeFile(fileObj.fileHandle, new Uint8Array(contentToWrite));
+                    }
+                } catch (e) {
+                    log(`Failed to write file: ${fileObj.filePath} (${e.message})`, true);
+                }
+            }
+
+            downloading = false;
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('status').textContent = 'Download complete!';
+            document.getElementById('downloadLink').style.display = 'block';
+
+            // Set up download link (open folder)
+            document.getElementById('downloadFolder').onclick = async function(e) {
+                e.preventDefault();
+                if (rootDirectory) {
+                    // Try to open the index.html file
                     try {
-                        // Convert HTML links to offline paths
-                        const updatedHTML = convertToOfflineURLs(content, url, urlMapping);
-
-                        // Save the HTML file to the ZIP
-                        await zipWriter.add(path, new zip.TextReader(updatedHTML));
-                        log(`Added to ZIP: ${path}`);
-                    } catch (error) {
-                        log(`Error processing HTML: ${url} - ${error.message}`, true);
+                        const indexHandle = await rootDirectory.getFileHandle('index.html');
+                        const file = await indexHandle.getFile();
+                        const url = URL.createObjectURL(file);
+                        window.open(url, '_blank');
+                    } catch (e) {
+                        log('Could not open index.html. Please open the folder manually.', true);
                     }
                 }
-            }
+            };
         }
 
-        // Stop the download process
         function stopDownload() {
-            if (downloading) {
-                stopRequested = true;
-                log('Stopping download... Please wait for current operations to complete');
-                document.getElementById('stopBtn').disabled = true;
-            }
-        }
-
-        // Dynamically load zip.js library with retry mechanism
-        async function loadZipJS() {
-            return new Promise((resolve, reject) => {
-                // JSZip CDN URLs (fallbacks if one fails)
-                const zipJSUrls = [
-                    'https://cdnjs.cloudflare.com/ajax/libs/zip.js/2.6.62/zip.min.js',
-                    'https://cdn.jsdelivr.net/npm/@zip.js/zip.js/dist/zip.min.js',
-                    'https://unpkg.com/@zip.js/zip.js/dist/zip.min.js'
-                ];
-
-                let currentUrlIndex = 0;
-
-                function tryLoadScript() {
-                    if (currentUrlIndex >= zipJSUrls.length) {
-                        reject(new Error('Failed to load zip.js library from all sources'));
-                        return;
-                    }
-
-                    const scriptUrl = zipJSUrls[currentUrlIndex];
-                    log(`Loading zip.js from ${scriptUrl}...`);
-
-                    const script = document.createElement('script');
-                    script.src = scriptUrl;
-
-                    script.onload = () => {
-                        log('Zip.js loaded successfully!');
-                        resolve();
-                    };
-
-                    script.onerror = () => {
-                        log(`Failed to load from ${scriptUrl}, trying next source...`, true);
-                        currentUrlIndex++;
-                        tryLoadScript();
-                    };
-
-                    document.head.appendChild(script);
-                }
-
-                tryLoadScript();
-            });
+            stopRequested = true;
+            downloading = false;
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('status').textContent = 'Download stopped by user.';
         }
     </script>
 </body>
