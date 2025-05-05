@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Pages Downloader</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 20px;
+            background-color: #4CAF50;
+            width: 0;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+        #log {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .status {
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        #downloadLink {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        #downloadLink a {
+            background-color: #27ae60;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        #downloadLink a:hover {
+            background-color: #2ecc71;
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+        .settings {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }
+        .settings-header {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .settings-content {
+            display: none;
+            margin-top: 10px;
+        }
+        .checkbox-group {
+            margin-top: 10px;
+        }
+        .site-info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Offline Pages Downloader</h1>
+
+        <div class="input-group">
+            <label for="url">Website URL:</label>
+            <input type="text" id="url" placeholder="Enter website URL (e.g., example.com)" autofocus>
+        </div>
+
+        <div class="settings">
+            <div class="settings-header" onclick="toggleSettings()">Advanced Settings ▼</div>
+            <div class="settings-content" id="settingsContent">
+                <div class="input-group">
+                    <label for="maxDepth">Maximum Crawl Depth:</label>
+                    <input type="number" id="maxDepth" value="3" min="1" max="10">
+                    <small>Higher values download more pages but take longer (1-10)</small>
+                </div>
+
+                <div class="input-group">
+                    <label for="maxFiles">Maximum Files to Download:</label>
+                    <input type="number" id="maxFiles" value="500" min="10" max="2000">
+                    <small>Limit the total number of files to download</small>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="includeImages" checked>
+                    <label for="includeImages">Download Images</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="includeCSS" checked>
+                    <label for="includeCSS">Download CSS Files</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="includeJS" checked>
+                    <label for="includeJS">Download JavaScript Files</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="stayOnDomain" checked>
+                    <label for="stayOnDomain">Stay on the Same Domain</label>
+                </div>
+            </div>
+        </div>
+
+        <button id="downloadBtn" onclick="startDownload()">Download Website</button>
+        <button id="stopBtn" onclick="stopDownload()" style="display: none; background-color: #e74c3c; margin-top: 10px;">Stop Download</button>
+
+        <div class="site-info" id="siteInfo">
+            <div id="siteInfoContent"></div>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="status" id="status">Initializing...</div>
+            <div class="progress-bar">
+                <div class="progress" id="progress">0%</div>
+            </div>
+        </div>
+
+        <div id="log"></div>
+
+        <div id="downloadLink">
+            <a href="#" id="downloadFile">Download Offline Package</a>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let downloadQueue = [];
+        let processedURLs = new Set();
+        let baseURL = '';
+        let baseDomain = '';
+        let downloading = false;
+        let stopRequested = false;
+        let fileBlobs = new Map();
+        let failedURLs = new Set();
+        let totalProcessed = 0;
+        let totalFiles = 0;
+        let zipWriter = null;
+
+        // Add a better CORS proxy list that we can cycle through if one fails
+        const CORS_PROXIES = [
+            'https://corsproxy.io/?',
+            'https://cors-anywhere.herokuapp.com/',
+            'https://api.allorigins.win/raw?url='
+        ];
+        let currentProxyIndex = 0;
+
+        // New function to get the next proxy from our list
+        function getNextProxy() {
+            const proxy = CORS_PROXIES[currentProxyIndex];
+            currentProxyIndex = (currentProxyIndex + 1) % CORS_PROXIES.length;
+            return proxy;
+        }
+
+        // Toggle advanced settings
+        function toggleSettings() {
+            const settingsContent = document.getElementById('settingsContent');
+            settingsContent.style.display = settingsContent.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Log messages to the UI
+        function log(message, isError = false) {
+            const logElement = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.textContent = message;
+            if (isError) {
+                entry.style.color = '#e74c3c';
+            }
+            logElement.appendChild(entry);
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        // Update progress bar
+        function updateProgress(processed, total) {
+            const progressBar = document.getElementById('progress');
+            const percentage = Math.round((processed / total) * 100);
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+
+            document.getElementById('status').textContent =
+                `Processed ${processed} of ${total} files (${failedURLs.size} failed)`;
+        }
+
+        // Get file extension from URL
+        function getFileExtension(url) {
+            try {
+                const pathname = new URL(url).pathname;
+                const filename = pathname.split('/').pop();
+                return filename.includes('.') ? filename.split('.').pop().toLowerCase() : '';
+            } catch (e) {
+                return '';
+            }
+        }
+
+        // Normalize URL
+        function normalizeURL(url) {
+            try {
+                // If URL doesn't start with http/https, add https://
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
+
+                const urlObj = new URL(url);
+                // Remove trailing slash for consistency
+                return urlObj.href.replace(/\/$/, '');
+            } catch (e) {
+                log(`Invalid URL: ${url}`, true);
+                return null;
+            }
+        }
+
+        // Check if URL is from the same domain
+        function isSameDomain(url) {
+            if (!document.getElementById('stayOnDomain').checked) {
+                return true;
+            }
+
+            try {
+                const urlObj = new URL(url);
+                return urlObj.hostname === baseDomain;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Check if the URL should be downloaded based on file type
+        function shouldDownloadURL(url) {
+            const extension = getFileExtension(url);
+
+            if (!document.getElementById('includeImages').checked &&
+                ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'ico', 'bmp'].includes(extension)) {
+                return false;
+            }
+
+            if (!document.getElementById('includeCSS').checked && extension === 'css') {
+                return false;
+            }
+
+            if (!document.getElementById('includeJS').checked && extension === 'js') {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Fetch a URL and return the response
+        async function fetchURL(url) {
+            let attempts = 0;
+            const maxAttempts = CORS_PROXIES.length;
+
+            while (attempts < maxAttempts) {
+                try {
+                    const proxy = getNextProxy();
+                    // Different proxies handle URLs differently
+                    let corsProxyUrl;
+                    if (proxy === 'https://api.allorigins.win/raw?url=') {
+                        corsProxyUrl = `${proxy}${encodeURIComponent(url)}`;
+                    } else {
+                        corsProxyUrl = `${proxy}${encodeURIComponent(url)}`;
+                    }
+
+                    log(`Trying proxy: ${proxy} for ${url}`);
+
+                    const response = await fetch(corsProxyUrl, {
+                        headers: {
+                            'Accept': '*/*',
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                        },
+                        // Increase timeout for large resources
+                        signal: AbortSignal.timeout(15000) // 15 second timeout
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+
+                    return response;
+                } catch (error) {
+                    attempts++;
+                    log(`Proxy attempt ${attempts}/${maxAttempts} failed: ${error.message}`, true);
+
+                    if (attempts >= maxAttempts) {
+                        throw new Error(`All proxies failed for URL: ${url}`);
+                    }
+                }
+            }
+        }
+
+        // Extract URLs from HTML content
+        function extractURLsFromHTML(html, baseUrl) {
+            const urls = new Set();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // Links (a tags)
+            doc.querySelectorAll('a[href]').forEach(el => {
+                try {
+                    const href = el.getAttribute('href');
+                    if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('mailto:')) {
+                        const absoluteUrl = new URL(href, baseUrl).href;
+                        urls.add(absoluteUrl);
+                    }
+                } catch (e) {}
+            });
+
+            // Images
+            if (document.getElementById('includeImages').checked) {
+                doc.querySelectorAll('img[src]').forEach(el => {
+                    try {
+                        const src = el.getAttribute('src');
+                        if (src) {
+                            const absoluteUrl = new URL(src, baseUrl).href;
+                            urls.add(absoluteUrl);
+                        }
+                    } catch (e) {}
+                });
+
+                // Background images in style attributes
+                doc.querySelectorAll('[style]').forEach(el => {
+                    try {
+                        const style = el.getAttribute('style');
+                        if (style) {
+                            const urlMatches = style.match(/url\(['"]?([^'")]+)['"]?\)/g);
+                            if (urlMatches) {
+                                urlMatches.forEach(match => {
+                                    const url = match.replace(/url\(['"]?([^'")]+)['"]?\)/, '$1');
+                                    try {
+                                        const absoluteUrl = new URL(url, baseUrl).href;
+                                        urls.add(absoluteUrl);
+                                    } catch (e) {}
+                                });
+                            }
+                        }
+                    } catch (e) {}
+                });
+            }
+
+            // CSS files
+            if (document.getElementById('includeCSS').checked) {
+                doc.querySelectorAll('link[rel="stylesheet"], link[type="text/css"]').forEach(el => {
+                    try {
+                        const href = el.getAttribute('href');
+                        if (href) {
+                            const absoluteUrl = new URL(href, baseUrl).href;
+                            urls.add(absoluteUrl);
+                        }
+                    } catch (e) {}
+                });
+            }
+
+            // JavaScript files
+            if (document.getElementById('includeJS').checked) {
+                doc.querySelectorAll('script[src]').forEach(el => {
+                    try {
+                        const src = el.getAttribute('src');
+                        if (src) {
+                            const absoluteUrl = new URL(src, baseUrl).href;
+                            urls.add(absoluteUrl);
+                        }
+                    } catch (e) {}
+                });
+            }
+
+            // Favicons
+            doc.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(el => {
+                try {
+                    const href = el.getAttribute('href');
+                    if (href) {
+                        const absoluteUrl = new URL(href, baseUrl).href;
+                        urls.add(absoluteUrl);
+                    }
+                } catch (e) {}
+            });
+
+            // Other embedded resources (video, audio, etc.)
+            doc.querySelectorAll('video[src], audio[src], source[src], embed[src], iframe[src]').forEach(el => {
+                try {
+                    const src = el.getAttribute('src');
+                    if (src) {
+                        const absoluteUrl = new URL(src, baseUrl).href;
+                        urls.add(absoluteUrl);
+                    }
+                } catch (e) {}
+            });
+
+            return Array.from(urls);
+        }
+
+        // Convert relative URLs in HTML to absolute
+        function convertToOfflineURLs(html, baseUrl, urlMapping) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+
+            // Update links
+            doc.querySelectorAll('a[href]').forEach(el => {
+                try {
+                    const href = el.getAttribute('href');
+                    if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('mailto:')) {
+                        const absoluteUrl = new URL(href, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('href', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            // Update images
+            doc.querySelectorAll('img[src]').forEach(el => {
+                try {
+                    const src = el.getAttribute('src');
+                    if (src) {
+                        const absoluteUrl = new URL(src, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('src', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            // Update CSS links
+            doc.querySelectorAll('link[rel="stylesheet"]').forEach(el => {
+                try {
+                    const href = el.getAttribute('href');
+                    if (href) {
+                        const absoluteUrl = new URL(href, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('href', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            // Update JS sources
+            doc.querySelectorAll('script[src]').forEach(el => {
+                try {
+                    const src = el.getAttribute('src');
+                    if (src) {
+                        const absoluteUrl = new URL(src, baseUrl).href;
+                        if (urlMapping.has(absoluteUrl)) {
+                            el.setAttribute('src', urlMapping.get(absoluteUrl));
+                        }
+                    }
+                } catch (e) {}
+            });
+
+            return new XMLSerializer().serializeToString(doc);
+        }
+
+        // Get a path/filename from a URL
+        function getPathFromURL(url) {
+            try {
+                const urlObj = new URL(url);
+                let path = urlObj.pathname;
+
+                // If path ends with /, add 'index.html'
+                if (path.endsWith('/')) {
+                    path += 'index.html';
+                } else if (!path.includes('.')) {
+                    // If path doesn't contain a file extension, add .html
+                    path += '/index.html';
+                }
+
+                // Make sure the path starts with a slash
+                if (!path.startsWith('/')) {
+                    path = '/' + path;
+                }
+
+                return path;
+            } catch (e) {
+                return '/unknown';
+            }
+        }
+
+        // Main function to download a website
+        async function startDownload() {
+            try {
+                // Check if the ZIP API is available in this browser
+                if (typeof window.zip === 'undefined') {
+                    log('Loading ZIP library...');
+                    // Load zip.js dynamically
+                    await loadZipJS();
+                }
+
+                // If still not loaded, show error
+                if (typeof window.zip === 'undefined') {
+                    alert('Could not load the ZIP library. Please check your internet connection and try again.');
+                    return;
+                }
+
+                // Reset state
+                downloadQueue = [];
+                processedURLs = new Set();
+                fileBlobs = new Map();
+                failedURLs = new Set();
+                totalProcessed = 0;
+                totalFiles = 0;
+                stopRequested = false;
+                downloading = true;
+
+                // Get input values
+                let inputURL = document.getElementById('url').value.trim();
+                const maxDepth = parseInt(document.getElementById('maxDepth').value, 10);
+                const maxFiles = parseInt(document.getElementById('maxFiles').value, 10);
+
+                // Validate the URL
+                inputURL = normalizeURL(inputURL);
+                if (!inputURL) {
+                    alert('Please enter a valid URL');
+                    return;
+                }
+
+                // Set base URL and domain
+                baseURL = inputURL;
+                try {
+                    baseDomain = new URL(baseURL).hostname;
+                } catch (e) {
+                    alert('Invalid URL');
+                    return;
+                }
+
+                // Update UI
+                document.getElementById('downloadBtn').style.display = 'none';
+                document.getElementById('stopBtn').style.display = 'block';
+                document.getElementById('progressContainer').style.display = 'block';
+                document.getElementById('downloadLink').style.display = 'none';
+                document.getElementById('log').innerHTML = '';
+
+                log(`Starting download of ${baseURL}`);
+                log(`Max depth: ${maxDepth}, Max files: ${maxFiles}`);
+
+                // Create a new ZIP file
+                try {
+                    zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), {
+                        level: 5 // Compression level (0-9)
+                    });
+                } catch (error) {
+                    log(`Error creating ZIP writer: ${error.message}`, true);
+                    document.getElementById('downloadBtn').style.display = 'block';
+                    document.getElementById('stopBtn').style.display = 'none';
+                    downloading = false;
+                    return;
+                }
+
+                // Add the base URL to the download queue with depth 0
+                downloadQueue.push({ url: baseURL, depth: 0 });
+
+                try {
+                    await processQueue(maxDepth, maxFiles);
+
+                    if (!stopRequested) {
+                        log(`Download complete! Downloaded ${fileBlobs.size} files (${failedURLs.size} failed)`);
+
+                        // Create the final ZIP file
+                        const blob = await zipWriter.close();
+                        const url = URL.createObjectURL(blob);
+
+                        // Show download link
+                        document.getElementById('downloadLink').style.display = 'block';
+                        const downloadLink = document.getElementById('downloadFile');
+                        downloadLink.href = url;
+                        downloadLink.download = `${baseDomain}-offline.zip`;
+
+                        // Update status
+                        document.getElementById('status').textContent = 'Download complete!';
+                    } else {
+                        log('Download stopped by user');
+                        await zipWriter.close();
+                    }
+                } catch (error) {
+                    log(`Error during download: ${error.message}`, true);
+                    if (zipWriter) {
+                        await zipWriter.close();
+                    }
+                } finally {
+                    document.getElementById('downloadBtn').style.display = 'block';
+                    document.getElementById('stopBtn').style.display = 'none';
+                    downloading = false;
+                }
+            } catch (error) {
+                log(`Critical error: ${error.message}`, true);
+                document.getElementById('downloadBtn').style.display = 'block';
+                document.getElementById('stopBtn').style.display = 'none';
+                downloading = false;
+            }
+        }
+
+        // Process CSS content to extract URLs
+        function extractUrlsFromCSS(css, baseUrl) {
+            const urls = new Set();
+
+            // Match url() patterns
+            const urlRegex = /url\(['"]?([^'")]+)['"]?\)/g;
+            let match;
+
+            while ((match = urlRegex.exec(css)) !== null) {
+                if (match[1] && !match[1].startsWith('data:')) {
+                    try {
+                        const absoluteUrl = new URL(match[1], baseUrl).href;
+                        urls.add(absoluteUrl);
+                    } catch (e) {}
+                }
+            }
+
+            // Match @import rules
+            const importRegex = /@import\s+['"]([^'"]+)['"]/g;
+            while ((match = importRegex.exec(css)) !== null) {
+                try {
+                    const absoluteUrl = new URL(match[1], baseUrl).href;
+                    urls.add(absoluteUrl);
+                } catch (e) {}
+            }
+
+            return Array.from(urls);
+        }
+
+        // Process the download queue
+        async function processQueue(maxDepth, maxFiles) {
+            // Create a URL mapping for offline use
+            const urlMapping = new Map();
+
+            while (downloadQueue.length > 0 && !stopRequested) {
+                if (totalProcessed >= maxFiles) {
+                    log(`Reached the maximum number of files (${maxFiles})`);
+                    break;
+                }
+
+                const { url, depth } = downloadQueue.shift();
+
+                // Skip if already processed
+                if (processedURLs.has(url)) {
+                    continue;
+                }
+
+                // Mark as processed to avoid duplicates
+                processedURLs.add(url);
+                totalProcessed++;
+
+                // Update progress
+                updateProgress(totalProcessed, Math.max(totalProcessed, downloadQueue.length + 1));
+
+                // Check domain restriction
+                if (!isSameDomain(url)) {
+                    log(`Skipping external domain: ${url}`);
+                    continue;
+                }
+
+                // Check if we should download this type of file
+                if (!shouldDownloadURL(url)) {
+                    log(`Skipping file type: ${url}`);
+                    continue;
+                }
+
+                try {
+                    log(`Downloading: ${url}`);
+                    const response = await fetchURL(url);
+                    const contentType = response.headers.get('content-type') || '';
+
+                    // Determine the local file path
+                    const path = getPathFromURL(url);
+                    const filePath = path.substring(1); // Remove leading slash
+
+                    // Store mapping for offline use
+                    urlMapping.set(url, filePath);
+
+                    // Process the file based on content type
+                    if (contentType.includes('text/html')) {
+                        const html = await response.text();
+
+                        // Extract and queue new URLs if within max depth
+                        if (depth < maxDepth) {
+                            const extractedURLs = extractURLsFromHTML(html, url);
+                            for (const newURL of extractedURLs) {
+                                if (!processedURLs.has(newURL) && !downloadQueue.some(item => item.url === newURL)) {
+                                    downloadQueue.push({ url: newURL, depth: depth + 1 });
+                                }
+                            }
+                        }
+
+                        // Store the HTML for later processing
+                        fileBlobs.set(url, { content: html, type: 'text/html', path: filePath });
+                    }
+                    else if (contentType.includes('text/css')) {
+                        // Process CSS files to extract more resources
+                        const css = await response.text();
+
+                        // Store the CSS
+                        fileBlobs.set(url, { content: css, type: contentType, path: filePath });
+
+                        // Extract and queue URLs from CSS if within max depth
+                        if (depth < maxDepth && document.getElementById('includeImages').checked) {
+                            const cssURLs = extractUrlsFromCSS(css, url);
+                            for (const cssURL of cssURLs) {
+                                if (!processedURLs.has(cssURL) && !downloadQueue.some(item => item.url === cssURL)) {
+                                    downloadQueue.push({ url: cssURL, depth: depth + 1 });
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        // For non-HTML files, just store the blob
+                        const blob = await response.blob();
+                        fileBlobs.set(url, { content: blob, type: contentType, path: filePath });
+                    }
+                } catch (error) {
+                    log(`Failed to download: ${url} - ${error.message}`, true);
+                    failedURLs.add(url);
+                }
+            }
+
+            // Process all HTML files to update their links to offline paths
+            if (!stopRequested) {
+                log('Processing files for offline use...');
+
+                // First add all non-HTML files to the ZIP
+                const htmlFiles = [];
+
+                for (const [url, { content, type, path }] of fileBlobs.entries()) {
+                    if (type === 'text/html') {
+                        htmlFiles.push([url, { content, type, path }]);
+                    } else {
+                        try {
+                            if (typeof content === 'string') {
+                                await zipWriter.add(path, new zip.TextReader(content));
+                            } else {
+                                await zipWriter.add(path, new zip.BlobReader(content));
+                            }
+                            log(`Added to ZIP: ${path}`);
+                        } catch (error) {
+                            log(`Error adding to ZIP: ${path} - ${error.message}`, true);
+                        }
+                    }
+                }
+
+                // Then process and add all HTML files
+                for (const [url, { content, type, path }] of htmlFiles) {
+                    try {
+                        // Convert HTML links to offline paths
+                        const updatedHTML = convertToOfflineURLs(content, url, urlMapping);
+
+                        // Save the HTML file to the ZIP
+                        await zipWriter.add(path, new zip.TextReader(updatedHTML));
+                        log(`Added to ZIP: ${path}`);
+                    } catch (error) {
+                        log(`Error processing HTML: ${url} - ${error.message}`, true);
+                    }
+                }
+            }
+        }
+
+        // Stop the download process
+        function stopDownload() {
+            if (downloading) {
+                stopRequested = true;
+                log('Stopping download... Please wait for current operations to complete');
+                document.getElementById('stopBtn').disabled = true;
+            }
+        }
+
+        // Dynamically load zip.js library with retry mechanism
+        async function loadZipJS() {
+            return new Promise((resolve, reject) => {
+                // JSZip CDN URLs (fallbacks if one fails)
+                const zipJSUrls = [
+                    'https://cdnjs.cloudflare.com/ajax/libs/zip.js/2.6.62/zip.min.js',
+                    'https://cdn.jsdelivr.net/npm/@zip.js/zip.js/dist/zip.min.js',
+                    'https://unpkg.com/@zip.js/zip.js/dist/zip.min.js'
+                ];
+
+                let currentUrlIndex = 0;
+
+                function tryLoadScript() {
+                    if (currentUrlIndex >= zipJSUrls.length) {
+                        reject(new Error('Failed to load zip.js library from all sources'));
+                        return;
+                    }
+
+                    const scriptUrl = zipJSUrls[currentUrlIndex];
+                    log(`Loading zip.js from ${scriptUrl}...`);
+
+                    const script = document.createElement('script');
+                    script.src = scriptUrl;
+
+                    script.onload = () => {
+                        log('Zip.js loaded successfully!');
+                        resolve();
+                    };
+
+                    script.onerror = () => {
+                        log(`Failed to load from ${scriptUrl}, trying next source...`, true);
+                        currentUrlIndex++;
+                        tryLoadScript();
+                    };
+
+                    document.head.appendChild(script);
+                }
+
+                tryLoadScript();
+            });
+        }
+    </script>
+</body>
+</html>
