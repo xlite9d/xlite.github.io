@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -603,7 +602,6 @@
                 max-height: 400px;
             }
         }
-        /* Music Player Styles - Sleek Modern Design */
         .music-player-container {
             position: fixed;
             top: 0;
@@ -734,7 +732,7 @@
         .music-player-iframe-container {
             flex-grow: 1;
             position: relative;
-            height: calc(100% - 118px); /* Adjust for header and close button */
+            height: calc(100% - 118px);
             background-color: #1e1e1e;
             overflow: hidden;
             border-radius: 8px;
@@ -759,7 +757,6 @@
             to { opacity: 1; }
         }
 
-        /* Style the headphones icon specifically */
         #music-player-btn {
             transition: all 0.3s ease;
             position: relative;
@@ -809,7 +806,6 @@
             transform: scale(1.2);
         }
 
-        /* Chat Container Styles - Similar to Music Player */
         .chat-container {
             position: fixed;
             top: 0;
@@ -931,7 +927,7 @@
         .chat-iframe-container {
             flex-grow: 1;
             position: relative;
-            height: calc(100% - 118px); /* Adjust for header and close button */
+            height: calc(100% - 118px);
             background-color: transparent;
             overflow: hidden;
             border-radius: 8px;
@@ -952,7 +948,6 @@
             background-color: #121212;
         }
 
-        /* Style the chat icon specifically */
         #chat-btn {
             transition: all 0.3s ease;
             position: relative;
@@ -989,6 +984,185 @@
         #chat-btn:hover ion-icon {
             transform: scale(1.2);
         }
+
+        .cloud-container {
+            position: fixed;
+            top: 0;
+            left: 56px;
+            width: 0;
+            height: 100%;
+            overflow: hidden;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            z-index: 100000;
+            backdrop-filter: blur(10px);
+        }
+
+        .cloud-container.open {
+            width: 490px;
+            animation: cloud-glow 2s infinite alternate;
+        }
+
+        @keyframes cloud-glow {
+            0% {
+                box-shadow: 0 0 10px rgba(128, 128, 255, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(128, 128, 255, 0.6);
+            }
+        }
+
+        .cloud-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+            border-left: 3px solid rgba(128, 128, 255, 0.7);
+            z-index: 9999;
+        }
+
+        .cloud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            height: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(128, 128, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cloud-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(128, 128, 255, 0.7), transparent);
+            animation: header-glow 3s infinite alternate;
+        }
+
+        .cloud-title {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, rgba(128, 128, 255, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: text-shimmer 3s infinite;
+            background-size: 200% 100%;
+        }
+
+        .cloud-close {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            cursor: pointer;
+            color: white;
+            font-weight: 800;
+            background-color: #000;
+            text-align: center;
+            padding: 18px 0;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            border-top: 1px solid rgba(128, 128, 255, 0.7);
+            overflow: hidden;
+        }
+
+        .cloud-close:hover {
+            background-color: rgba(128, 128, 255, 0.8);
+            letter-spacing: 3px;
+        }
+
+        .cloud-close::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(128, 128, 255, 0.3), transparent);
+            transition: all 0.5s;
+        }
+
+        .cloud-close:hover::before {
+            left: 100%;
+            transition: all 0.5s;
+        }
+
+        .cloud-iframe-container {
+            flex-grow: 1;
+            position: relative;
+            height: calc(100% - 118px);
+            background-color: transparent;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 10px;
+            border: 1px solid rgba(128, 128, 255, 0.4);
+            z-index: 10000;
+        }
+
+        .cloud-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            border-radius: 8px;
+            opacity: 1;
+            position: relative;
+            z-index: 10;
+            background-color: #121212;
+        }
+
+        #clouds-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #clouds-btn:hover {
+            color: rgba(128, 128, 255, 0.9) !important;
+        }
+
+        #clouds-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(128, 128, 255, 0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 50%;
+            transform: scale(0.85);
+        }
+
+        #clouds-btn:hover::before {
+            opacity: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        #clouds-btn ion-icon {
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+
+        #clouds-btn:hover ion-icon {
+            transform: scale(1.2);
+        }
     </style>
 </head>
 <body>
@@ -1022,6 +1196,9 @@
                 </div>
                 <div class="sidebar-icon" data-url="/tutorials">
                     <ion-icon name="eye-outline"></ion-icon>
+                </div>
+                <div class="sidebar-icon" id="clouds-btn">
+                    <ion-icon name="cloud"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/styles">
                     <ion-icon name="timer"></ion-icon>
@@ -1109,7 +1286,7 @@
             <div class="history-panel" id="history-panel">
                 <div class="history-header">
                     <div class="history-icon">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNsb2NrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCI+PC9jaXJjbGU+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCI+PC9wb2x5bGluZT48L3N2Zz4=" alt="History" width="24" height="24">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNsb2NrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCI+PC9jaXJjbGU+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCI+PC9wb2x5bGluZT48L3N2Zz4=" alt="History" width="24" height="24">
                     </div>
                     <div class="history-title">History</div>
                 </div>
@@ -1120,7 +1297,6 @@
         </div>
     </div>
 
-    <!-- Music Player Container -->
     <div class="music-player-container" id="music-player-container">
         <div class="music-player-content" id="music-player-content">
             <div class="music-player-header">
@@ -1128,7 +1304,6 @@
                 <a>Slow on your first try!</a>
             </div>
             <div class="music-player-iframe-container" id="music-player-iframe-container">
-                <!-- Empty div that will be populated with an iframe when needed -->
             </div>
             <div class="music-player-close" id="music-player-close">
                 CLOSE PLAYER <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
@@ -1136,7 +1311,6 @@
         </div>
     </div>
 
-    <!-- Chat Container -->
     <div class="chat-container" id="chat-container">
         <div class="chat-content" id="chat-content">
             <div class="chat-header">
@@ -1144,10 +1318,22 @@
                 <a>Chat with friends!</a>
             </div>
             <div class="chat-iframe-container" id="chat-iframe-container">
-                <!-- Empty div that will be populated with an iframe when needed -->
             </div>
             <div class="chat-close" id="chat-close">
                 CLOSE CHAT <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="cloud-container" id="cloud-container">
+        <div class="cloud-content" id="cloud-content">
+            <div class="cloud-header">
+                <span class="cloud-title">Vplaza Cloud</span>
+            </div>
+            <div class="cloud-iframe-container" id="cloud-iframe-container">
+            </div>
+            <div class="cloud-close" id="cloud-close">
+                CLOSE CLOUD <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
             </div>
         </div>
     </div>
@@ -1350,7 +1536,6 @@
             }
         }
         function updateUrlBar(url) {
-            // Check if the URL is the specific landing page path
             if (url.toLowerCase().includes('vplaza') || url.toLowerCase().includes('file://')) {
                 urlBar.value = '(hidden)';
             } else if (url.includes('/active/embed.html?url=')) {
@@ -1686,8 +1871,7 @@
             icon.addEventListener('click', function() {
                 const url = this.getAttribute('data-url');
                 if (url) {
-                    // Don't navigate for the music player button or chat button
-                    if (this.id === 'music-player-btn' || this.id === 'chat-btn') return;
+                    if (this.id === 'music-player-btn' || this.id === 'chat-btn' || this.id === 'clouds-btn') return;
                     navigateToUrl(url);
                 }
             });
@@ -1740,33 +1924,27 @@
             });
         }
 
-        // --- Enhanced Music Player Animations and Interactions ---
         document.querySelectorAll('.sidebar-icon').forEach(icon => {
             if (icon.id === 'music-player-btn') {
                 icon.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    // Get the music player container
                     const musicPlayerContainer = document.getElementById('music-player-container');
                     const musicPlayerIframeContainer = document.getElementById('music-player-iframe-container');
 
-                    // Check if iframe already exists
                     let iframe = document.getElementById('music-player-iframe');
                     if (!iframe) {
-                        // Create iframe if it doesn't exist
                         iframe = document.createElement('iframe');
                         iframe.src = "/audio";
                         iframe.id = "music-player-iframe";
                         iframe.className = "music-player-iframe";
 
-                        // Add transition effect class
                         setTimeout(() => {
                             musicPlayerIframeContainer.appendChild(iframe);
                         }, 100);
                     }
 
-                    // Toggle visibility with smooth animation
                     if (musicPlayerContainer.classList.contains('open')) {
                         musicPlayerContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
                         musicPlayerContainer.classList.remove('open');
@@ -1776,12 +1954,10 @@
                     }
                 });
 
-                // Remove data-url to prevent normal navigation
                 if (icon.hasAttribute('data-url')) {
                     icon.removeAttribute('data-url');
                 }
 
-                // Add hover effect
                 icon.addEventListener('mouseenter', function() {
                     this.style.textShadow = "0 0 10px rgba(255, 0, 128, 0.7)";
                     this.style.color = "rgba(255, 0, 128, 0.9)";
@@ -1795,17 +1971,14 @@
                     this.style.transform = "";
                 });
             }
-            // Chat button logic
             if (icon.id === 'chat-btn') {
                 icon.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    // Get the chat container
                     const chatContainer = document.getElementById('chat-container');
                     const chatIframeContainer = document.getElementById('chat-iframe-container');
 
-                    // Only create the iframe if it doesn't already exist
                     let iframe = document.getElementById('chat-iframe');
                     if (!iframe) {
                         iframe = document.createElement('iframe');
@@ -1817,11 +1990,9 @@
                         iframe.style.border = "none";
                         iframe.style.zIndex = "10000";
 
-                        // Add iframe immediately
                         chatIframeContainer.appendChild(iframe);
                     }
 
-                    // Toggle visibility with smooth animation
                     if (chatContainer.classList.contains('open')) {
                         chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
                         chatContainer.classList.remove('open');
@@ -1831,12 +2002,10 @@
                     }
                 });
 
-                // Remove data-url to prevent normal navigation
                 if (icon.hasAttribute('data-url')) {
                     icon.removeAttribute('data-url');
                 }
 
-                // Add hover effect
                 icon.addEventListener('mouseenter', function() {
                     this.style.textShadow = "0 0 10px rgba(0, 128, 255, 0.7)";
                     this.style.color = "rgba(0, 128, 255, 0.9)";
@@ -1850,22 +2019,67 @@
                     this.style.transform = "";
                 });
             }
+            if (icon.id === 'clouds-btn') {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+
+                    const cloudContainer = document.getElementById('cloud-container');
+                    const cloudIframeContainer = document.getElementById('cloud-iframe-container');
+
+                    let iframe = document.getElementById('cloud-iframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.src = "/styles/weather.html";
+                        iframe.id = "cloud-iframe";
+                        iframe.className = "cloud-iframe";
+                        iframe.style.width = "100%";
+                        iframe.style.height = "100%";
+                        iframe.style.border = "none";
+                        iframe.style.zIndex = "10000";
+
+                        cloudIframeContainer.appendChild(iframe);
+                    }
+
+                    if (cloudContainer.classList.contains('open')) {
+                        cloudContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
+                        cloudContainer.classList.remove('open');
+                    } else {
+                        cloudContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
+                        cloudContainer.classList.add('open');
+                    }
+                });
+
+                if (icon.hasAttribute('data-url')) {
+                    icon.removeAttribute('data-url');
+                }
+
+                icon.addEventListener('mouseenter', function() {
+                    this.style.textShadow = "0 0 10px rgba(128, 128, 255, 0.7)";
+                    this.style.color = "rgba(128, 128, 255, 0.9)";
+                    this.style.transform = "scale(1.1)";
+                    this.style.transition = "all 0.3s ease";
+                });
+
+                icon.addEventListener('mouseleave', function() {
+                    this.style.textShadow = "";
+                    this.style.color = "";
+                    this.style.transform = "";
+                });
+            }
         });
 
-        // Close music player when X is clicked
         document.getElementById('music-player-close').addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
 
-            // Get the music player container and iframe
             const musicPlayerContainer = document.getElementById('music-player-container');
             const iframe = document.getElementById('music-player-iframe');
 
-            // Add closing transition
             musicPlayerContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
             musicPlayerContainer.classList.remove('open');
 
-            // Remove iframe to stop playback with a small delay
             if (iframe && iframe.parentNode) {
                 setTimeout(() => {
                     iframe.parentNode.removeChild(iframe);
@@ -1873,32 +2087,43 @@
             }
         });
 
-        // Close chat ONLY when the Close Chat button is clicked
         document.getElementById('chat-close').addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
 
-            // Get the chat container
             const chatContainer = document.getElementById('chat-container');
             const chatIframeContainer = document.getElementById('chat-iframe-container');
 
-            // Add closing transition
             chatContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
             chatContainer.classList.remove('open');
 
-            // When the Close Chat button is clicked, we actually destroy the iframe
-            // to completely close the chat session
             setTimeout(() => {
                 chatIframeContainer.innerHTML = '';
             }, 300);
         });
 
-        // Close player (but keep playing) when clicking outside
+        document.getElementById('cloud-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const cloudContainer = document.getElementById('cloud-container');
+            const cloudIframeContainer = document.getElementById('cloud-iframe-container');
+
+            cloudContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
+            cloudContainer.classList.remove('open');
+
+            setTimeout(() => {
+                cloudIframeContainer.innerHTML = '';
+            }, 300);
+        });
+
         document.addEventListener('click', function(e) {
             const musicPlayerContainer = document.getElementById('music-player-container');
             const musicPlayerBtn = document.getElementById('music-player-btn');
             const chatContainer = document.getElementById('chat-container');
             const chatBtn = document.getElementById('chat-btn');
+            const cloudContainer = document.getElementById('cloud-container');
+            const cloudBtn = document.getElementById('clouds-btn');
 
             if (
                 musicPlayerContainer &&
@@ -1907,10 +2132,8 @@
                 e.target !== musicPlayerBtn &&
                 !musicPlayerBtn.contains(e.target)
             ) {
-                // Smooth transition out
                 musicPlayerContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
                 musicPlayerContainer.classList.remove('open');
-                // Note: We don't remove the iframe here, so music continues playing
             }
 
             if (
@@ -1920,10 +2143,19 @@
                 e.target !== chatBtn &&
                 !chatBtn.contains(e.target)
             ) {
-                // Smooth transition out to hide the chat (but don't destroy the iframe)
                 chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
                 chatContainer.classList.remove('open');
-                // Important: We don't remove the iframe here, so chat session persists
+            }
+
+            if (
+                cloudContainer &&
+                cloudContainer.classList.contains('open') &&
+                !cloudContainer.contains(e.target) &&
+                e.target !== cloudBtn &&
+                !cloudBtn.contains(e.target)
+            ) {
+                cloudContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+                cloudContainer.classList.remove('open');
             }
         });
     </script>
