@@ -1531,73 +1531,18 @@
                 selectedContent.classList.add('active');
                 activeTabId = parseInt(tabId);
 
-                // Make sure history is initialized for this tab
-                if (!tabHistory[activeTabId]) {
-                    tabHistory[activeTabId] = [];
-                    tabHistoryPosition[activeTabId] = -1;
-
-                    // Add the current URL to history if the tab already has a URL
-                    const frameUrl = selectedTab.dataset.url;
-                    if (frameUrl) {
-                        // For embedded URLs, extract the actual URL
-                        let actualUrl = frameUrl;
-                        if (frameUrl.includes('/active/embed.html?url=')) {
-                            actualUrl = decodeURIComponent(frameUrl.split('/active/embed.html?url=')[1]);
-                        }
-
-                        tabHistory[activeTabId].push(actualUrl);
-                        tabHistoryPosition[activeTabId] = 0;
-                    }
-                }
-
                 const frameUrl = selectedTab.dataset.url;
                 updateUrlBar(frameUrl);
             }
         }
         function updateUrlBar(url) {
-            if (url.includes('/active/embed.html?url=')) {
+            if (url.toLowerCase().includes('vplaza') || url.toLowerCase().includes('file://')) {
+                urlBar.value = '(hidden)';
+            } else if (url.includes('/active/embed.html?url=')) {
                 const actualUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
                 urlBar.value = actualUrl;
-                // Update just the UI elements to show site info
-                try {
-                    const domain = extractDomain(actualUrl);
-                    // We don't want to change actual browser title anymore
-                    // document.title = domain || 'New Tab';
-
-                    // Update tab visuals only
-                    updateTabVisuals(actualUrl);
-                } catch (e) {
-                    console.error('Error updating tab visuals:', e);
-                }
             } else {
                 urlBar.value = url;
-            }
-        }
-
-        function updateTabVisuals(url) {
-            // Only update the tab UI elements, not the actual browser tab
-            try {
-                const domain = extractDomain(url);
-                if (domain) {
-                    const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}`;
-
-                    // Update tab icon if found
-                    const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
-                    if (topTab) {
-                        const iconElement = topTab.querySelector('.tab-icon');
-                        if (iconElement) {
-                            iconElement.innerHTML = `<img src="${faviconUrl}" alt="">`;
-                        }
-                    }
-
-                    // Update sidebar tab icon if found
-                    const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
-                    if (sidebarTab) {
-                        sidebarTab.innerHTML = `<img src="${faviconUrl}" alt="" style="width:16px;height:16px;">`;
-                    }
-                }
-            } catch (e) {
-                console.error('Error updating tab visuals:', e);
             }
         }
         function createNewTab() {
@@ -1688,104 +1633,34 @@
             switchTab(activeTabId);
         }
 
-        // Store browser history for each tab
-        const tabHistory = {};
-        const tabHistoryPosition = {};
-
         function goBack() {
             const activeFrame = document.getElementById(`frame-${activeTabId}`);
-            if (!activeFrame) return;
-
-            // Initialize history for this tab if it doesn't exist
-            if (!tabHistory[activeTabId]) {
-                tabHistory[activeTabId] = [];
-                tabHistoryPosition[activeTabId] = -1;
-                return; // No history to go back to
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.back();
+                } catch (error) {
+                    console.error("Could not navigate back:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
             }
-
-            const currentPosition = tabHistoryPosition[activeTabId];
-            if (currentPosition <= 0) return; // Already at the beginning of history
-
-            loadingBarContainer.style.display = 'block';
-            activeFrame.dataset.isLoading = 'true';
-
-            // Move back in history
-            tabHistoryPosition[activeTabId] = currentPosition - 1;
-            const previousUrl = tabHistory[activeTabId][tabHistoryPosition[activeTabId]];
-
-            // Navigate to the URL directly rather than using iframe history
-            const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
-            const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
-
-            // Handle external URLs properly
-            if (previousUrl.includes('://')) {
-                const embedUrl = `/active/embed.html?url=${encodeURIComponent(previousUrl)}`;
-                activeFrame.src = embedUrl;
-
-                // Update tab URL
-                if (topTab) topTab.dataset.url = embedUrl;
-                if (sidebarTab) sidebarTab.dataset.url = embedUrl;
-
-                // Update tab visuals
-                updateTabVisuals(previousUrl);
-            } else {
-                activeFrame.src = previousUrl;
-
-                // Update tab URL
-                if (topTab) topTab.dataset.url = previousUrl;
-                if (sidebarTab) sidebarTab.dataset.url = previousUrl;
-            }
-
-            // Update URL bar
-            updateUrlBar(previousUrl);
         }
 
         function goForward() {
             const activeFrame = document.getElementById(`frame-${activeTabId}`);
-            if (!activeFrame) return;
-
-            // Check if history exists for this tab
-            if (!tabHistory[activeTabId]) {
-                tabHistory[activeTabId] = [];
-                tabHistoryPosition[activeTabId] = -1;
-                return; // No history to go forward to
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.forward();
+                } catch (error) {
+                    console.error("Could not navigate forward:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
             }
-
-            const currentPosition = tabHistoryPosition[activeTabId];
-            if (currentPosition >= tabHistory[activeTabId].length - 1) return; // Already at the end of history
-
-            loadingBarContainer.style.display = 'block';
-            activeFrame.dataset.isLoading = 'true';
-
-            // Move forward in history
-            tabHistoryPosition[activeTabId] = currentPosition + 1;
-            const nextUrl = tabHistory[activeTabId][tabHistoryPosition[activeTabId]];
-
-            // Navigate to the URL directly rather than using iframe history
-            const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
-            const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
-
-            // Handle external URLs properly
-            if (nextUrl.includes('://')) {
-                const embedUrl = `/active/embed.html?url=${encodeURIComponent(nextUrl)}`;
-                activeFrame.src = embedUrl;
-
-                // Update tab URL
-                if (topTab) topTab.dataset.url = embedUrl;
-                if (sidebarTab) sidebarTab.dataset.url = embedUrl;
-
-                // Update tab visuals
-                updateTabVisuals(nextUrl);
-            } else {
-                activeFrame.src = nextUrl;
-
-                // Update tab URL
-                if (topTab) topTab.dataset.url = nextUrl;
-                if (sidebarTab) sidebarTab.dataset.url = nextUrl;
-            }
-
-            // Update URL bar
-            updateUrlBar(nextUrl);
         }
 
         function reloadPage() {
@@ -1793,32 +1668,7 @@
             if (activeFrame) {
                 loadingBarContainer.style.display = 'block';
                 activeFrame.dataset.isLoading = 'true';
-
-                // Get the current URL from the URL bar
-                const currentUrl = urlBar.value.trim();
-
-                // Check if the URL is for an embedded site
-                const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
-                const tabUrl = topTab ? topTab.dataset.url : '';
-
-                if (tabUrl && tabUrl.includes('/active/embed.html?url=')) {
-                    // Create a new embed URL from the current URL bar value
-                    const newUrl = `/active/embed.html?url=${encodeURIComponent(currentUrl)}`;
-                    activeFrame.src = newUrl;
-
-                    // Update tab URL
-                    if (topTab) topTab.dataset.url = newUrl;
-                    const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
-                    if (sidebarTab) sidebarTab.dataset.url = newUrl;
-
-                    // We don't add to history when reloading, but we update the current history entry
-                    if (tabHistory[activeTabId] && tabHistoryPosition[activeTabId] >= 0) {
-                        tabHistory[activeTabId][tabHistoryPosition[activeTabId]] = currentUrl;
-                    }
-                } else {
-                    // For internal pages, just reload
-                    activeFrame.src = activeFrame.src;
-                }
+                activeFrame.src = activeFrame.src;
             }
         }
 
@@ -1831,60 +1681,21 @@
                 const internalPaths = ['/tutorials', '/gamepagev1', '/ai', '/v-ai', '/a', '/landin'];
 
                 let processedUrl = url;
-                let actualUrl = url;
-
                 if (internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
                     processedUrl = url;
-                    // Don't update tab visuals for internal paths
                 } else if (!url.includes('://') && !url.startsWith('/')) {
-                    actualUrl = `https://${url}`;
-                    processedUrl = `/active/embed.html?url=${encodeURIComponent(actualUrl)}`;
-                    // Tab visuals will be updated below
+                    processedUrl = `/active/embed.html?url=https://${url}`;
                 } else if (!url.startsWith('/')) {
                     processedUrl = `/active/embed.html?url=${encodeURIComponent(url)}`;
-                    // Tab visuals will be updated below
                 }
 
-                // Update custom browser history for this tab
-                if (!tabHistory[activeTabId]) {
-                    tabHistory[activeTabId] = [];
-                    tabHistoryPosition[activeTabId] = -1;
-                }
-
-                // When navigating manually, we need to:
-                // 1. Remove any forward history
-                // 2. Add the new URL to history
-                // 3. Update the current position
-                const currentPosition = tabHistoryPosition[activeTabId];
-
-                // If we have history and we're not at the end, truncate the forward history
-                if (currentPosition >= 0 && currentPosition < tabHistory[activeTabId].length - 1) {
-                    tabHistory[activeTabId] = tabHistory[activeTabId].slice(0, currentPosition + 1);
-                }
-
-                // Store the actual URL we're navigating to, not the processed one
-                // This is important for proper back/forward navigation
-                tabHistory[activeTabId].push(actualUrl);
-                tabHistoryPosition[activeTabId] = tabHistory[activeTabId].length - 1;
-
-                // Now actually navigate to the URL
                 activeFrame.src = processedUrl;
 
                 const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
                 const sidebarTab = sidebarTabsSection.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
 
-                if (topTab) {
-                    topTab.dataset.url = processedUrl;
-                }
-
-                if (sidebarTab) {
-                    sidebarTab.dataset.url = processedUrl;
-                }
-
-                // Update the tab visuals if it's not an internal path
-                if (!internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
-                    updateTabVisuals(actualUrl);
-                }
+                if (topTab) topTab.dataset.url = processedUrl;
+                if (sidebarTab) sidebarTab.dataset.url = processedUrl;
 
                 updateUrlBar(processedUrl);
                 storeHistoryItem(url);
@@ -1898,10 +1709,8 @@
 
                 if (!url.includes('://') && !url.includes('.') && url !== '/landin') {
                     url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
-                    // We'll update tab visuals in navigateToUrl later
                 } else if (!url.includes('://') && url !== '/landin') {
                     url = `https://${url}`;
-                    // Tab visuals will be updated in navigateToUrl
                 }
 
                 navigateToUrl(url);
