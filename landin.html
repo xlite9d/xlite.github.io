@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/css/ionicons.min.css" rel="stylesheet">
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <style>
 * {
     margin: 0;
@@ -24,6 +27,67 @@ body {
     width: 100%;
     overflow: hidden;
     position: relative;
+}
+
+/* Shake animation for selected wallpapers */
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.shake-animation {
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+/* Delete confirmation bar */
+.delete-confirmation {
+    position: fixed;
+    bottom: -60px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: rgba(40, 40, 50, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: bottom 0.3s ease;
+    z-index: 150;
+}
+
+.delete-confirmation.active {
+    bottom: 0;
+}
+
+.delete-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.delete-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.delete-button ion-icon {
+    font-size: 22px;
+    color: #ff3333;
+    filter: drop-shadow(0 0 5px rgba(255, 51, 51, 0.7));
+}
+
+/* Selected wallpaper style */
+.bg-option.selected-for-deletion {
+    border: 2px solid #ff3333;
 }
 
 /* Add styles for animated wallpapers */
@@ -515,6 +579,14 @@ body[data-wallpaper-type="animated"] {
 
 <div class="overlay" id="overlay" onclick="closeSettingsPanel()"></div>
 
+<!-- Delete confirmation bar -->
+<div class="delete-confirmation" id="deleteConfirmation">
+    <button class="delete-button" id="deleteButton" onclick="deleteSelectedWallpapers()">
+        <ion-icon name="trash" role="img" class="md hydrated"></ion-icon>
+        Delete Selected Wallpapers
+    </button>
+</div>
+
 <!-- Upload Modal -->
 <div class="upload-modal" id="uploadModal">
     <div class="upload-header">
@@ -766,9 +838,63 @@ function displayCustomWallpapers() {
             }
 
             wallpaperDiv.dataset.bg = wallpaper.dataUrl;
-            wallpaperDiv.onclick = function() {
-                selectCustomBackground(this);
-            };
+            wallpaperDiv.dataset.id = wallpaper.id;
+
+            // Setup long press handling
+            let pressTimer;
+            let isLongPress = false;
+
+            wallpaperDiv.addEventListener('mousedown', function(e) {
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    handleLongPress(this);
+                }, 2000); // 2 seconds for long press
+            });
+
+            wallpaperDiv.addEventListener('mouseup', function(e) {
+                clearTimeout(pressTimer);
+                if (!isLongPress) {
+                    if (document.querySelector('.shake-animation')) {
+                        // If deletion mode is active, clicking selects for deletion
+                        toggleDeleteSelection(this);
+                    } else {
+                        // Regular click selects background
+                        selectCustomBackground(this);
+                    }
+                }
+                isLongPress = false;
+            });
+
+            wallpaperDiv.addEventListener('mouseleave', function(e) {
+                clearTimeout(pressTimer);
+                isLongPress = false;
+            });
+
+            wallpaperDiv.addEventListener('touchstart', function(e) {
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    handleLongPress(this);
+                }, 2000); // 2 seconds for long press
+            });
+
+            wallpaperDiv.addEventListener('touchend', function(e) {
+                clearTimeout(pressTimer);
+                if (!isLongPress) {
+                    if (document.querySelector('.shake-animation')) {
+                        // If deletion mode is active, tapping selects for deletion
+                        toggleDeleteSelection(this);
+                    } else {
+                        // Regular tap selects background
+                        selectCustomBackground(this);
+                    }
+                }
+                isLongPress = false;
+            });
+
+            wallpaperDiv.addEventListener('touchcancel', function(e) {
+                clearTimeout(pressTimer);
+                isLongPress = false;
+            });
 
             const img = document.createElement('img');
             img.src = wallpaper.dataUrl;
@@ -789,7 +915,99 @@ function displayCustomWallpapers() {
     }
 }
 
+function handleLongPress(element) {
+    // Start deletion mode
+    element.classList.add('shake-animation');
+    element.classList.add('selected-for-deletion');
+
+    // Show delete confirmation bar
+    document.getElementById('deleteConfirmation').classList.add('active');
+}
+
+function toggleDeleteSelection(element) {
+    if (element.classList.contains('selected-for-deletion')) {
+        element.classList.remove('selected-for-deletion');
+        element.classList.remove('shake-animation');
+
+        // If no items are selected, hide the delete bar
+        if (!document.querySelector('.selected-for-deletion')) {
+            exitDeletionMode();
+        }
+    } else {
+        element.classList.add('selected-for-deletion');
+        element.classList.add('shake-animation');
+    }
+}
+
+function exitDeletionMode() {
+    // Remove shake effect and selection from all items
+    const items = document.querySelectorAll('.bg-option');
+    items.forEach(item => {
+        item.classList.remove('shake-animation');
+        item.classList.remove('selected-for-deletion');
+    });
+
+    // Hide delete confirmation bar
+    document.getElementById('deleteConfirmation').classList.remove('active');
+}
+
+function deleteSelectedWallpapers() {
+    const selectedItems = document.querySelectorAll('.selected-for-deletion');
+    if (selectedItems.length === 0) return;
+
+    // Get current list of wallpapers
+    let customWallpapers = getCustomWallpapers();
+    const currentBg = localStorage.getItem('backgroundImage');
+    let backgroundWasDeleted = false;
+
+    // Remove the selected wallpapers
+    selectedItems.forEach(item => {
+        const id = item.dataset.id;
+        const bgUrl = item.dataset.bg;
+
+        // Check if we're deleting the current background
+        if (currentBg === bgUrl) {
+            backgroundWasDeleted = true;
+        }
+
+        // Remove from the array
+        customWallpapers = customWallpapers.filter(wp => wp.id !== id);
+    });
+
+    // Save the updated list
+    localStorage.setItem('customWallpapers', JSON.stringify(customWallpapers));
+
+    // If we deleted all custom wallpapers or the current background was deleted
+    if (customWallpapers.length === 0 || backgroundWasDeleted) {
+        // Set default background
+        document.body.style.backgroundImage = "url('images/download.png')";
+        localStorage.setItem('backgroundImage', 'images/download.png');
+        localStorage.setItem('isAnimatedWallpaper', false);
+        document.body.removeAttribute('data-wallpaper-type');
+
+        // Update selected state in the UI
+        const defaultOption = document.querySelector('.bg-option[data-bg="images/download.png"]');
+        if (defaultOption) {
+            const allOptions = document.querySelectorAll('.bg-option');
+            allOptions.forEach(option => option.classList.remove('selected'));
+            defaultOption.classList.add('selected');
+        }
+    }
+
+    // Exit deletion mode
+    exitDeletionMode();
+
+    // Refresh the custom wallpapers display
+    displayCustomWallpapers();
+}
+
 function selectCustomBackground(element) {
+    // Exit deletion mode if active
+    if (document.querySelector('.shake-animation')) {
+        exitDeletionMode();
+        return;
+    }
+
     // Remove selected class from all bg options
     const allOptions = document.querySelectorAll('.bg-option');
     allOptions.forEach(option => option.classList.remove('selected'));
