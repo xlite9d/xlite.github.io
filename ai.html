@@ -870,16 +870,16 @@
      */
 
     // ===== Configuration & Setup =====
-    const CONFIG = {
-        apiKey: "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",
-        model: "llama3-8b-8192",
-        apiEndpoint: "https://api.groq.com/openai/v1/chat/completions",
-        defaultGreeting: "Hello! How can I assist you today?",
-        localStorageKeys: {
-            chats: 'vaiChats',
-            activeChat: 'vaiActiveChat',
-            legacyConversation: 'vaiConversation'
-        },
+const CONFIG = {
+    apiKey: "AIzaSyBKbKHMO6IEVsC4wKplMfrg8g0EMGHwSJ4", // Replace with your actual Gemini API key
+    model: "gemini-1.5-pro",
+    apiEndpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+    defaultGreeting: "Hello! How can I assist you today?",
+    localStorageKeys: {
+        chats: 'vaiChats',
+        activeChat: 'vaiActiveChat',
+        legacyConversation: 'vaiConversation'
+    },
         typingSpeed: {
             min: 5,
             max: 25
