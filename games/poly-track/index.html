@@ -1,16 +1,75 @@
 <!DOCTYPE html>
-
 <html>
-	<head>
-		<title>PolyTrack</title>
-		<link rel="manifest" href="manifest.json" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-	</head>
-	<body>
-		<canvas id="screen"></canvas>
-		<div id="ui"></div>
-		<div id="transition-layer"></div>
+<head>
+    <title>PolyTrack</title>
+    <link rel="manifest" href="manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        #firstTimePopup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #popupContent {
+            background: #ffffff93;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            text-align: center;
+        }
+        #popupContent button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #showReminder {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="screen"></canvas>
+    <div id="ui"></div>
+    <div id="transition-layer"></div>
 
-		<script type="module" src="main.bundle.js" defer></script>
-	</body>
+    <div id="firstTimePopup">
+        <div id="popupContent">
+            <h2>Welcome to PolyTrack!</h2>
+            <p>Thanks for playing! This is a modified version of Polytrack!</p>
+            <button id="closePopup">Got it!</button>
+        </div>
+    </div>
+
+    <script type="module" src="main.bundle.js" defer></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const popup = document.getElementById('firstTimePopup');
+            const closeBtn = document.getElementById('closePopup');
+            const reminderBtn = document.getElementById('showReminder');
+
+            popup.style.display = 'flex';
+
+            closeBtn.addEventListener('click', () => {
+                popup.style.display = 'none';
+            });
+
+            if (reminderBtn) {
+                reminderBtn.addEventListener('click', () => {
+                    popup.style.display = 'flex';
+                });
+            }
+        });
+    </script>
+</body>
 </html>
