@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1795,11 +1794,25 @@
             if (e.key === 'Enter') {
                 e.preventDefault();
                 let url = urlBar.value.trim();
+                let originalUrl = url;
 
                 if (!url.includes('://') && !url.includes('.') && url !== '/landin') {
+                    // This is a search query
                     url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+                    // Change browser URL to include the search query
+                    window.location.href = window.location.origin + window.location.pathname +
+                        `?!URLHTTPS://google.com/search?q=${encodeURIComponent(originalUrl)}`;
                 } else if (!url.includes('://') && url !== '/landin') {
+                    // This is a URL without protocol
                     url = `https://${url}`;
+                    // Change browser URL
+                    window.location.href = window.location.origin + window.location.pathname +
+                        `?!URLHTTPS://${originalUrl}`;
+                } else {
+                    // Regular URL with protocol
+                    // Change browser URL
+                    window.location.href = window.location.origin + window.location.pathname +
+                        `?!URL${originalUrl}`;
                 }
 
                 navigateToUrl(url);
@@ -2004,6 +2017,26 @@
         });
 
         initializeTabs();
+
+        // Check for URL parameters on page load
+        const currentBrowserUrl = window.location.href;
+        if (currentBrowserUrl.includes('?!URL')) {
+            const encodedUrlPart = currentBrowserUrl.split('?!URL')[1];
+            let targetUrl = decodeURIComponent(encodedUrlPart);
+             // Ensure it's a full URL if it's a search, otherwise treat as direct URL
+            if (targetUrl.startsWith('HTTPS://google.com/search?q=')) {
+                // Already a full URL for search
+            } else if (targetUrl.startsWith('HTTPS://') || targetUrl.startsWith('HTTP://')) {
+                // It's a full URL
+            } else if (targetUrl.includes('.')) {
+                targetUrl = 'HTTPS://' + targetUrl; // Assume HTTPS for sites with a domain
+            } else {
+                 // Assume it's a search term if no protocol and no dot
+                targetUrl = `HTTPS://google.com/search?q=${encodeURIComponent(targetUrl)}`;
+            }
+            urlBar.value = targetUrl.replace(/^HTTPS:\/\//i, '').replace(/^HTTP:\/\//i, ''); // Show user-friendly URL
+            navigateToUrl(targetUrl);
+        }
 
         populateHistoryPanel();
 
