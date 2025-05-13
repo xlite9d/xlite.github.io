@@ -177,7 +177,7 @@
             background-color: #000000;
             min-width: 120px;
             max-width: 200px;
-            border-radius: 0px; /* Rounded all corners for non-active tabs */
+            border-radius: 8px; /* Rounded all corners for non-active tabs */
         }
         .tabs-top-bar .tab .tab-icon {
             margin-right: 8px;
@@ -1297,87 +1297,6 @@
         #clouds-btn:hover ion-icon {
             transform: scale(1.2);
         }
-
-        /* --- PINNED TABS --- */
-        .tabs-top-bar .tab.pinned {
-            min-width: auto;
-            max-width: 40px;
-            padding: 0 5px;
-            border-left: 2px solid #fa1e4e;
-            order: -1; /* Place pinned tabs at the beginning of the tab bar */
-        }
-
-        .tabs-top-bar .tab.pinned .tab-title,
-        .tabs-top-bar .tab.pinned .tab-close {
-            display: none;
-        }
-
-        .tabs-top-bar .tab.pinned .tab-icon {
-            margin-right: 0;
-        }
-
-        /* --- TAB PREVIEW --- */
-        .tab-preview-container {
-            position: absolute;
-            top: 40px;
-            background-color: #121212;
-            border: 1px solid #fa1e4e;
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            overflow: hidden;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            pointer-events: none;
-            width: 300px;
-            max-height: 250px;
-        }
-
-        .tab-preview-container.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .tab-preview-header {
-            padding: 5px 10px;
-            background-color: #1a1a1a;
-            border-bottom: 1px solid rgba(255, 0, 68, 0.3);
-        }
-
-        .tab-preview-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 2px;
-        }
-
-        .tab-preview-url {
-            font-size: 10px;
-            color: #aaa;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .tab-preview-content {
-            width: 100%;
-            height: 180px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .tab-preview-iframe {
-            width: 100%;
-            height: 100%;
-            transform: scale(0.5);
-            transform-origin: 0 0;
-            border: none;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body>
@@ -1559,17 +1478,6 @@
         </div>
     </div>
 
-    <!-- Tab Preview Container -->
-    <div class="tab-preview-container" id="tab-preview-container">
-        <div class="tab-preview-header">
-            <div class="tab-preview-title" id="tab-preview-title">Tab Title</div>
-            <div class="tab-preview-url" id="tab-preview-url">Tab URL</div>
-        </div>
-        <div class="tab-preview-content" id="tab-preview-content">
-            <!-- Preview iframe will be inserted here dynamically -->
-        </div>
-    </div>
-
     <script>
         let activeTabId = 0;
         let tabCounter = 1;
@@ -1717,42 +1625,6 @@
                 if (!e.target.closest('.tab-close')) {
                     switchTab(tabId);
                 }
-            });
-
-            // Add context menu event for pinning
-            tab.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                togglePinTab(tabId);
-            });
-
-            // Add mouse hover events for preview
-            let previewTimer;
-            tab.addEventListener('mouseenter', (e) => {
-                const tabPreviewContainer = document.getElementById('tab-preview-container');
-                const tabRect = tab.getBoundingClientRect();
-
-                // Position the preview container
-                tabPreviewContainer.style.left = `${tabRect.left}px`;
-
-                // Update preview content
-                updateTabPreview(tabId);
-
-                // Show preview after a short delay
-                previewTimer = setTimeout(() => {
-                    tabPreviewContainer.classList.add('visible');
-                }, 300);
-            });
-
-            tab.addEventListener('mouseleave', () => {
-                clearTimeout(previewTimer);
-                const tabPreviewContainer = document.getElementById('tab-preview-container');
-                tabPreviewContainer.classList.remove('visible');
-
-                // Clear preview content after animation
-                setTimeout(() => {
-                    const previewContent = document.getElementById('tab-preview-content');
-                    previewContent.innerHTML = '';
-                }, 300);
             });
 
             const closeBtn = tab.querySelector('.tab-close');
@@ -1923,87 +1795,6 @@
                 if (remainingTabs.length === 0) {
                     createNewTab();
                 }
-            }
-        }
-
-        // --- PIN TAB FUNCTIONALITY ---
-        function togglePinTab(tabId) {
-            const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
-
-            if (topTab) {
-                // Toggle the pinned class
-                topTab.classList.toggle('pinned');
-
-                // Reorder tabs to ensure pinned tabs are first
-                reorderTabs();
-
-                // Update the tab styling based on pinned state
-                if (topTab.classList.contains('pinned')) {
-                    // Save the title for later unpinning
-                    topTab.dataset.savedTitle = topTab.querySelector('.tab-title').textContent;
-                } else {
-                    // Restore the title if it was saved
-                    if (topTab.dataset.savedTitle) {
-                        topTab.querySelector('.tab-title').textContent = topTab.dataset.savedTitle;
-                    }
-                }
-            }
-        }
-
-        // Function to reorder tabs so pinned tabs appear first
-        function reorderTabs() {
-            const tabs = Array.from(topTabsBar.querySelectorAll('.tab'));
-            const newTabBtn = document.getElementById('new-tab-btn-top');
-
-            // Remove all tabs from the bar
-            tabs.forEach(tab => topTabsBar.removeChild(tab));
-
-            // Sort tabs - pinned first, then unpinned
-            const pinnedTabs = tabs.filter(tab => tab.classList.contains('pinned'));
-            const unpinnedTabs = tabs.filter(tab => !tab.classList.contains('pinned'));
-
-            // Re-add tabs in the correct order
-            [...pinnedTabs, ...unpinnedTabs].forEach(tab => {
-                topTabsBar.insertBefore(tab, newTabBtn);
-            });
-        }
-
-        // --- TAB PREVIEW FUNCTIONALITY ---
-        function updateTabPreview(tabId) {
-            const tabPreviewContainer = document.getElementById('tab-preview-container');
-            const tabPreviewTitle = document.getElementById('tab-preview-title');
-            const tabPreviewUrl = document.getElementById('tab-preview-url');
-            const tabPreviewContent = document.getElementById('tab-preview-content');
-
-            // Clear previous preview
-            tabPreviewContent.innerHTML = '';
-
-            // Get tab and frame information
-            const tab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
-            const frame = document.getElementById(`frame-${tabId}`);
-
-            if (tab && frame) {
-                // Set title and URL
-                const title = tab.querySelector('.tab-title').textContent;
-                const url = tab.dataset.url;
-
-                tabPreviewTitle.textContent = title;
-
-                // Format the URL for display
-                let displayUrl = url;
-                if (url.includes('/active/embed.html?url=')) {
-                    displayUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
-                }
-                tabPreviewUrl.textContent = displayUrl;
-
-                // Create a preview iframe
-                const previewIframe = document.createElement('iframe');
-                previewIframe.className = 'tab-preview-iframe';
-                previewIframe.src = frame.src;
-                previewIframe.style.width = '200%';
-                previewIframe.style.height = '200%';
-
-                tabPreviewContent.appendChild(previewIframe);
             }
         }
 
