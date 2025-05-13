@@ -189,6 +189,27 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+
+        .tab-shortcut-number {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 9px;
+            color: #aaa;
+            font-weight: 600;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
+            padding: 1px 3px;
+            line-height: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        body.show-shortcuts .tab-shortcut-number {
+            opacity: 1;
         }
         .tabs-top-bar .tab .tab-title {
             flex-grow: 1;
@@ -1682,10 +1703,165 @@
         // Start measuring FPS
         requestAnimationFrame(measureFPS);
 
-        // Close context menu on ESC key press
+        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
+            // Close context menu on ESC key press
             if (e.key === 'Escape') {
                 document.getElementById('tab-context-menu').style.display = 'none';
+            }
+
+            // Ctrl+Shift+Number to switch tabs
+            if (e.ctrlKey && e.shiftKey && !e.altKey && !isNaN(parseInt(e.key))) {
+                const tabNumber = parseInt(e.key);
+
+                // Tab numbers are 1-based for user (1,2,3...), but 0-based in our code
+                if (tabNumber >= 1 && tabNumber <= 9) {
+                    // Get all tabs in their displayed order
+                    const tabs = Array.from(document.querySelectorAll('.tab'));
+
+                    // Adjust index to be 0-based
+                    const tabIndex = tabNumber - 1;
+
+                    // Switch to the tab if it exists
+                    if (tabIndex < tabs.length) {
+                        const tabId = tabs[tabIndex].dataset.tabId;
+                        switchTab(tabId);
+                        e.preventDefault(); // Prevent default browser behavior
+                    }
+                }
+            }
+
+            // Show tab numbers when Ctrl+Shift is pressed
+            if (e.ctrlKey && e.shiftKey) {
+                document.body.classList.add('show-shortcuts');
+            }
+        });
+
+        // Hide tab numbers when Ctrl+Shift is released
+        document.addEventListener('keyup', (e) => {
+            if (!e.ctrlKey || !e.shiftKey) {
+                document.body.classList.remove('show-shortcuts');
+            }
+        });
+
+        // Allow context menu to open anywhere by right-clicking
+        document.addEventListener('contextmenu', (e) => {
+            // Prevent default context menu for the entire browser UI except iframes
+            if (!e.target.closest('iframe')) {
+                e.preventDefault();
+
+                const contextMenu = document.getElementById('tab-context-menu');
+
+                // Default to showing some general options
+                let showNew = true;
+                let showReload = true;
+                let showClose = false;
+                let showPin = false;
+                let showUnpin = false;
+                let showCloseOthers = false;
+                let showCloseRight = false;
+                let showMute = false;
+                let showUnmute = false;
+                let showDuplicate = false;
+
+                // If right-clicking on a tab, set the rightClickedTabId and show tab-specific options
+                if (e.target.closest('.tab')) {
+                    const tab = e.target.closest('.tab');
+                    rightClickedTabId = parseInt(tab.dataset.tabId);
+
+                    // Show all tab-specific options
+                    showClose = true;
+                    showCloseOthers = true;
+                    showCloseRight = true;
+                    showDuplicate = true;
+
+                    // Show pin/unpin based on current state
+                    const isPinned = tab.classList.contains('pinned');
+                    showPin = !isPinned;
+                    showUnpin = isPinned;
+
+                    // Show mute options
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        showMute = !frame.muted;
+                        showUnmute = frame.muted;
+                    }
+                }
+                // If right-clicking on sidebar icons
+                else if (e.target.closest('.sidebar-icon') || e.target.closest('.opera-logo')) {
+                    // Show limited options for sidebar elements
+                    showNew = true;
+                    showReload = true;
+                    showClose = false;
+                }
+                // If right-clicking on URL bar or browser actions
+                else if (e.target.closest('.url-bar-container') || e.target.closest('.browser-actions')) {
+                    showNew = true;
+                    showReload = true;
+                    // Use active tab for reload
+                    rightClickedTabId = activeTabId;
+                }
+                // If right-clicking in content area but not on iframe
+                else if (e.target.closest('.content-area') && !e.target.closest('iframe')) {
+                    showNew = true;
+                    showReload = true;
+                    // Use active tab for reload
+                    rightClickedTabId = activeTabId;
+                }
+                // If right-clicking on any other part of the browser UI
+                else {
+                    showNew = true;
+                    showReload = true;
+                    rightClickedTabId = activeTabId;
+                }
+
+                // Set display of context menu options based on above logic
+                document.getElementById('context-new-tab').style.display = showNew ? 'flex' : 'none';
+                document.getElementById('context-reload').style.display = showReload ? 'flex' : 'none';
+                document.getElementById('context-close').style.display = showClose ? 'flex' : 'none';
+                document.getElementById('context-close-other').style.display = showCloseOthers ? 'flex' : 'none';
+                document.getElementById('context-close-right').style.display = showCloseRight ? 'flex' : 'none';
+                document.getElementById('context-pin').style.display = showPin ? 'flex' : 'none';
+                document.getElementById('context-unpin').style.display = showUnpin ? 'flex' : 'none';
+                document.getElementById('context-mute').style.display = showMute ? 'flex' : 'none';
+                document.getElementById('context-unmute').style.display = showUnmute ? 'flex' : 'none';
+                document.getElementById('context-duplicate').style.display = showDuplicate ? 'flex' : 'none';
+
+                // Handle dividers visibility
+                const dividers = document.querySelectorAll('.context-menu-divider');
+
+                // First divider - between new tab/reload and duplicate/pin
+                dividers[0].style.display = (showNew || showReload) && (showDuplicate || showPin || showUnpin) ? 'block' : 'none';
+
+                // Second divider - between pin/unpin and mute/unmute
+                dividers[1].style.display = (showPin || showUnpin) && (showMute || showUnmute) ? 'block' : 'none';
+
+                // Third divider - between mute/unmute and close options
+                dividers[2].style.display = (showMute || showUnmute) && (showClose || showCloseOthers || showCloseRight) ? 'block' : 'none';
+
+                // Position the context menu
+                contextMenu.style.display = 'block';
+
+                // Ensure the menu doesn't go off screen
+                const menuWidth = contextMenu.offsetWidth;
+                const menuHeight = contextMenu.offsetHeight;
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+                // Calculate position (don't go off screen)
+                let posX = e.clientX;
+                let posY = e.clientY;
+
+                if (posX + menuWidth > windowWidth) {
+                    posX = windowWidth - menuWidth - 5;
+                }
+
+                if (posY + menuHeight > windowHeight) {
+                    posY = windowHeight - menuHeight - 5;
+                }
+
+                contextMenu.style.left = posX + 'px';
+                contextMenu.style.top = posY + 'px';
             }
         });
 
@@ -1777,6 +1953,25 @@
             });
 
             switchTab(activeTabId);
+            updateTabNumbers();
+        }
+
+        // Function to update tab shortcut numbers
+        function updateTabNumbers() {
+            const tabs = Array.from(document.querySelectorAll('.tab'));
+
+            // Reset all tab numbers first
+            document.querySelectorAll('.tab-shortcut-number').forEach(num => {
+                num.textContent = '';
+            });
+
+            // Assign numbers 1-9 to first 9 tabs
+            tabs.slice(0, 9).forEach((tab, index) => {
+                const numberEl = tab.querySelector('.tab-shortcut-number');
+                if (numberEl) {
+                    numberEl.textContent = (index + 1).toString();
+                }
+            });
         }
 
         function createTopTab(tabId, title, url, icon) {
@@ -1793,6 +1988,7 @@
             tab.innerHTML = `
                 <div class="tab-icon">
                     ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<ion-icon name="planet"></ion-icon>`}
+                    <span class="tab-shortcut-number"></span>
                 </div>
                 <div class="tab-title">${title}</div>
                 <div class="tab-close">
@@ -1828,6 +2024,14 @@
 
                 // Set current right-clicked tab ID
                 rightClickedTabId = tabId;
+
+                // Show all tab-specific options
+                document.getElementById('context-close').style.display = 'flex';
+                document.getElementById('context-close-other').style.display = 'flex';
+                document.getElementById('context-close-right').style.display = 'flex';
+                document.getElementById('context-mute').style.display = 'flex';
+                document.getElementById('context-duplicate').style.display = 'flex';
+                document.getElementById('context-reload').style.display = 'flex';
 
                 // Show/hide pin/unpin options based on the tab's pinned status
                 const isPinned = tab.classList.contains('pinned');
@@ -1996,6 +2200,9 @@
             contentArea.appendChild(tabContent);
 
             switchTab(tabId);
+
+            // Update tab numbers after adding a new tab
+            updateTabNumbers();
         }
 
         function closeTab(tabId) {
@@ -2028,6 +2235,9 @@
                 if (remainingTabs.length === 0) {
                     createNewTab();
                 }
+
+                // Update tab numbers after closing a tab
+                updateTabNumbers();
             }
         }
 
