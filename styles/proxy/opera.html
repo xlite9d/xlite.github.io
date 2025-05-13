@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -177,7 +178,11 @@
             background-color: #000000;
             min-width: 120px;
             max-width: 200px;
-            border-radius: 8px; /* Rounded all corners for non-active tabs */
+            border-radius: 0px; /* Rounded all corners for non-active tabs */
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+
         }
         .tabs-top-bar .tab .tab-icon {
             margin-right: 8px;
@@ -201,10 +206,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            border-radius: 7%;
         }
         .tabs-top-bar .tab .tab-close:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 0, 0, 0.357);
         }
         .tabs-top-bar .tab:hover {
             background-color: #000000;
@@ -216,6 +221,8 @@
             position: relative;
             border-radius: 8px 8px 0 0; /* Only round the top corners for active tab */
             margin-bottom: -2px; /* Adjust for the 2px offset of the corners */
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
 
         /* Top red indicator for active tab */
@@ -1615,7 +1622,7 @@
                 </div>
                 <div class="tab-title">${title}</div>
                 <div class="tab-close">
-                    <i class="fa-solid fa-xmark"></i>
+                    <i class="bi bi-x-square"></i>
                 </div>
             `;
 
