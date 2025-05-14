@@ -1,19 +1,19 @@
 {
-    "name": "Vplaza.org",
+    "name": "Vplaza - The Browser of 2025",
     "short_name": "Vplaza",
-    "description": "Download the latest version of Vplaza.org",
-    "start_url": "/",
+    "description": "Download the latest version of Vplaza!",
+    "start_url": "/styles/proxy/opera.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#27ae60",
     "icons": [
       {
-        "src": "icon-192x192.png",
+        "src": "/vplazax.png",
         "sizes": "192x192",
         "type": "image/png"
       },
       {
-        "src": "icon-512x512.png",
+        "src": "/vplazax.png",
         "sizes": "512x512",
         "type": "image/png"
       }
