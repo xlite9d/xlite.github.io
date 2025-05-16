@@ -1,52 +1,124 @@
-
-    <link rel="icon" href="/favicons/vplaza.ico">
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XWMFDM1WRX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XWMFDM1WRX');
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>V Plaza - Settings</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>V Plaza - Settings</title>
+<style>
+  /* Reset & base styles */
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #121212; /* Dark background for a modern vibe */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  /* Container for settings */
+  .settings-container {
+    background-color: #1f1f1f;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    width: 350px;
+  }
+
+  /* Header style */
+  h1 {
+    margin: 0 0 30px;
+    font-size: 24px;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  /* Toggle item style */
+  .toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: box-shadow 0.3s, filter 0.3s;
+  }
+
+  /* Glow hover effect */
+  .toggle-item:hover {
+    box-shadow: 0 0 15px #4CAF50;
+    filter: brightness(1.05);
+  }
+
+  /* Label style */
+  .label {
+    color: #ddd;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  /* Switch styles */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+  }
+
+  /* Hide checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  /* Slider track */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #555;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
+
+  /* Slider thumb */
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #fff;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+
+  /* Checked state styles */
+  input:checked + .slider {
+    background-color: #4CAF50;
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(22px);
+  }
+</style>
 </head>
 <body>
-    <div class="settingsmodal">
-        <div class="toggle-container">
-            <span class="toggle-label">About:blank cloak toggle</span>
-            <label class="toggle-switch">
-                <input type="checkbox" id="toggle" />
-                <span class="slider"></span>
-            </label>
-        </div>
-        
-        <div class="toggle-container">
-            <span class="toggle-label">Custom Cursor Toggle</span>
-            <label class="toggle-switch">
-                <input type="checkbox" id="cursor-toggle" />
-                <span class="slider"></span>
-            </label>
-        </div>
-    </div>
+<div class="settings-container">
+  <h1>Settings</h1>
+  <!-- Cloak toggle only -->
+  <div class="toggle-item">
+    <div class="label">About:blank cloak toggle</div>
+    <label class="switch">
+      <input type="checkbox" id="toggle" />
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
 
-    <script src="aboutblankontoggle.js"></script>
-    <script>
-        document.getElementById('cursor-toggle').addEventListener('change', function() {
-            if (this.checked) {
-                document.body.style.cursor = "url('favicons/vplaza.ico'), auto";
-            } else {
-                document.body.style.cursor = "default";
-            }
-        });
-    </script>
+</script>
 </body>
 </html>
