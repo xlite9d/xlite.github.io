@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('toggle').addEventListener('change', function() {
         if (this.checked) {
-            openIframedUrlInNewBlank('info.html');
+            openIframedUrlInNewBlank('/styles/prox/opera.html');
         } else {
             console.log("Toggle is OFF.");
         }
