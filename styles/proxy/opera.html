@@ -1597,7 +1597,7 @@
                 <div class="sidebar-icon" data-url="/active/embed.html?url=https://play.geforcenow.com">
                     <ion-icon name="happy-outline"></ion-icon>
                 </div>
-                <div class="sidebar-icon" data-url="/tutorials">
+                <div class="sidebar-icon" data-url="/active/embed.html?url=https://vplaza.org/tutorials">
                     <ion-icon name="eye-outline"></ion-icon>
                 </div>
                 <div class="sidebar-icon" id="clouds-btn">
@@ -3265,5 +3265,15 @@
             }
         });
     </script>
+    <script>
+  if (location.hostname === 'localhost' || location.search.includes('debug=true')) {
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+    document.body.appendChild(script);
+    script.onload = function() {
+      eruda.init();
+    };
+  }
+</script>
 </body>
 </html>
