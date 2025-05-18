@@ -147,7 +147,7 @@
         .tabs-top-bar {
             display: flex;
             height: 40px;
-            background-color: #000000; /* Return to original color */
+            background-color: #000000;
             align-items: center;
             padding: 0 8px;
             overflow-x: auto;
@@ -168,8 +168,8 @@
             display: flex;
             align-items: center;
             height: 40px;
-            margin-right: 4px; /* VERY LITTLE margin between tabs */
-            padding: 0 20px; /* Increased padding for better text display */
+            margin-right: 4px;
+            padding: 0 20px; 
             cursor: pointer;
             position: relative;
             color: #aaa;
@@ -177,7 +177,7 @@
             background-color: #000000;
             min-width: 120px;
             max-width: 200px;
-            border-radius: 0px; /* Rounded all corners for non-active tabs */
+            border-radius: 0px;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
             border-bottom-right-radius: 10px;
@@ -214,7 +214,6 @@
             opacity: 1;
         }
 
-        /* Tab Hover Preview Box */
         .tab-preview {
             position: absolute;
             top: 45px;
@@ -347,16 +346,15 @@
             color: #fff;
         }
         .tabs-top-bar .tab.active {
-            background-color: #000000; /* Back to original color */
+            background-color: #000000;
             color: #fff;
             position: relative;
-            border-radius: 8px 8px 0 0; /* Only round the top corners for active tab */
-            margin-bottom: -2px; /* Adjust for the 2px offset of the corners */
+            border-radius: 8px 8px 0 0;
+            margin-bottom: -2px;
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
         }
 
-        /* Top red indicator for active tab */
         .tabs-top-bar .tab.active::before {
             content: '';
             position: absolute;
@@ -368,8 +366,6 @@
             border-radius: 0 0 4px 4px;
             z-index: 6;
         }
-
-        /* Left connector */
         .tabs-top-bar .tab.active .left-connector {
             content: '';
             position: absolute;
@@ -381,7 +377,6 @@
             z-index: 4;
         }
 
-        /* Right connector */
         .tabs-top-bar .tab.active .right-connector {
             content: '';
             position: absolute;
@@ -393,29 +388,27 @@
             z-index: 4;
         }
 
-        /* Responsive adjustments to keep corners connected on smaller screens */
         @media (max-width: 768px) {
             .tabs-top-bar .tab.active .left-connector,
             .tabs-top-bar .tab.active .right-connector {
-                height: 3px; /* Slightly thicker for better visibility */
+                height: 3px;
             }
 
             .tabs-top-bar .tab.active::after,
             .tabs-top-bar .tab-corner-right {
-                bottom: -2px !important; /* Ensure corners stay at correct position */
+                bottom: -2px !important; 
             }
         }
 
-        /* Left corner positioning */
         .tabs-top-bar .tab.active::after {
             content: '';
             position: absolute;
-            bottom: -2px; /* Moved 1 more px down (2px total from bottom) */
-            left: -14px; /* 14px out from the tab */
+            bottom: -2px;
+            left: -14px; 
             width: 16px;
             height: 16px;
-            background-color: transparent; /* Transparent background */
-            box-shadow: 8px 8px 0 0 #000000; /* Creates a rounded corner effect */
+            background-color: transparent; 
+            box-shadow: 8px 8px 0 0 #000000;
             border-bottom-right-radius: 16px;
             z-index: 5;
         }
@@ -475,7 +468,7 @@
             position: relative;
         }
         .browser-header {
-            background-color: #000000; /* Revert to original color */
+            background-color: #000000; 
             display: flex;
             align-items: center;
             padding: 8px 16px;
@@ -790,12 +783,12 @@
             .tabs-top-bar .tab {
                 font-size: 14px;
                 min-width: 80px;
-                margin-right: 2px; /* Even smaller gap on mobile */
+                margin-right: 2px;
             }
             .tabs-top-bar .tab.active .left-connector,
             .tabs-top-bar .tab.active .right-connector {
                 height: 3px;
-                width: 10px; /* Shorter connectors on mobile */
+                width: 10px;
             }
             .tabs-top-bar .tab.active .left-connector {
                 left: -10px;
@@ -804,11 +797,11 @@
                 right: -10px;
             }
             .tabs-top-bar .tab.active::after {
-                left: -10px; /* Corner closer to tab */
+                left: -10px;
                 bottom: -2px !important;
             }
             .tab-corner-right {
-                right: -10px !important; /* Corner closer to tab */
+                right: -10px !important; 
                 bottom: -2px !important;
             }
             .main-content {
@@ -875,7 +868,6 @@
             }
         }
 
-        /* Tab Hover Preview Box */
         .tab-preview {
             position: absolute;
             top: 45px;
@@ -952,7 +944,6 @@
             background-color: #111;
         }
 
-        /* Tab Context Menu */
         .tab-context-menu {
             position: absolute;
             background-color: #630404d3;
@@ -992,7 +983,6 @@
             margin: 4px 0;
         }
 
-        /* Pinned tab styling */
         .tabs-top-bar .tab.pinned {
             min-width: 40px;
             max-width: 40px;
@@ -1747,7 +1737,6 @@
         </div>
     </div>
 
-    <!-- Tab Context Menu -->
     <div class="tab-context-menu" id="tab-context-menu">
         <div class="context-menu-item" id="context-new-tab">
             <i class="fa-solid fa-plus"></i>New Tab
@@ -1791,13 +1780,11 @@
         let currentIp = "local";
         let rightClickedTabId = null;
 
-        // FPS counter variables
         let frameCount = 0;
         let lastTime = performance.now();
         let fps = 0;
         const fpsCounter = document.getElementById('fps-counter');
 
-        // FPS measurement function
         function measureFPS() {
             frameCount++;
             const currentTime = performance.now();
@@ -1813,59 +1800,45 @@
             requestAnimationFrame(measureFPS);
         }
 
-        // Start measuring FPS
         requestAnimationFrame(measureFPS);
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            // Close context menu on ESC key press
             if (e.key === 'Escape') {
                 document.getElementById('tab-context-menu').style.display = 'none';
             }
 
-            // Ctrl+Shift+Number to switch tabs
             if (e.ctrlKey && e.shiftKey && !e.altKey && !isNaN(parseInt(e.key))) {
                 const tabNumber = parseInt(e.key);
 
-                // Tab numbers are 1-based for user (1,2,3...), but 0-based in our code
                 if (tabNumber >= 1 && tabNumber <= 9) {
-                    // Get all tabs in their displayed order
                     const tabs = Array.from(document.querySelectorAll('.tab'));
 
-                    // Adjust index to be 0-based
                     const tabIndex = tabNumber - 1;
 
-                    // Switch to the tab if it exists
                     if (tabIndex < tabs.length) {
                         const tabId = tabs[tabIndex].dataset.tabId;
                         switchTab(tabId);
-                        e.preventDefault(); // Prevent default browser behavior
+                        e.preventDefault();
                     }
                 }
             }
 
-            // Show tab numbers when Ctrl+Shift is pressed
             if (e.ctrlKey && e.shiftKey) {
                 document.body.classList.add('show-shortcuts');
             }
         });
 
-        // Hide tab numbers when Ctrl+Shift is released
         document.addEventListener('keyup', (e) => {
             if (!e.ctrlKey || !e.shiftKey) {
                 document.body.classList.remove('show-shortcuts');
             }
         });
 
-        // Allow context menu to open anywhere by right-clicking
         document.addEventListener('contextmenu', (e) => {
-            // Prevent default context menu for the entire browser UI except iframes
             if (!e.target.closest('iframe')) {
                 e.preventDefault();
 
                 const contextMenu = document.getElementById('tab-context-menu');
-
-                // Default to showing some general options
                 let showNew = true;
                 let showReload = true;
                 let showClose = false;
@@ -1877,58 +1850,46 @@
                 let showUnmute = false;
                 let showDuplicate = false;
 
-                // If right-clicking on a tab, set the rightClickedTabId and show tab-specific options
                 if (e.target.closest('.tab')) {
                     const tab = e.target.closest('.tab');
                     rightClickedTabId = parseInt(tab.dataset.tabId);
 
-                    // Show all tab-specific options
                     showClose = true;
                     showCloseOthers = true;
                     showCloseRight = true;
                     showDuplicate = true;
 
-                    // Show pin/unpin based on current state
                     const isPinned = tab.classList.contains('pinned');
                     showPin = !isPinned;
                     showUnpin = isPinned;
 
-                    // Show mute options
                     const frame = document.getElementById(`frame-${rightClickedTabId}`);
                     if (frame) {
                         showMute = !frame.muted;
                         showUnmute = frame.muted;
                     }
                 }
-                // If right-clicking on sidebar icons
                 else if (e.target.closest('.sidebar-icon') || e.target.closest('.opera-logo')) {
-                    // Show limited options for sidebar elements
                     showNew = true;
                     showReload = true;
                     showClose = false;
                 }
-                // If right-clicking on URL bar or browser actions
                 else if (e.target.closest('.url-bar-container') || e.target.closest('.browser-actions')) {
                     showNew = true;
                     showReload = true;
-                    // Use active tab for reload
                     rightClickedTabId = activeTabId;
                 }
-                // If right-clicking in content area but not on iframe
                 else if (e.target.closest('.content-area') && !e.target.closest('iframe')) {
                     showNew = true;
                     showReload = true;
-                    // Use active tab for reload
                     rightClickedTabId = activeTabId;
                 }
-                // If right-clicking on any other part of the browser UI
                 else {
                     showNew = true;
                     showReload = true;
                     rightClickedTabId = activeTabId;
                 }
 
-                // Set display of context menu options based on above logic
                 document.getElementById('context-new-tab').style.display = showNew ? 'flex' : 'none';
                 document.getElementById('context-reload').style.display = showReload ? 'flex' : 'none';
                 document.getElementById('context-close').style.display = showClose ? 'flex' : 'none';
@@ -1940,28 +1901,21 @@
                 document.getElementById('context-unmute').style.display = showUnmute ? 'flex' : 'none';
                 document.getElementById('context-duplicate').style.display = showDuplicate ? 'flex' : 'none';
 
-                // Handle dividers visibility
                 const dividers = document.querySelectorAll('.context-menu-divider');
 
-                // First divider - between new tab/reload and duplicate/pin
                 dividers[0].style.display = (showNew || showReload) && (showDuplicate || showPin || showUnpin) ? 'block' : 'none';
 
-                // Second divider - between pin/unpin and mute/unmute
                 dividers[1].style.display = (showPin || showUnpin) && (showMute || showUnmute) ? 'block' : 'none';
 
-                // Third divider - between mute/unmute and close options
                 dividers[2].style.display = (showMute || showUnmute) && (showClose || showCloseOthers || showCloseRight) ? 'block' : 'none';
 
-                // Position the context menu
                 contextMenu.style.display = 'block';
 
-                // Ensure the menu doesn't go off screen
                 const menuWidth = contextMenu.offsetWidth;
                 const menuHeight = contextMenu.offsetHeight;
                 const windowWidth = window.innerWidth;
                 const windowHeight = window.innerHeight;
 
-                // Calculate position (don't go off screen)
                 let posX = e.clientX;
                 let posY = e.clientY;
 
@@ -2069,16 +2023,13 @@
             updateTabNumbers();
         }
 
-        // Function to update tab shortcut numbers
         function updateTabNumbers() {
             const tabs = Array.from(document.querySelectorAll('.tab'));
 
-            // Reset all tab numbers first
             document.querySelectorAll('.tab-shortcut-number').forEach(num => {
                 num.textContent = '';
             });
 
-            // Assign numbers 1-9 to first 9 tabs
             tabs.slice(0, 9).forEach((tab, index) => {
                 const numberEl = tab.querySelector('.tab-shortcut-number');
                 if (numberEl) {
@@ -2097,7 +2048,6 @@
                 ? ''
                 : `https://www.google.com/s2/favicons?domain=${extractDomain(url)}`;
 
-            // Create the tab's basic structure
             tab.innerHTML = `
                 <div class="tab-icon">
                     ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<ion-icon name="planet"></ion-icon>`}
@@ -2133,14 +2083,11 @@
                 }
             });
 
-            // Add right-click context menu
             tab.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
 
-                // Set current right-clicked tab ID
                 rightClickedTabId = tabId;
 
-                // Show all tab-specific options
                 document.getElementById('context-close').style.display = 'flex';
                 document.getElementById('context-close-other').style.display = 'flex';
                 document.getElementById('context-close-right').style.display = 'flex';
@@ -2148,22 +2095,18 @@
                 document.getElementById('context-duplicate').style.display = 'flex';
                 document.getElementById('context-reload').style.display = 'flex';
 
-                // Show/hide pin/unpin options based on the tab's pinned status
                 const isPinned = tab.classList.contains('pinned');
                 document.getElementById('context-pin').style.display = isPinned ? 'none' : 'flex';
                 document.getElementById('context-unpin').style.display = isPinned ? 'flex' : 'none';
 
-                // Position the context menu
                 const contextMenu = document.getElementById('tab-context-menu');
                 contextMenu.style.display = 'block';
 
-                // Ensure the menu doesn't go off screen
                 const menuWidth = contextMenu.offsetWidth;
                 const menuHeight = contextMenu.offsetHeight;
                 const windowWidth = window.innerWidth;
                 const windowHeight = window.innerHeight;
 
-                // Calculate position (don't go off screen)
                 let posX = e.clientX;
                 let posY = e.clientY;
 
@@ -2249,10 +2192,8 @@
                 selectedContent.classList.add('active');
                 activeTabId = parseInt(tabId);
 
-                // Remove any previous connector/corner elements
                 document.querySelectorAll('.left-connector, .right-connector, .tab-corner-right').forEach(el => el.remove());
 
-                // Add left and right connector elements
                 if (selectedTab.classList.contains('tab')) {
                     let leftConnector = document.createElement('span');
                     leftConnector.className = 'left-connector';
@@ -2261,8 +2202,6 @@
                     let rightConnector = document.createElement('span');
                     rightConnector.className = 'right-connector';
                     selectedTab.appendChild(rightConnector);
-
-                    // Add right corner element
                     let rightCorner = document.createElement('span');
                     rightCorner.className = 'tab-corner-right';
                     rightCorner.style.position = 'absolute';
@@ -2316,10 +2255,8 @@
 
             switchTab(tabId);
 
-            // Update tab numbers after adding a new tab
             updateTabNumbers();
 
-            // Initialize the tab preview with default content
             setTimeout(() => {
                 updateTabThumbnail(tabId);
             }, 500);
@@ -2356,7 +2293,6 @@
                     createNewTab();
                 }
 
-                // Update tab numbers after closing a tab
                 updateTabNumbers();
             }
         }
@@ -2447,10 +2383,8 @@
                     processedUrl = `/active/embed.html?url=${encodeURIComponent(url)}`;
                 }
 
-                // Apply IP spoofing headers when navigating
                 if (currentIp === "japan") {
                     activeFrame.setAttribute('data-ip-spoofed', 'true');
-                    // Add URL parameter for server-side handling
                     if (processedUrl.includes('?')) {
                         processedUrl += '&ip_country=jp&x_forwarded_for=101.102.99.255';
                     } else {
@@ -2528,13 +2462,11 @@
                         }
                     }
 
-                    // Update preview information
                     const previewTitle = topTab.querySelector('.tab-preview-title');
                     if (previewTitle) previewTitle.textContent = pageTitle;
 
                     const previewUrl = topTab.querySelector('.tab-preview-url');
                     if (previewUrl) {
-                        // Format URL for better display
                         let displayUrl = frameUrl;
                         if (frameUrl.includes('/active/embed.html?url=')) {
                             displayUrl = decodeURIComponent(frameUrl.split('/active/embed.html?url=')[1]);
@@ -2547,7 +2479,6 @@
                         previewIcon.innerHTML = `<img src="${faviconUrl}" alt="">`;
                     }
 
-                    // Update thumbnail preview
                     updateTabThumbnail(tabId);
                 }
 
@@ -2640,7 +2571,6 @@
         });
 
         document.addEventListener('click', function(event) {
-            // Close history panel when clicking outside
             if (!historyPanel.contains(event.target) && event.target !== historyBtn && !historyBtn.contains(event.target)) {
                 if (historyPanel.style.display === 'block') {
                     historyPanel.classList.remove('visible');
@@ -2650,24 +2580,20 @@
                 }
             }
 
-            // Close context menu when clicking outside
             const contextMenu = document.getElementById('tab-context-menu');
             if (!contextMenu.contains(event.target)) {
                 contextMenu.style.display = 'none';
             }
         });
 
-        // Context menu functionality
         function setupContextMenu() {
             const contextMenu = document.getElementById('tab-context-menu');
 
-            // New Tab option
             document.getElementById('context-new-tab').addEventListener('click', () => {
                 createNewTab();
                 contextMenu.style.display = 'none';
             });
 
-            // Reload option
             document.getElementById('context-reload').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     const frame = document.getElementById(`frame-${rightClickedTabId}`);
@@ -2678,7 +2604,6 @@
                 contextMenu.style.display = 'none';
             });
 
-            // Duplicate tab option
             document.getElementById('context-duplicate').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     const originalTab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
@@ -2687,10 +2612,8 @@
                         const title = originalTab.querySelector('.tab-title').textContent;
                         const tabId = tabCounter++;
 
-                        // Create duplicated tab
                         createTopTab(tabId, title, url);
 
-                        // Create content area for the new tab
                         const tabContent = document.createElement('div');
                         tabContent.className = 'tab-content';
                         tabContent.id = `tab-content-${tabId}`;
@@ -2703,20 +2626,17 @@
                 contextMenu.style.display = 'none';
             });
 
-            // Pin tab option
             document.getElementById('context-pin').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     const tab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
                     if (tab) {
                         tab.classList.add('pinned');
-                        // Move pinned tabs to the left
                         topTabsBar.insertBefore(tab, topTabsBar.firstChild);
                     }
                 }
                 contextMenu.style.display = 'none';
             });
 
-            // Unpin tab option
             document.getElementById('context-unpin').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     const tab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
@@ -2727,7 +2647,6 @@
                 contextMenu.style.display = 'none';
             });
 
-            // Close tab option
             document.getElementById('context-close').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     closeTab(rightClickedTabId);
@@ -2735,7 +2654,6 @@
                 contextMenu.style.display = 'none';
             });
 
-            // Close tabs to the right
             document.getElementById('context-close-right').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     const tabs = Array.from(document.querySelectorAll('.tab'));
@@ -2752,7 +2670,6 @@
                 contextMenu.style.display = 'none';
             });
 
-            // Close other tabs
             document.getElementById('context-close-other').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     const tabs = Array.from(document.querySelectorAll('.tab'));
@@ -2766,7 +2683,6 @@
                 contextMenu.style.display = 'none';
             });
 
-            // Mute tab
             document.getElementById('context-mute').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     const frame = document.getElementById(`frame-${rightClickedTabId}`);
@@ -2779,7 +2695,6 @@
                 contextMenu.style.display = 'none';
             });
 
-            // Unmute tab
             document.getElementById('context-unmute').addEventListener('click', () => {
                 if (rightClickedTabId !== null) {
                     const frame = document.getElementById(`frame-${rightClickedTabId}`);
@@ -2793,7 +2708,6 @@
             });
         }
 
-        // IP switcher functionality
         const usFlag = document.getElementById('us-flag');
         const jpFlag = document.getElementById('jp-flag');
         const activeIpDisplay = document.getElementById('active-ip');
@@ -2805,16 +2719,13 @@
                 jpFlag.classList.remove('active');
                 activeIpDisplay.textContent = "IP: Local";
 
-                // Reload current tab with new IP settings
                 const activeFrame = document.getElementById(`frame-${activeTabId}`);
                 if (activeFrame) {
                     const currentUrl = activeFrame.src;
                     activeFrame.removeAttribute('data-ip-spoofed');
-                    // Remove any existing IP parameters
                     let newUrl = currentUrl;
                     newUrl = newUrl.replace(/[&?]ip_country=jp/, '');
                     newUrl = newUrl.replace(/[&?]x_forwarded_for=101\.102\.99\.255/, '');
-                    // Clean up any orphaned parameters
                     newUrl = newUrl.replace(/\?&/, '?');
                     newUrl = newUrl.replace(/\?$/, '');
 
@@ -2830,17 +2741,14 @@
                 usFlag.classList.remove('active');
                 activeIpDisplay.textContent = "IP: 101.102.99.255";
 
-                // Reload current tab with new IP settings
                 const activeFrame = document.getElementById(`frame-${activeTabId}`);
                 if (activeFrame) {
                     let currentUrl = activeFrame.src;
                     activeFrame.setAttribute('data-ip-spoofed', 'true');
 
-                    // Remove any existing IP parameters first
                     currentUrl = currentUrl.replace(/[&?]ip_country=jp/, '');
                     currentUrl = currentUrl.replace(/[&?]x_forwarded_for=101\.102\.99\.255/, '');
 
-                    // Add IP parameters
                     if (currentUrl.includes('?')) {
                         activeFrame.src = currentUrl + '&ip_country=jp&x_forwarded_for=101.102.99.255';
                     } else {
@@ -2850,29 +2758,24 @@
             }
         });
 
-        // Function to capture tab thumbnail for preview
         function updateTabThumbnail(tabId) {
             const frame = document.getElementById(`frame-${tabId}`);
             const thumbnailElement = document.getElementById(`preview-thumbnail-${tabId}`);
             const tab = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
 
             if (frame && thumbnailElement) {
-                // Get tab title and URL for the preview
                 let pageTitle = 'Loading...';
                 let pageUrl = frame.src || '';
 
-                // Format URL for display
                 if (pageUrl.includes('/active/embed.html?url=')) {
                     pageUrl = decodeURIComponent(pageUrl.split('/active/embed.html?url=')[1]);
                 }
 
-                // Get the favicon URL
                 let faviconUrl = '';
                 if (!pageUrl.startsWith('/landin')) {
                     faviconUrl = `https://www.google.com/s2/favicons?domain=${extractDomain(pageUrl)}&sz=128`;
                 }
 
-                // Try to get the page title
                 try {
                     if (frame.contentDocument) {
                         pageTitle = frame.contentDocument.title || 'New Tab';
@@ -2881,7 +2784,6 @@
                     console.log('Could not access title due to cross-origin policy');
                 }
 
-                // Update preview title and URL if tab exists
                 if (tab) {
                     const previewTitle = tab.querySelector('.tab-preview-title');
                     const previewUrl = tab.querySelector('.tab-preview-url');
@@ -2891,16 +2793,11 @@
                 }
 
                 try {
-                    // Try to access the iframe content and capture it as a thumbnail
-                    // This might fail due to cross-origin restrictions
                     const frameDoc = frame.contentDocument || frame.contentWindow.document;
                     if (frameDoc) {
-                        // Set background color based on site's background
                         thumbnailElement.style.backgroundColor = '#1a1a1a';
-                        thumbnailElement.innerHTML = ''; // Clear any loading text
+                        thumbnailElement.innerHTML = '';
 
-                        // For sites that can't be captured due to cross-origin policy,
-                        // show a nice preview with favicon and title
                         if (frame.src.includes('google.com')) {
                             thumbnailElement.style.backgroundColor = '#fff';
                             thumbnailElement.innerHTML = '<div style="text-align:center;padding:20px;"><img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" style="max-width:80%;margin-bottom:10px;"><br><span style="color:#444;">Google Search</span></div>';
@@ -2911,7 +2808,6 @@
                             thumbnailElement.style.backgroundColor = '#0d1117';
                             thumbnailElement.innerHTML = '<div style="text-align:center;padding:20px;"><img src="https://github.githubassets.com/favicons/favicon.svg" style="max-width:50px;margin-bottom:10px;"><br><span style="color:#58a6ff;">GitHub</span></div>';
                         } else {
-                            // Generic preview with favicon
                             if (faviconUrl) {
                                 thumbnailElement.innerHTML = `<div style="text-align:center;padding:20px;">
                                     <img src="${faviconUrl}" style="max-width:48px;margin-bottom:15px;">
@@ -2929,7 +2825,6 @@
                     }
                 } catch (e) {
                     console.log('Could not access iframe content due to cross-origin policy');
-                    // Set a default thumbnail with favicon
                     thumbnailElement.style.backgroundColor = '#1a1a1a';
 
                     if (faviconUrl) {
@@ -2949,7 +2844,6 @@
             }
         }
 
-        // Update all tab thumbnails
         function updateAllThumbnails() {
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => {
@@ -2958,13 +2852,10 @@
             });
         }
 
-        // Initialize tabs
         initializeTabs();
 
-        // Initialize history panel
         populateHistoryPanel();
 
-        // Initialize context menu
         setupContextMenu();
 
         newTabBtnTop.addEventListener('click', createNewTab);
@@ -3010,6 +2901,7 @@
 
         const officialDomains = [
             "vplaza.org",
+            "simplybetterclever.org/",
             "vplaza.mollypornstar.com/",
             "vplazav1.web.app/",
             "vplazav1.firebaseapp.com/",
