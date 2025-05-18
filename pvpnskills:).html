@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlayerVPN | About Me</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.1.0/tsparticles.bundle.min.js"></script>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(180deg, #0a0a0a, #000);
+      color: #ff3c3c;
+      font-family: 'Cal Sans', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    canvas#tsparticles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      text-align: center;
+      padding: 60px 20px 30px;
+      color: #ff3c3c;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+      z-index: 2;
+      position: relative;
+      animation: glitch 3s infinite steps(1);
+    }
+
+    @keyframes glitch {
+      0%, 100% { transform: none; }
+      25% { transform: translateX(2px) skewX(3deg); }
+      50% { transform: translateX(-2px) skewX(-3deg); }
+      75% { transform: translateX(1px); }
+    }
+
+    .skills {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      padding: 0 10vw 100px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .skill {
+      background: rgba(255, 0, 0, 0.05);
+      border: 1px solid rgba(255, 60, 60, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      transform-style: preserve-3d;
+      backdrop-filter: blur(8px);
+    }
+
+    .skill:hover {
+      transform: perspective(800px) rotateX(5deg) rotateY(-5deg) scale(1.02);
+      box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+    }
+
+    .label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2em;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #ff4d4d;
+    }
+
+    .bar-wrap {
+      background: #111;
+      height: 22px;
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: 0 0 8px #000 inset, 0 0 8px #ff4d4d;
+      position: relative;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(270deg, #ff3c3c, #8c0000);
+      box-shadow: 0 0 10px #ff4d4d, 0 0 15px #8c0000 inset;
+      border-radius: 999px;
+      position: relative;
+      transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .bar::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: 12px;
+      background: rgba(255,255,255,0.4);
+      filter: blur(5px);
+      animation: shimmer 3s infinite ease-in-out;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: translateX(100%); opacity: 0; }
+    }
+
+    .visible .bar {
+      width: var(--width);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="tsparticles"></canvas>
+
+<h1 id="type-title"></h1>
+
+<div class="skills">
+  <div class="skill" style="--width: 100%">
+    <div class="label"><span>HTML</span><span>100%</span></div>
+    <div class="bar-wrap"><div class="bar"></div></div>
+  </div>
+  <div class="skill" style="--width: 99%">
+    <div class="label"><span>CSS</span><span>99%</span></div>
+    <div class="bar-wrap"><div class="bar"></div></div>
+  </div>
+  <div class="skill" style="--width: 86%">
+    <div class="label"><span>JavaScript</span><span>86%</span></div>
+    <div class="bar-wrap"><div class="bar"></div></div>
+  </div>
+  <div class="skill" style="--width: 78%">
+    <div class="label"><span>Python</span><span>78%</span></div>
+    <div class="bar-wrap"><div class="bar"></div></div>
+  </div>
+  <div class="skill" style="--width: 71%">
+    <div class="label"><span>NodeJS</span><span>71%</span></div>
+    <div class="bar-wrap"><div class="bar"></div></div>
+  </div>
+  <div class="skill" style="--width: 15%">
+    <div class="label"><span>Malbolge</span><span>15%</span></div>
+    <div class="bar-wrap"><div class="bar"></div></div>
+  </div>
+</div>
+
+<script>
+  const typeText = "PlayerVPN";
+  const titleEl = document.getElementById("type-title");
+  let index = 0;
+
+  function typeWriter() {
+    if (index < typeText.length) {
+      titleEl.textContent += typeText.charAt(index);
+      index++;
+      setTimeout(typeWriter, 80);
+    }
+  }
+  typeWriter();
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll(".skill").forEach(skill => observer.observe(skill));
+
+  tsParticles.load("tsparticles", {
+    fullScreen: { enable: false },
+    particles: {
+      number: { value: 75 },
+      color: { value: "#ff3c3c" },
+      shape: { type: "circle" },
+      opacity: { value: 0.2 },
+      size: { value: { min: 1, max: 4 } },
+      move: { enable: true, speed: 1, outModes: { default: "bounce" } },
+      links: { enable: true, distance: 120, color: "#ff3c3c", opacity: 0.1, width: 1 }
+    },
+    interactivity: {
+      events: { onHover: { enable: true, mode: "attract" } },
+      modes: { attract: { distance: 100, duration: 0.4 } }
+    },
+    detectRetina: true
+  });
+</script>
+
+</body>
+</html>
