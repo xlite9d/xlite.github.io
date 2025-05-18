@@ -1,5 +1,4 @@
-    <link rel="icon" type="image/x-icon" href="/vplazax.png">
-
+<link rel="icon" type="image/x-icon" href="/vplazax.png">
 
 <!DOCTYPE html>
 <html>
@@ -158,8 +157,10 @@
 </div>
 
 <script>
-    // Set the target date and time (May 3rd, 2026 at 5:50 PM)
-    const targetDate = new Date("May 3, 2026 17:50:00").getTime();
+    // Calculate the date 2 months from today
+    const today = new Date();
+    const targetDateObj = new Date(today.getFullYear(), today.getMonth() + 2, today.getDate(), 16, 40, 0);
+    const targetDate = targetDateObj.getTime();
 
     // Get the HTML elements to display the time units
     const daysEl = document.getElementById("days");
@@ -184,49 +185,45 @@
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Display the time units and animate changed values
+        // Display and animate if changed
         if (days !== prevDays) {
             daysEl.innerHTML = days;
             animateElement(daysEl);
             prevDays = days;
         }
-
         if (hours !== prevHours) {
             hoursEl.innerHTML = hours;
             animateElement(hoursEl);
             prevHours = hours;
         }
-
         if (minutes !== prevMinutes) {
             minutesEl.innerHTML = minutes;
             animateElement(minutesEl);
             prevMinutes = minutes;
         }
-
         if (seconds !== prevSeconds) {
             secondsEl.innerHTML = seconds;
             animateElement(secondsEl);
             prevSeconds = seconds;
         }
 
-        // If the countdown is finished, display a message
+        // When countdown ends
         if (distance < 0) {
             clearInterval(countdownInterval);
             document.getElementById("countdown").innerHTML = "Countdown Finished!";
         }
     }
 
-    // Function to animate an element when it changes
+    // Animate change
     function animateElement(el) {
         el.classList.remove('number-animate');
-        void el.offsetWidth; // Trigger reflow to restart animation
+        void el.offsetWidth; // Trigger reflow
         el.classList.add('number-animate');
     }
 
-    // Update the countdown every second
+    // Run every second
     const countdownInterval = setInterval(updateCountdown, 1000);
-
-    // Initial call to display the countdown immediately
+    // Initialize immediately
     updateCountdown();
 </script>
 
