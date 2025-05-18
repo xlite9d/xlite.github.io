@@ -1,0 +1,231 @@
+<link rel="icon" type="image/x-icon" href="/vplazax.png">
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>VX Release Countdown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+<style>
+    body {
+        background-color: #000000;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .countdown-container {
+        text-align: center;
+        z-index: 10;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 40px;
+    }
+
+    .logo {
+        margin-right: 15px;
+    }
+
+    .logo img {
+        height: 4rem;
+        vertical-align: middle;
+    }
+
+    h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        margin: 0;
+        text-transform: none;
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        color: #ff6666;
+    }
+
+    #countdown {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .time-unit {
+        width: 110px;
+        height: 110px;
+        background-color: rgba(255, 50, 50, 0.25);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .time-unit span {
+        display: block;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #ff6666;
+        margin-bottom: 0;
+        text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+    }
+
+    .time-unit p {
+        font-size: 1rem;
+        margin: 0;
+        color: #ff6666;
+        text-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+    }
+
+    .dot {
+        position: absolute;
+        background-color: #ff3333;
+        border-radius: 50%;
+        opacity: 0.6;
+        box-shadow: 0 0 15px #ff3333;
+    }
+
+    @keyframes numberChange {
+        0% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        20% {
+            transform: translateY(-10px);
+            opacity: 0.8;
+        }
+        40% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .number-animate {
+        animation: numberChange 0.5s ease-in-out;
+    }
+</style>
+</head>
+<body>
+
+<!-- Background dots -->
+<div id="dot1" class="dot" style="width: 30px; height: 30px; top: 25%; left: 15%;"></div>
+<div id="dot2" class="dot" style="width: 20px; height: 20px; top: 15%; right: 10%;"></div>
+<div id="dot3" class="dot" style="width: 25px; height: 25px; bottom: 20%; right: 15%;"></div>
+<div id="dot4" class="dot" style="width: 20px; height: 20px; bottom: 40%; left: 40%;"></div>
+
+<div class="countdown-container">
+    <div class="logo-container">
+        <div class="logo">
+            <!-- Rocket image that matches text weight and size -->
+            <img src="/vplazax.png" alt="Rocket">
+        </div>
+        <h1>VX release</h1>
+    </div>
+    <div id="countdown">
+        <div class="time-unit">
+            <span id="days">90</span>
+            <p>days</p>
+        </div>
+        <div class="time-unit">
+            <span id="hours">20</span>
+            <p>hours</p>
+        </div>
+        <div class="time-unit">
+            <span id="minutes">42</span>
+            <p>minutes</p>
+        </div>
+        <div class="time-unit">
+            <span id="seconds">12</span>
+            <p>seconds</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Calculate the date 1 hour from now
+    const now = new Date();
+    const targetDateObj = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0);
+    const targetDate = targetDateObj.getTime();
+
+    // Get the HTML elements to display the time units
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
+
+    // Previous values to check what changed
+    let prevDays = -1;
+    let prevHours = -1;
+    let prevMinutes = -1;
+    let prevSeconds = -1;
+
+    // Function to update the timeout progress
+    function updateTimeoutProgress() {
+        const nowTime = new Date().getTime();
+        const distance = targetDate - nowTime;
+
+        // Calculate time units
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // Display and animate if changed
+        if (days !== prevDays) {
+            daysEl.innerHTML = days;
+            animateElement(daysEl);
+            prevDays = days;
+        }
+        if (hours !== prevHours) {
+            hoursEl.innerHTML = hours;
+            animateElement(hoursEl);
+            prevHours = hours;
+        }
+        if (minutes !== prevMinutes) {
+            minutesEl.innerHTML = minutes;
+            animateElement(minutesEl);
+            prevMinutes = minutes;
+        }
+        if (seconds !== prevSeconds) {
+            secondsEl.innerHTML = seconds;
+            animateElement(secondsEl);
+            prevSeconds = seconds;
+        }
+
+        // When timeout ends
+        if (distance < 0) {
+            clearInterval(timeoutInterval);
+            document.getElementById("timeout-progress").innerHTML = "Timeout Complete!";
+        }
+    }
+
+    // Animate change
+    function animateElement(el) {
+        el.classList.remove('number-animate');
+        void el.offsetWidth; // Trigger reflow
+        el.classList.add('number-animate');
+    }
+
+    // Run every second
+    const timeoutInterval = setInterval(updateTimeoutProgress, 1000);
+    // Initialize immediately
+    updateTimeoutProgress();
+</script>
+
+</body>
+</html>
