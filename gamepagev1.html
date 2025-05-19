@@ -1,52 +1,110 @@
-
-
-<link rel="icon" type="image/x-icon" href="/v1/files/v1-info/images/vplazav1.png">
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:description" content="VPlaza is a game/pr_xy site full of games all kids want and need. Meet your expectations with Vplaza Games V1">
-    <link rel="stylesheet" href="main.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta property="og:description" content="VPlaza is a game/pr_xy site full of games all kids want and need. Meet your expectations with Vplaza Games V1" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<!-- Ionicons CDN for icons -->
+<link rel="stylesheet" href="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.css" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<!-- Your existing CSS -->
+<link rel="stylesheet" href="main.css" />
 
-    <title>Vplaza - Games</title>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+
+<title>Vplaza - Games</title>
+
+<style>
+/* Style for the Discord button - sleek black with glowing blue outline */
+.discord-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: #000; /* Black background */
+  border: 2px solid #3498db; /* Blue outline */
+  border-radius: 8px;
+  box-shadow: 0 0 15px #3498db; /* Glowing blue shadow */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+}
+.discord-btn:hover {
+  box-shadow: 0 0 25px #3498db;
+  background-color: #111;
+}
+
+/* Style for the Support Us link/button */
+.support-us {
+  margin-left: 15px;
+  padding: 10px 20px;
+  background-color: #000; /* Black background */
+  color: #fff;
+  border: 2px solid #3498db; /* Blue outline */
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 0 10px #3498db;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+.support-us:hover {
+  background-color: #222;
+  box-shadow: 0 0 20px #3498db;
+}
+
+/* Glowing effect for icon inside discord button */
+.discord-icon {
+  font-size: 24px;
+  color: #3498db;
+  filter: drop-shadow(0 0 8px #3498db);
+  transition: filter 0.3s ease;
+}
+.discord-btn:active .discord-icon {
+  filter: drop-shadow(0 0 12px #3498db);
+}
+</style>
 </head>
 <body>
 
-    <div class="navbar">
-        <header>
-            <div class="head-left">
-                <img src="V.png" alt="logo">
-            </div>
-            <div class="head-right">
-                <p><a href="#">Home</a></p>
-                <p><a href="a">Apps</a></p>
-                <p><a href="ai">AI</a></p>
-                <p><a href="info">Pr_xy</a></p>
-            </div>
-            <div class="search-container">
-                <input type="text" placeholder="Search games..." class="search-bar" />
-            </div>
-        </header>
+<div class="navbar">
+  <header>
+    <div class="head-left">
+      <img src="V.png" alt="logo" />
     </div>
-
-    <div class="no-results-message" id="noResultsMessage" style="display:none;">
-        <h2>No results found...</h2>
-        <p>Try a different search term!</p>
+    <div class="head-right" style="display: flex; align-items: center; gap: 10px;">
+      <p><a href="#">Home</a></p>
+      <p><a href="a">Apps</a></p>
+      <p><a href="ai">AI</a></p>
+      <p><a href="info">Pr_xy</a></p>
+      
+      <!-- Support Us link -->
+      <a href="https://dsc.gg/vplazagamespage" target="_blank" class="support-us">Support Us</a>
+      
+      <!-- Discord Button -->
+      <div class="discord-btn" title="Join our Discord" onclick="window.open('https://dsc.gg/vplazagamespage', '_blank')">
+        <ion-icon class="discord-icon" name="logo-discord"></ion-icon>
+      </div>
     </div>
+    <div class="search-container">
+      <input type="text" placeholder="Search games..." class="search-bar" />
+    </div>
+  </header>
+</div>
 
-    <main class="games-section">
-        <section class="section">
+<div class="no-results-message" id="noResultsMessage" style="display:none;">
+  <h2>No results found...</h2>
+  <p>Try a different search term!</p>
+</div>
+
+<main class="games-section">
+<section class="section">
             <h2>Popular Titles</h2>
             <div class="games-grid">
                 <div class="game-card" data-url="/active/go/hvtrs8%2F-pna%7B.eedopcgnmw%2Ccmm-gcmgs%3Dgcmg-kd%3F44bda%6004-f844%2F445f-%3Be76%2F2f9g47cfeg0c%26nalg%3Fel_WS%24aqsgt%2Fif%3D21%5D7644f78f-2d12%2F46f2-%604f0%2Fcdea563c5423">
@@ -819,21 +877,21 @@
    <h3>Fireboy and Watergirl...</h3>
    <a>Help, im desperate to add games! 😭</a>
 </div>
-                </div>
-        </section>
-    </main>
+</section>
+</main>
 
-    <script>
-        document.querySelectorAll('.game-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const url = card.getAttribute('data-url');
-                if (url) {
-                    window.location.href = url;
-                }
-            });
-        });
-    </script>
+<script>
+  document.querySelectorAll('.game-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const url = card.getAttribute('data-url');
+      if (url) {
+        window.location.href = url;
+      }
+    });
+  });
+</script>
+<script src="main.js"></script>
+<script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    <script src="main.js"></script>
 </body>
 </html>
