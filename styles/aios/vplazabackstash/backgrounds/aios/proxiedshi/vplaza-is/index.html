@@ -1,0 +1,2763 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsidian | New</title>
+    <link rel="icon" type="image/x-icon" href="images/obsidian.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #8000ff #111111;
+        }
+        
+        /* Tab context menu styles */
+        .tab-context-menu {
+            position: absolute;
+            background-color: #202124;
+            border: 1px solid #444;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            width: 200px;
+            z-index: 10000;
+            display: none;
+        }
+
+        .context-menu-item {
+            padding: 8px 16px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            color: #e8eaed;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .context-menu-item:hover {
+            background-color: #52008c5b;
+        }
+
+        .context-menu-item i {
+            margin-right: 8px;
+            color: #9aa0a6;
+            width: 16px;
+            text-align: center;
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 4px 0;
+        }
+        body {
+            background-color: #000000;
+            color: #e8eaed;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            --color: hsl(0, 0%, 0%);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            height: calc(100vh - 40px);
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
+        }
+        .tabs-top-bar {
+            display: flex;
+            height: 40px;
+            background-color: #000000;
+            align-items: center;
+            padding: 0 8px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+            transition: 0.3s;
+            z-index: 10;
+        }
+        .tabs-top-bar:hover {
+            background-color: #46054c5b;
+        }
+        .tabs-top-bar::-webkit-scrollbar {
+            height: 0;
+            background: transparent;
+        }
+        .tabs-top-bar .tab {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            margin-right: 4px;
+            padding: 0 10px;
+            cursor: pointer;
+            position: relative;
+            color: #aaa;
+            transition: all 0.2s ease;
+            background-color: #ffffff;
+            min-width: 120px;
+            max-width: 200px;
+            border-radius: 0;
+        }
+        .tabs-top-bar .tab .tab-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tabs-top-bar .tab .tab-title {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            color: #000000;
+        }
+        .tabs-top-bar .tab .tab-close {
+            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: #333;
+        }
+        .tabs-top-bar .tab .tab-close:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #000;
+        }
+        .tabs-top-bar .tab:hover {
+            background-color: #f0f0f0;
+        }
+        .tabs-top-bar .tab.active {
+            background-color: #ffffff;
+            color: #000;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            margin-bottom: -2px;
+            position: relative;
+        }
+        .tabs-top-bar .tab.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #6f0551;
+            border-radius: 0 0 4px 4px;
+            z-index: 6;
+        }
+        
+        .tabs-top-bar .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: -14px; 
+            width: 16px;
+            height: 16px;
+            background-color: transparent; 
+            box-shadow: 8px 8px 0 0 #ffffff;
+            border-bottom-right-radius: 16px;
+            z-index: 5;
+        }
+        
+        .tabs-top-bar .tab.active .left-connector {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -14px;
+            width: 14px;
+            height: 2px;
+            background-color: #ffffff;
+            z-index: 4;
+        }
+
+        .tabs-top-bar .tab.active .right-connector {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: -14px;
+            width: 14px;
+            height: 2px;
+            background-color: #ffffff;
+            z-index: 4;
+        }
+        
+        .tab-corner-right {
+            position: absolute;
+            bottom: -2px;
+            right: -14px;
+            width: 16px;
+            height: 16px;
+            background-color: transparent;
+            border-bottom-left-radius: 16px;
+            box-shadow: -8px 8px 0 0 #ffffff;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs-top-bar .tab.active .left-connector,
+            .tabs-top-bar .tab.active .right-connector {
+                height: 3px;
+            }
+
+            .tabs-top-bar .tab.active::after,
+            .tab-corner-right {
+                bottom: -2px !important; 
+            }
+        }
+        .tabs-top-bar .new-tab {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .tabs-top-bar .new-tab:hover {
+            color: #fff;
+            background-color: #46054c5b;
+        }
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            background-color: #000000;
+            overflow: hidden;
+            position: relative;
+        }
+        .browser-header {
+            background-color: #000000;
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            height: 52px;
+            transition: 1s;
+        }
+        .browser-header:hover {
+            background-color: #52008c5b;
+        }
+        .url-bar-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            font-family: poppins;
+        }
+        .browser-actions {
+            display: flex;
+            margin-right: 8px;
+            transition: 0.5s;
+        }
+        .action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 14px;
+            margin-right: 4px;
+        }
+        .action-btn:hover {
+            background-color: #52008c5b;
+            color: #fff;
+        }
+        .url-bar-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            height: 36px;
+            background-color: #000000;
+            border-radius: 4px;
+            padding: 0 10px;
+            margin: 0 10px;
+            transition: 0.5s;
+        }
+
+        .flag-container {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .fps-counter {
+            font-size: 12px;
+            color: white;
+            margin-right: 10px;
+            font-weight: 500;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .flag {
+            width: 24px;
+            height: 16px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 3px;
+            box-shadow: 0 0 3px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .flag:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 5px #52008c5b;
+        }
+
+        .flag.active {
+            box-shadow: 0 0 8px #52008c5b;
+            transform: scale(1.1);
+        }
+
+        .active-ip {
+            font-size: 10px;
+            color: #aaa;
+            margin-left: 5px;
+            font-weight: 500;
+        }
+        .url-bar-wrapper:hover {
+            background-color: #52008c5b;
+        }
+        .url-bar {
+            flex-grow: 1;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 14px;
+            padding: 0 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+        .url-bar-icon {
+            color: #9500ff;
+            font-size: 14px;
+            transition: 1s;
+        }
+        .url-bar-icon:hover {
+            color: black;
+        }
+        .window-controls {
+            display: flex;
+            margin-left: auto;
+        }
+        .window-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6f6f6f;
+            cursor: pointer;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+        .window-btn:hover {
+            color: #52008c5b;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .window-btn.close:hover {
+            background-color: #3f3f3f78;
+        }
+        .content-area {
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+            height: calc(100% - 52px - 50px); /* Adjusted to account for toolbar */
+            width: 100%;
+        }
+        .tab-content {
+            width: 100%;
+            height: 100%;
+            display: none;
+            overflow: hidden;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none; /* Unrounded iframe */
+            background: #000;
+            display: block;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .loading-bar-container {
+            position: absolute;
+            top: 52px;
+            left: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: transparent;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+        .loading-bar {
+            height: 100%;
+            width: 0;
+            background-color: #380000;
+            animation: loading 2s ease-in-out infinite;
+        }
+        @keyframes loading {
+            0% { width: 0; transform: translateX(0); }
+            50% { width: 50%; transform: translateX(50%); }
+            100% { width: 0; transform: translateX(100%); }
+        }
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .wave-background {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/images/bg.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 1;
+            z-index: -1;
+        }
+        .new-tab {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 50%;
+            margin: 4px 0;
+            transition: color 0.2s;
+        }
+        .new-tab:hover {
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .history-panel {
+            position: fixed;
+            top: 94px;
+            left: 20px;
+            width: 400px;
+            max-height: 800px;
+            background-color: rgba(46, 1, 1, 0.595);
+            backdrop-filter: blur(10px);
+            border-radius: 17px;
+            color: rgb(255, 255, 255);
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+            z-index: 999999999999999;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        .history-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .history-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            color: rgb(0, 0, 0);
+        }
+        .history-item:hover {
+            background-color: #52008c5b;
+        }
+        .history-item-icon {
+            color: #52008c5b;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .history-item-time {
+            font-size: 14px;
+            font-weight: 600;
+            color: #52008c5b;
+            margin-right: 12px;
+            min-width: 45px;
+        }
+        .history-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.4);
+            margin: 15px 0;
+        }
+        .history-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .history-icon {
+            margin-right: 10px;
+        }
+        .history-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgb(0, 0, 0);
+        }
+        .history-item-url {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            color: rgb(255, 255, 255);
+        }
+        @media (max-width: 768px) {
+            .tabs-top-bar {
+                height: 50px;
+            }
+            .tabs-top-bar .tab {
+                font-size: 14px;
+                min-width: 80px;
+            }
+            .main-content {
+                height: calc(100vh - 40px);
+            }
+            .browser-header {
+                padding: 5px 10px;
+            }
+            .url-bar-wrapper {
+                height: 32px;
+                padding: 0 8px;
+            }
+            .url-bar {
+                font-size: 12px;
+            }
+            .action-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+            }
+            .window-btn {
+                width: 24px;
+                height: 24px;
+            }
+            .new-tab {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            .history-panel {
+                width: 90%;
+                left: 5%;
+                top: 60px;
+            }
+            .toolbar {
+                height: 60px;
+            }
+        }
+        @media (max-width: 480px) {
+            .tabs-top-bar .tab {
+                min-width: 60px;
+            }
+            .url-bar {
+                font-size: 11px;
+            }
+            .url-bar-wrapper {
+                padding: 0 6px;
+            }
+            .history-panel {
+                max-height: 400px;
+            }
+            .toolbar {
+                height: 70px;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 5px;
+            }
+            .toolbar-section {
+                margin: 3px;
+            }
+            .datetime-info {
+                display: none;
+            }
+        }
+        .music-player-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            overflow: hidden;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+
+        .music-player-container.open {
+            width: 490px;
+            animation: player-glow 2s infinite alternate;
+        }
+
+        @keyframes player-glow {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(255, 0, 128, 0.6);
+            }
+        }
+
+        .music-player-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+            border-left: 3px solid rgba(255, 0, 128, 0.7);
+        }
+
+        .music-player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            height: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255, 0, 128, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .music-player-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255, 0, 128, 0.7), transparent);
+            animation: header-glow 3s infinite alternate;
+        }
+
+        @keyframes header-glow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .music-player-title {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, rgba(255, 0, 128, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: text-shimmer 3s infinite;
+            background-size: 200% 100%;
+        }
+
+        @keyframes text-shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .music-player-close {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            cursor: pointer;
+            color: white;
+            font-weight: 800;
+            background-color: #000;
+            text-align: center;
+            padding: 18px 0;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            border-top: 1px solid #52008c5b;
+            overflow: hidden;
+        }
+
+        .music-player-close:hover {
+            background-color: #52008c5b;
+            letter-spacing: 3px;
+        }
+
+        .music-player-close::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 128, 0.3), transparent);
+            transition: all 0.5s;
+        }
+
+        .music-player-close:hover::before {
+            left: 100%;
+            transition: all 0.5s;
+        }
+
+        .music-player-iframe-container {
+            flex-grow: 1;
+            position: relative;
+            height: calc(100% - 118px);
+            background-color: #1e1e1e;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 10px;
+            border: 1px solid rgba(255, 0, 128, 0.4);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .music-player-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            border-radius: 8px;
+            opacity: 0;
+            animation: fade-in 0.4s forwards 0.3s;
+            background-color: #121212;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #music-player-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #music-player-btn:hover {
+            color: #a548e85b !important;
+        }
+
+        #music-player-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #52008c5b 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 50%;
+            transform: scale(0.85);
+        }
+
+        #music-player-btn:hover::before {
+            opacity: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.85);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(0.85);
+            }
+        }
+
+        #music-player-btn ion-icon {
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+
+        #music-player-btn:hover ion-icon {
+            transform: scale(1.2);
+        }
+
+        .chat-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            overflow: hidden;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            z-index: 100000;
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-container.open {
+            width: 490px;
+            animation: chat-glow 2s infinite alternate;
+        }
+
+        @keyframes chat-glow {
+            0% {
+                box-shadow: 0 0 10px rgba(0, 128, 255, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(0, 128, 255, 0.6);
+            }
+        }
+
+        .chat-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+            border-left: 3px solid rgba(0, 128, 255, 0.7);
+            z-index: 9999;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            height: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(0, 128, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(0, 128, 255, 0.7), transparent);
+            animation: header-glow 3s infinite alternate;
+        }
+
+        .chat-title {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, rgba(0, 128, 255, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: text-shimmer 3s infinite;
+            background-size: 200% 100%;
+        }
+
+        .chat-close {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            cursor: pointer;
+            color: white;
+            font-weight: 800;
+            background-color: #000;
+            text-align: center;
+            padding: 18px 0;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            border-top: 1px solid rgba(0, 128, 255, 0.7);
+            overflow: hidden;
+        }
+
+        .chat-close:hover {
+            background-color: rgba(0, 128, 255, 0.8);
+            letter-spacing: 3px;
+        }
+
+        .chat-close::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 128, 255, 0.3), transparent);
+            transition: all 0.5s;
+        }
+
+        .chat-close:hover::before {
+            left: 100%;
+            transition: all 0.5s;
+        }
+
+        .chat-iframe-container {
+            flex-grow: 1;
+            position: relative;
+            height: calc(100% - 118px);
+            background-color: transparent;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 10px;
+            border: 1px solid rgba(0, 128, 255, 0.4);
+            z-index: 10000;
+        }
+
+        .chat-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            border-radius: 8px;
+            opacity: 1;
+            position: relative;
+            z-index: 10;
+            background-color: #121212;
+        }
+
+        #chat-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #chat-btn:hover {
+            color: rgba(0, 128, 255, 0.9) !important;
+        }
+
+        #chat-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 128, 255, 0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 50%;
+            transform: scale(0.85);
+        }
+
+        #chat-btn:hover::before {
+            opacity: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        #chat-btn ion-icon {
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+
+        #chat-btn:hover ion-icon {
+            transform: scale(1.2);
+        }
+
+        .cloud-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            overflow: hidden;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+            z-index: 100000;
+            backdrop-filter: blur(10px);
+        }
+
+        .cloud-container.open {
+            width: 490px;
+            animation: cloud-glow 2s infinite alternate;
+        }
+
+        @keyframes cloud-glow {
+            0% {
+                box-shadow: 0 0 10px rgba(128, 128, 255, 0.3);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(128, 128, 255, 0.6);
+            }
+        }
+
+        .cloud-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+            border-left: 3px solid rgba(128, 128, 255, 0.7);
+            z-index: 9999;
+        }
+
+        .cloud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            height: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(128, 128, 255, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cloud-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(128, 128, 255, 0.7), transparent);
+            animation: header-glow 3s infinite alternate;
+        }
+
+        .cloud-title {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #fff, rgba(128, 128, 255, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: text-shimmer 3s infinite;
+            background-size: 200% 100%;
+        }
+
+        .cloud-close {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            cursor: pointer;
+            color: white;
+            font-weight: 800;
+            background-color: #000;
+            text-align: center;
+            padding: 18px 0;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            border-top: 1px solid rgba(128, 128, 255, 0.7);
+            overflow: hidden;
+        }
+
+        .cloud-close:hover {
+            background-color: rgba(128, 128, 255, 0.8);
+            letter-spacing: 3px;
+        }
+
+        .cloud-close::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(128, 128, 255, 0.3), transparent);
+            transition: all 0.5s;
+        }
+
+        .cloud-close:hover::before {
+            left: 100%;
+            transition: all 0.5s;
+        }
+
+        .cloud-iframe-container {
+            flex-grow: 1;
+            position: relative;
+            height: calc(100% - 118px);
+            background-color: transparent;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 10px;
+            border: 1px solid rgba(128, 128, 255, 0.4);
+            z-index: 10000;
+        }
+
+        .cloud-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            border-radius: 8px;
+            opacity: 1;
+            position: relative;
+            z-index: 10;
+            background-color: #121212;
+        }
+
+        #clouds-btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #clouds-btn:hover {
+            color: rgba(128, 128, 255, 0.9) !important;
+        }
+
+        #clouds-btn::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(128, 128, 255, 0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            border-radius: 50%;
+            transform: scale(0.85);
+        }
+
+        #clouds-btn:hover::before {
+            opacity: 1;
+            animation: pulse 1.5s infinite;
+        }
+
+        #clouds-btn ion-icon {
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+
+        #clouds-btn:hover ion-icon {
+            transform: scale(1.2);
+        }
+
+        /* Tab hover preview styles */
+        .tab-hover-preview {
+            position: absolute;
+            display: none;
+            top: 42px;
+            left: 0;
+            width: 320px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            padding: 10px;
+            color: #000;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .tab:hover .tab-hover-preview {
+            display: block;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        .preview-favicon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        .preview-title {
+            font-size: 14px;
+            font-weight: 500;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-url {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            word-wrap: break-word;
+        }
+
+        .preview-thumbnail {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            border-radius: 4px;
+            position: relative;
+            background: #f5f5f5;
+        }
+
+        .preview-thumbnail iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            transform: scale(0.6);
+            transform-origin: 0 0;
+        }
+
+        /* Toolbar styles */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 50px;
+            background-color: #000000;
+            padding: 0 15px;
+            transition: background-color 0.3s;
+            border-top: 1px solid #222;
+        }
+
+        .toolbar:hover {
+            background-color: #52008c5b;
+        }
+
+        .toolbar-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .toolbar-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 5px;
+            color: #aaa;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toolbar-icon:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .toolbar-icon ion-icon,
+        .toolbar-icon i {
+            font-size: 20px;
+        }
+
+        .datetime-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-left: 10px;
+            color: #aaa;
+        }
+
+        .time-display {
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .date-display {
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .battery-info {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+        }
+
+        .battery-icon {
+            position: relative;
+            width: 22px;
+            height: 12px;
+            border: 1px solid #aaa;
+            border-radius: 2px;
+            margin-right: 5px;
+        }
+
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: 3px;
+            width: 2px;
+            height: 6px;
+            background: #aaa;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .battery-level {
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            bottom: 1px;
+            background-color: #4caf50;
+            min-width: 5%;
+        }
+
+        .battery-percent {
+            font-size: 10px;
+            color: #aaa;
+        }
+    </style>
+<script src="https://lib.youware.com/youware-lib.1747145198.js" id="yourware-lib"></script></head>
+<body>
+    <div class="tabs-top-bar" id="tabs-top-bar">
+        <div class="new-tab" id="new-tab-btn-top">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+    </div>
+    <div class="container">
+        <div class="main-content">
+            <div class="browser-header">
+                <div class="url-bar-container">
+                    <div class="browser-actions">
+                        <div class="action-btn" id="back-btn">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="action-btn" id="forward-btn">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                        <div class="action-btn" id="reload-btn">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </div>
+                    </div>
+                    <div class="url-bar-wrapper">
+                        <i class="fa-solid fa-magnifying-glass url-bar-icon"></i>
+                        <input type="text" class="url-bar" id="url-bar" placeholder="Enter search or web address">
+                        <div class="flag-container">
+                            <div class="fps-counter" id="fps-counter">0 FPS</div>
+                            <img src="/images/usa.png" alt="American Flag" class="flag active" id="us-flag">
+                            <img src="/images/japan.png" alt="Japanese Flag" class="flag" id="jp-flag">
+                            <span class="active-ip" id="active-ip">IP: Local</span>
+                        </div>
+                    </div>
+                    <div class="window-controls">
+                        <div class="window-btn">
+                            <i class="fa-solid fa-minus"></i>
+                        </div>
+                        <div class="window-btn" id="fullscreen-btn">
+                            <ion-icon name="expand-outline"></ion-icon>
+                        </div>
+                        <div class="window-btn close" id="close-browser">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-bar-container" id="loading-bar-container">
+                    <div class="loading-bar"></div>
+                </div>
+            </div>
+            <div class="content-area" id="content-area">
+                <div class="tab-content active" id="tab-content-0">
+                    <iframe src="/landin" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
+                </div>
+            </div>
+
+            <div class="toolbar" id="toolbar">
+                <div class="toolbar-section">
+                    <div class="toolbar-icon">
+                        <ion-icon name="logo-twitch" data-url="/active/embed.html?url=https://www.twitch.tv"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon">
+                        <ion-icon name="game-controller" data-url="/gamepagev1"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon">
+                        <ion-icon name="happy-outline" data-url="/active/embed.html?url=https://play.geforcenow.com"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon">
+                        <ion-icon name="eye-outline" data-url="/tutorials"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="toolbar-section">
+                    <div class="toolbar-icon" id="clouds-btn">
+                        <ion-icon name="cloud"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon">
+                        <ion-icon name="timer" data-url="/styles"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon">
+                        <ion-icon name="call-outline" data-url="/v-ai"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="toolbar-section">
+                    <div class="toolbar-icon">
+                        <ion-icon name="logo-ionitron" data-url="/ai"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon">
+                        <ion-icon name="logo-apple-appstore" data-url="/a"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon" id="chat-btn">
+                        <ion-icon name="chatbubble"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon" id="music-player-btn">
+                        <ion-icon name="headset"></ion-icon>
+                    </div>
+                </div>
+
+                <div class="toolbar-section">
+                    <div class="toolbar-icon" id="history-btn">
+                        <ion-icon name="alarm"></ion-icon>
+                    </div>
+                    <div class="toolbar-icon">
+                        <ion-icon name="logo-dropbox" data-url="/active/embed.html?url=https://www.dropbox.com"></ion-icon>
+                    </div>
+                    <div class="datetime-info">
+                        <div class="time-display" id="time-display">--:--</div>
+                        <div class="date-display" id="date-display">--/--/----</div>
+                    </div>
+                    <div class="battery-info">
+                        <div class="battery-icon">
+                            <div class="battery-level" id="battery-level"></div>
+                        </div>
+                        <div class="battery-percent" id="battery-percent">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="background-container">
+                <div class="wave-background"></div>
+            </div>
+
+            <div class="history-panel" id="history-panel">
+                <div class="history-header">
+                    <div class="history-icon">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNsb2NrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCI+PC9jaXJjbGU+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCI+PC9wb2x5bGluZT48L3N2Zz4=" alt="History" width="24" height="24">
+                    </div>
+                    <div class="history-title">History</div>
+                </div>
+                <div class="history-divider"></div>
+                <div id="history-items-container">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="music-player-container" id="music-player-container">
+        <div class="music-player-content" id="music-player-content">
+            <div class="music-player-header">
+                <span class="music-player-title">Obsidian Music</span>
+                <a>Slow on your first try!</a>
+            </div>
+            <div class="music-player-iframe-container" id="music-player-iframe-container">
+            </div>
+            <div class="music-player-close" id="music-player-close">
+                CLOSE PLAYER <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chat-container">
+        <div class="chat-content" id="chat-content">
+            <div class="chat-header">
+                <span class="chat-title">Obsidian Chat</span>
+                <a>Chat with friends!</a>
+            </div>
+            <div class="chat-iframe-container" id="chat-iframe-container">
+            </div>
+            <div class="chat-close" id="chat-close">
+                CLOSE CHAT <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="cloud-container" id="cloud-container">
+        <div class="cloud-content" id="cloud-content">
+            <div class="cloud-header">
+                <span class="cloud-title">Obsidian Cloud</span>
+                <a>Tysm Vplaza</a>
+            </div>
+            <div class="cloud-iframe-container" id="cloud-iframe-container">
+            </div>
+            <div class="cloud-close" id="cloud-close">
+                CLOSE CLOUD <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-context-menu" id="tab-context-menu">
+        <div class="context-menu-item" id="context-new-tab">
+            <i class="fa-solid fa-plus"></i>New Tab
+        </div>
+        <div class="context-menu-item" id="context-reload">
+            <i class="fa-solid fa-rotate-right"></i>Reload
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="context-duplicate">
+            <i class="fa-solid fa-copy"></i>Duplicate
+        </div>
+        <div class="context-menu-item" id="context-pin">
+            <i class="fa-solid fa-thumbtack"></i>Pin
+        </div>
+        <div class="context-menu-item" id="context-unpin" style="display: none;">
+            <i class="fa-solid fa-thumbtack"></i>Unpin
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="context-mute">
+            <i class="fa-solid fa-volume-xmark"></i>Mute site
+        </div>
+        <div class="context-menu-item" id="context-unmute" style="display: none;">
+            <i class="fa-solid fa-volume-high"></i>Unmute site
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="context-close">
+            <i class="fa-solid fa-xmark"></i>Close
+        </div>
+        <div class="context-menu-item" id="context-close-other">
+            <i class="fa-solid fa-xmark"></i>Close other tabs
+        </div>
+        <div class="context-menu-item" id="context-close-right">
+            <i class="fa-solid fa-xmark"></i>Close tabs to the right
+        </div>
+    </div>
+
+    <script>
+        let activeTabId = 0;
+        let tabCounter = 1;
+        let tabsInSidebar = false;
+        let currentIp = "local";
+        let rightClickedTabId = null;
+
+        // FPS counter variables
+        let frameCount = 0;
+        let lastTime = performance.now();
+        let fps = 0;
+        const fpsCounter = document.getElementById('fps-counter');
+
+        // FPS measurement function
+        function measureFPS() {
+            frameCount++;
+            const currentTime = performance.now();
+            const elapsedTime = currentTime - lastTime;
+
+            if (elapsedTime >= 1000) {
+                fps = Math.round((frameCount * 1000) / elapsedTime);
+                fpsCounter.textContent = fps + " FPS";
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+
+            requestAnimationFrame(measureFPS);
+        }
+
+        // Start measuring FPS
+        requestAnimationFrame(measureFPS);
+
+        // Date, Time and Battery functions
+        function updateDateTime() {
+            const now = new Date();
+            const timeDisplay = document.getElementById('time-display');
+            const dateDisplay = document.getElementById('date-display');
+            
+            // Update time (HH:MM:SS)
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            timeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Update date (YYYY-MM-DD)
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            dateDisplay.textContent = `${year}-${month}-${day}`;
+        }
+
+        // Update date/time every second
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); // Initial update
+        
+        // Battery API
+        function updateBattery(battery) {
+            const level = Math.floor(battery.level * 100);
+            const batteryLevel = document.getElementById('battery-level');
+            const batteryPercent = document.getElementById('battery-percent');
+            
+            batteryLevel.style.width = level + '%';
+            batteryPercent.textContent = level + '%';
+            
+            // Add color based on level
+            if (level <= 20) {
+                batteryLevel.style.backgroundColor = '#f44336';
+            } else if (level <= 50) {
+                batteryLevel.style.backgroundColor = '#ff9800';
+            } else {
+                batteryLevel.style.backgroundColor = '#4caf50';
+            }
+            
+            // Update on battery change events
+            battery.addEventListener('levelchange', function() {
+                updateBattery(battery);
+            });
+        }
+        
+        // Check if Battery API is supported
+        if ('getBattery' in navigator) {
+            navigator.getBattery().then(updateBattery);
+        } else {
+            document.getElementById('battery-percent').textContent = 'N/A';
+        }
+
+        let browserHistory = [];
+
+        if (localStorage.getItem('browserHistory')) {
+            try {
+                browserHistory = JSON.parse(localStorage.getItem('browserHistory'));
+            } catch (e) {
+                console.error('Error loading history:', e);
+                browserHistory = [];
+            }
+        }
+
+        const topTabsBar = document.getElementById('tabs-top-bar');
+        const contentArea = document.getElementById('content-area');
+        const urlBar = document.getElementById('url-bar');
+        const newTabBtnTop = document.getElementById('new-tab-btn-top');
+        const backBtn = document.getElementById('back-btn');
+        const forwardBtn = document.getElementById('forward-btn');
+        const reloadBtn = document.getElementById('reload-btn');
+        const loadingBarContainer = document.getElementById('loading-bar-container');
+        const historyPanel = document.getElementById('history-panel');
+        const historyItemsContainer = document.getElementById('history-items-container');
+
+        const historyBtn = document.getElementById('history-btn');
+        historyBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (historyPanel.style.display === 'block') {
+                historyPanel.classList.remove('visible');
+                setTimeout(() => {
+                    historyPanel.style.display = 'none';
+                }, 200);
+            } else {
+                historyPanel.style.display = 'block';
+
+                historyPanel.offsetWidth;
+                historyPanel.classList.add('visible');
+            }
+        });
+
+        function populateHistoryPanel() {
+            historyItemsContainer.innerHTML = '';
+
+            browserHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+
+                historyItem.innerHTML = `
+                    <div class="history-item-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <div class="history-item-time">${item.time}</div>
+                    <div class="history-item-url">${item.displayUrl}</div>
+                `;
+
+                historyItem.addEventListener('click', function() {
+                    const clickedUrl = item.url;
+                    navigateToUrl(clickedUrl);
+
+                    historyPanel.classList.remove('visible');
+                    setTimeout(() => {
+                        historyPanel.style.display = 'none';
+                    }, 200);
+                });
+
+                historyItemsContainer.appendChild(historyItem);
+            });
+        }
+
+        const initialTabs = [
+            { id: 0, title: 'New Tab', url: '/landin', icon: 'fa-home' }
+        ];
+
+        function initializeTabs() {
+            while (topTabsBar.firstChild) {
+                if (topTabsBar.firstChild.id === 'new-tab-btn-top') {
+                    break;
+                }
+                topTabsBar.removeChild(topTabsBar.firstChild);
+            }
+
+            initialTabs.forEach(tab => {
+                createTopTab(tab.id, tab.title, tab.url, tab.icon);
+            });
+
+            switchTab(activeTabId);
+        }
+
+        function createTopTab(tabId, title, url, icon) {
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.tabId = tabId;
+            tab.dataset.url = url;
+
+            const faviconUrl = url.startsWith('/landin')
+                ? ''
+                : `https://www.google.com/s2/favicons?domain=${extractDomain(url)}`;
+
+            tab.innerHTML = `
+                <div class="tab-icon">
+                    ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<ion-icon name="planet"></ion-icon>`}
+                </div>
+                <div class="tab-title">${title}</div>
+                <div class="tab-close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+                <div class="tab-hover-preview">
+                    <div class="preview-header">
+                        ${faviconUrl ? `<img src="${faviconUrl}" class="preview-favicon" alt="">` : ''}
+                        <div class="preview-title">${title}</div>
+                    </div>
+                    <div class="preview-url">${url}</div>
+                    <div class="preview-thumbnail">
+                        <iframe src="${url}" frameborder="0"></iframe>
+                    </div>
+                </div>
+            `;
+
+            topTabsBar.insertBefore(tab, newTabBtnTop);
+
+            tab.addEventListener('click', (e) => {
+                if (!e.target.closest('.tab-close') && !e.target.closest('.tab-hover-preview')) {
+                    switchTab(tabId);
+                }
+            });
+
+            const closeBtn = tab.querySelector('.tab-close');
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeTab(tabId);
+            });
+        }
+
+        function extractDomain(url) {
+            if (url.startsWith('/landin')) return '';
+            try {
+                if (url.includes('/active/embed.html?url=')) {
+                    const embedUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+                    if (embedUrl.includes('://')) {
+                        return new URL(embedUrl).hostname;
+                    } else if (embedUrl.includes('.')) {
+                        return embedUrl.split('/')[0];
+                    }
+                }
+
+                if (url.includes('://')) {
+                    return new URL(url).hostname;
+                } else if (url.includes('.')) {
+                    return url.split('/')[0];
+                }
+            } catch (e) {
+                console.error('Error extracting domain:', e);
+            }
+            return '';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            let selectedTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            const selectedContent = document.getElementById(`tab-content-${tabId}`);
+
+            if (selectedTab && selectedContent) {
+                selectedTab.classList.add('active');
+                selectedContent.classList.add('active');
+                activeTabId = parseInt(tabId);
+
+                document.querySelectorAll('.left-connector, .right-connector, .tab-corner-right').forEach(el => el.remove());
+
+                if (selectedTab.classList.contains('tab')) {
+                    let leftConnector = document.createElement('span');
+                    leftConnector.className = 'left-connector';
+                    selectedTab.appendChild(leftConnector);
+
+                    let rightConnector = document.createElement('span');
+                    rightConnector.className = 'right-connector';
+                    selectedTab.appendChild(rightConnector);
+                    
+                    let rightCorner = document.createElement('span');
+                    rightCorner.className = 'tab-corner-right';
+                    selectedTab.appendChild(rightCorner);
+                }
+
+                const frameUrl = selectedTab.dataset.url;
+                updateUrlBar(frameUrl);
+            }
+        }
+        function updateUrlBar(url) {
+            if (url.toLowerCase().includes('obsidian') || url.toLowerCase().includes('file://')) {
+                urlBar.value = '(hidden)';
+            } else if (url.includes('/active/embed.html?url=')) {
+                const actualUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+                urlBar.value = actualUrl;
+            } else {
+                urlBar.value = url;
+            }
+        }
+        function createNewTab() {
+            const tabId = tabCounter++;
+            const newTabData = {
+                id: tabId,
+                title: 'New Tab',
+                url: '/landin',
+                icon: 'fa-globe'
+            };
+
+            createTopTab(tabId, newTabData.title, newTabData.url, newTabData.icon);
+
+            const tabContent = document.createElement('div');
+            tabContent.className = 'tab-content';
+            tabContent.id = `tab-content-${tabId}`;
+            tabContent.innerHTML = `<iframe src="${newTabData.url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+
+            contentArea.appendChild(tabContent);
+
+            switchTab(tabId);
+        }
+
+        function closeTab(tabId) {
+            const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            const tabContent = document.getElementById(`tab-content-${tabId}`);
+
+            if (topTab && tabContent) {
+                if (parseInt(tabId) === activeTabId) {
+                    let nextTabId = null;
+
+                    const allTabIds = Array.from(document.querySelectorAll('.tab'))
+                        .map(tab => parseInt(tab.dataset.tabId))
+                        .filter(id => id !== parseInt(tabId));
+
+                    if (allTabIds.length > 0) {
+                        nextTabId = allTabIds[0];
+                    }
+
+                    if (nextTabId !== null) {
+                        switchTab(nextTabId);
+                    }
+                }
+
+                topTab.remove();
+                tabContent.remove();
+
+                const remainingTabs = document.querySelectorAll('.tab');
+                if (remainingTabs.length === 0) {
+                    createNewTab();
+                }
+            }
+        }
+
+        function goBack() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.back();
+                } catch (error) {
+                    console.error("Could not navigate back:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
+            }
+        }
+
+        function goForward() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.forward();
+                } catch (error) {
+                    console.error("Could not navigate forward:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
+            }
+        }
+
+        function reloadPage() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                activeFrame.src = activeFrame.src;
+            }
+        }
+
+        function navigateToUrl(url) {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+
+                const internalPaths = ['/tutorials', '/gamepagev1', '/ai', '/v-ai', '/a', '/landin'];
+
+                let processedUrl = url;
+                if (internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
+                    processedUrl = url;
+                } else if (!url.includes('://') && !url.startsWith('/')) {
+                    processedUrl = `/active/embed.html?url=https://${url}`;
+                } else if (!url.startsWith('/')) {
+                    processedUrl = `/active/embed.html?url=${encodeURIComponent(url)}`;
+                }
+
+                // Apply IP spoofing headers when navigating
+                if (currentIp === "japan") {
+                    activeFrame.setAttribute('data-ip-spoofed', 'true');
+                    // Add URL parameter for server-side handling
+                    if (processedUrl.includes('?')) {
+                        processedUrl += '&ip_country=jp&x_forwarded_for=101.102.99.255';
+                    } else {
+                        processedUrl += '?ip_country=jp&x_forwarded_for=101.102.99.255';
+                    }
+                } else {
+                    activeFrame.removeAttribute('data-ip-spoofed');
+                }
+
+                activeFrame.src = processedUrl;
+
+                const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                if (topTab) {
+                    topTab.dataset.url = processedUrl;
+                    const previewUrl = topTab.querySelector('.preview-url');
+                    if (previewUrl) {
+                        previewUrl.textContent = processedUrl;
+                    }
+                    
+                    const previewThumbnail = topTab.querySelector('.preview-thumbnail iframe');
+                    if (previewThumbnail) {
+                        previewThumbnail.src = processedUrl;
+                    }
+                }
+
+                updateUrlBar(processedUrl);
+                storeHistoryItem(url);
+            }
+        }
+
+        function handleUrlSubmit(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                let url = urlBar.value.trim();
+
+                if (!url.includes('://') && !url.includes('.') && url !== '/landin') {
+                    url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+                } else if (!url.includes('://') && url !== '/landin') {
+                    url = `https://${url}`;
+                }
+
+                navigateToUrl(url);
+            }
+        }
+
+        function frameLoaded(tabId) {
+            const frame = document.getElementById(`frame-${tabId}`);
+            if (!frame) return;
+
+            if (frame.dataset.isLoading === 'true') {
+                setTimeout(() => {
+                    loadingBarContainer.style.display = 'none';
+                    frame.dataset.isLoading = 'false';
+                }, 500);
+            }
+
+            try {
+                const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                const frameUrl = frame.src;
+
+                let pageTitle = 'New Tab';
+                try {
+                    if (frame.contentDocument) {
+                        pageTitle = frame.contentDocument.title || 'New Tab';
+                    }
+                } catch (e) {
+                    console.log('Could not access title due to cross-origin policy');
+                }
+
+                const faviconUrl = frameUrl.startsWith('/landin')
+                    ? ''
+                    : `https://www.google.com/s2/favicons?domain=${extractDomain(frameUrl)}`;
+
+                if (topTab) {
+                    const titleElement = topTab.querySelector('.tab-title');
+                    if (titleElement) titleElement.textContent = pageTitle;
+
+                    if (faviconUrl) {
+                        const iconElement = topTab.querySelector('.tab-icon');
+                        if (iconElement) {
+                            iconElement.innerHTML = `<img src="${faviconUrl}" alt="">`;
+                        }
+                        
+                        // Update preview favicon too
+                        const previewIcon = topTab.querySelector('.preview-favicon');
+                        if (previewIcon) {
+                            previewIcon.src = faviconUrl;
+                        }
+                    }
+                    
+                    // Update preview title
+                    const previewTitle = topTab.querySelector('.preview-title');
+                    if (previewTitle) {
+                        previewTitle.textContent = pageTitle;
+                    }
+                }
+
+                if (parseInt(tabId) === activeTabId) {
+                    updateUrlBar(frameUrl);
+                }
+            } catch (e) {
+                console.error('Error updating tab info:', e);
+            }
+        }
+
+        function storeHistoryItem(url) {
+            if (!url || url === '/landin') return;
+
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}`;
+
+            let displayUrl = url;
+            if (url.includes('/active/embed.html?url=')) {
+                displayUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+            }
+
+            browserHistory.unshift({
+                url: url,
+                displayUrl: displayUrl,
+                time: timeString,
+                timestamp: now.getTime()
+            });
+
+            if (browserHistory.length > 15) {
+                browserHistory.pop();
+            }
+
+            try {
+                localStorage.setItem('browserHistory', JSON.stringify(browserHistory));
+            } catch (e) {
+                console.error('Error saving history:', e);
+            }
+
+            populateHistoryPanel();
+        }
+
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type) {
+                if (event.data.type === 'search') {
+                    const searchUrl = `/active/embed.html?url=https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = searchUrl;
+
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) {
+                            topTab.dataset.url = searchUrl;
+                            const previewUrl = topTab.querySelector('.preview-url');
+                            if (previewUrl) {
+                                previewUrl.textContent = `https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+                            }
+                            
+                            const previewThumbnail = topTab.querySelector('.preview-thumbnail iframe');
+                            if (previewThumbnail) {
+                                previewThumbnail.src = searchUrl;
+                            }
+                        }
+
+                        urlBar.value = `https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+
+                        storeHistoryItem(`https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`);
+                    }
+                } else if (event.data.type === 'navigate') {
+                    const url = `/active/embed.html?url=${encodeURIComponent(event.data.url)}`;
+
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = url;
+
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) {
+                            topTab.dataset.url = url;
+                            const previewUrl = topTab.querySelector('.preview-url');
+                            if (previewUrl) {
+                                previewUrl.textContent = event.data.url;
+                            }
+                            
+                            const previewThumbnail = topTab.querySelector('.preview-thumbnail iframe');
+                            if (previewThumbnail) {
+                                previewThumbnail.src = url;
+                            }
+                        }
+
+                        urlBar.value = event.data.url;
+
+                        storeHistoryItem(event.data.url);
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!historyPanel.contains(event.target) && event.target !== historyBtn && !historyBtn.contains(event.target)) {
+                if (historyPanel.style.display === 'block') {
+                    historyPanel.classList.remove('visible');
+                    setTimeout(() => {
+                        historyPanel.style.display = 'none';
+                    }, 200);
+                }
+            }
+
+            const contextMenu = document.getElementById('tab-context-menu');
+            if (!contextMenu.contains(event.target)) {
+                contextMenu.style.display = 'none';
+            }
+        });
+        
+        document.addEventListener('contextmenu', (e) => {
+            if (!e.target.closest('iframe')) {
+                e.preventDefault();
+
+                const contextMenu = document.getElementById('tab-context-menu');
+                let showNew = true;
+                let showReload = true;
+                let showClose = false;
+                let showPin = false;
+                let showUnpin = false;
+                let showCloseOthers = false;
+                let showCloseRight = false;
+                let showMute = false;
+                let showUnmute = false;
+                let showDuplicate = false;
+
+                if (e.target.closest('.tab')) {
+                    const tab = e.target.closest('.tab');
+                    rightClickedTabId = parseInt(tab.dataset.tabId);
+
+                    showClose = true;
+                    showCloseOthers = true;
+                    showCloseRight = true;
+                    showDuplicate = true;
+
+                    const isPinned = tab.classList.contains('pinned');
+                    showPin = !isPinned;
+                    showUnpin = isPinned;
+
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        showMute = !frame.muted;
+                        showUnmute = frame.muted;
+                    }
+                }
+                else if (e.target.closest('.toolbar-icon') || e.target.closest('.tabs-top-bar')) {
+                    showNew = true;
+                    showReload = false;
+                    showClose = false;
+                }
+                else if (e.target.closest('.url-bar-container') || e.target.closest('.browser-actions')) {
+                    showNew = true;
+                    showReload = true;
+                    rightClickedTabId = activeTabId;
+                }
+                else if (e.target.closest('.content-area') && !e.target.closest('iframe')) {
+                    showNew = true;
+                    showReload = true;
+                    rightClickedTabId = activeTabId;
+                }
+                else {
+                    showNew = true;
+                    showReload = true;
+                    rightClickedTabId = activeTabId;
+                }
+
+                document.getElementById('context-new-tab').style.display = showNew ? 'flex' : 'none';
+                document.getElementById('context-reload').style.display = showReload ? 'flex' : 'none';
+                document.getElementById('context-close').style.display = showClose ? 'flex' : 'none';
+                document.getElementById('context-close-other').style.display = showCloseOthers ? 'flex' : 'none';
+                document.getElementById('context-close-right').style.display = showCloseRight ? 'flex' : 'none';
+                document.getElementById('context-pin').style.display = showPin ? 'flex' : 'none';
+                document.getElementById('context-unpin').style.display = showUnpin ? 'flex' : 'none';
+                document.getElementById('context-mute').style.display = showMute ? 'flex' : 'none';
+                document.getElementById('context-unmute').style.display = showUnmute ? 'flex' : 'none';
+                document.getElementById('context-duplicate').style.display = showDuplicate ? 'flex' : 'none';
+
+                const dividers = document.querySelectorAll('.context-menu-divider');
+
+                dividers[0].style.display = (showNew || showReload) && (showDuplicate || showPin || showUnpin) ? 'block' : 'none';
+
+                dividers[1].style.display = (showPin || showUnpin) && (showMute || showUnmute) ? 'block' : 'none';
+
+                dividers[2].style.display = (showMute || showUnmute) && (showClose || showCloseOthers || showCloseRight) ? 'block' : 'none';
+
+                contextMenu.style.display = 'block';
+
+                const menuWidth = contextMenu.offsetWidth;
+                const menuHeight = contextMenu.offsetHeight;
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+                let posX = e.clientX;
+                let posY = e.clientY;
+
+                if (posX + menuWidth > windowWidth) {
+                    posX = windowWidth - menuWidth - 5;
+                }
+
+                if (posY + menuHeight > windowHeight) {
+                    posY = windowHeight - menuHeight - 5;
+                }
+
+                contextMenu.style.left = posX + 'px';
+                contextMenu.style.top = posY + 'px';
+            }
+        });
+
+        // IP switcher functionality
+        const usFlag = document.getElementById('us-flag');
+        const jpFlag = document.getElementById('jp-flag');
+        const activeIpDisplay = document.getElementById('active-ip');
+
+        usFlag.addEventListener('click', function() {
+            if (currentIp !== "local") {
+                currentIp = "local";
+                usFlag.classList.add('active');
+                jpFlag.classList.remove('active');
+                activeIpDisplay.textContent = "IP: Local";
+
+                // Reload current tab with new IP settings
+                const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                if (activeFrame) {
+                    const currentUrl = activeFrame.src;
+                    activeFrame.removeAttribute('data-ip-spoofed');
+                    // Remove any existing IP parameters
+                    let newUrl = currentUrl;
+                    newUrl = newUrl.replace(/[&?]ip_country=jp/, '');
+                    newUrl = newUrl.replace(/[&?]x_forwarded_for=101\.102\.99\.255/, '');
+                    // Clean up any orphaned parameters
+                    newUrl = newUrl.replace(/\?&/, '?');
+                    newUrl = newUrl.replace(/\?$/, '');
+
+                    activeFrame.src = newUrl;
+                }
+            }
+        });
+
+        jpFlag.addEventListener('click', function() {
+            if (currentIp !== "japan") {
+                currentIp = "japan";
+                jpFlag.classList.add('active');
+                usFlag.classList.remove('active');
+                activeIpDisplay.textContent = "IP: 101.102.99.255";
+
+                // Reload current tab with new IP settings
+                const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                if (activeFrame) {
+                    let currentUrl = activeFrame.src;
+                    activeFrame.setAttribute('data-ip-spoofed', 'true');
+
+                    // Remove any existing IP parameters first
+                    currentUrl = currentUrl.replace(/[&?]ip_country=jp/, '');
+                    currentUrl = currentUrl.replace(/[&?]x_forwarded_for=101\.102\.99\.255/, '');
+
+                    // Add IP parameters
+                    if (currentUrl.includes('?')) {
+                        activeFrame.src = currentUrl + '&ip_country=jp&x_forwarded_for=101.102.99.255';
+                    } else {
+                        activeFrame.src = currentUrl + '?ip_country=jp&x_forwarded_for=101.102.99.255';
+                    }
+                }
+            }
+        });
+
+        function setupContextMenu() {
+            const contextMenu = document.getElementById('tab-context-menu');
+
+            document.getElementById('context-new-tab').addEventListener('click', () => {
+                createNewTab();
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-reload').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        frame.src = frame.src;
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-duplicate').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const originalTab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
+                    if (originalTab) {
+                        const url = originalTab.dataset.url;
+                        const title = originalTab.querySelector('.tab-title').textContent;
+                        const tabId = tabCounter++;
+
+                        createTopTab(tabId, title, url);
+
+                        const tabContent = document.createElement('div');
+                        tabContent.className = 'tab-content';
+                        tabContent.id = `tab-content-${tabId}`;
+                        tabContent.innerHTML = `<iframe src="${url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+
+                        contentArea.appendChild(tabContent);
+                        switchTab(tabId);
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-pin').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const tab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
+                    if (tab) {
+                        tab.classList.add('pinned');
+                        topTabsBar.insertBefore(tab, topTabsBar.firstChild);
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-unpin').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const tab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
+                    if (tab) {
+                        tab.classList.remove('pinned');
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-close').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    closeTab(rightClickedTabId);
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-close-right').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const tabs = Array.from(document.querySelectorAll('.tab'));
+                    const tabIds = tabs.map(tab => parseInt(tab.dataset.tabId));
+                    const rightClickedIndex = tabIds.indexOf(parseInt(rightClickedTabId));
+
+                    if (rightClickedIndex !== -1) {
+                        const tabsToClose = tabIds.slice(rightClickedIndex + 1);
+                        tabsToClose.forEach(id => {
+                            closeTab(id);
+                        });
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-close-other').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const tabs = Array.from(document.querySelectorAll('.tab'));
+                    tabs.forEach(tab => {
+                        const tabId = parseInt(tab.dataset.tabId);
+                        if (tabId !== parseInt(rightClickedTabId)) {
+                            closeTab(tabId);
+                        }
+                    });
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-mute').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        frame.muted = true;
+                        document.getElementById('context-mute').style.display = 'none';
+                        document.getElementById('context-unmute').style.display = 'flex';
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-unmute').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        frame.muted = false;
+                        document.getElementById('context-mute').style.display = 'flex';
+                        document.getElementById('context-unmute').style.display = 'none';
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+        }
+
+        initializeTabs();
+
+        populateHistoryPanel();
+
+        setupContextMenu();
+
+        newTabBtnTop.addEventListener('click', createNewTab);
+        backBtn.addEventListener('click', goBack);
+        forwardBtn.addEventListener('click', goForward);
+        reloadBtn.addEventListener('click', reloadPage);
+        urlBar.addEventListener('keydown', handleUrlSubmit);
+
+        // Toolbar icons event listeners
+        document.querySelectorAll('.toolbar-icon').forEach(icon => {
+            if (icon.id === 'music-player-btn' || icon.id === 'chat-btn' || icon.id === 'clouds-btn' || icon.id === 'history-btn') return;
+            
+            icon.addEventListener('click', function() {
+                const iconElement = this.querySelector('ion-icon');
+                if (iconElement && iconElement.hasAttribute('data-url')) {
+                    const url = iconElement.getAttribute('data-url');
+                    if (url) {
+                        navigateToUrl(url);
+                    }
+                }
+            });
+        });
+
+        document.getElementById('fullscreen-btn').addEventListener('click', function() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                if (activeFrame.requestFullscreen) {
+                    activeFrame.requestFullscreen();
+                } else if (activeFrame.webkitRequestFullscreen) {
+                    activeFrame.webkitRequestFullscreen();
+                } else if (activeFrame.msRequestFullscreen) {
+                    activeFrame.msRequestFullscreen();
+                }
+            }
+        });
+
+        document.getElementById('close-browser').addEventListener('click', function() {
+            const currentUrl = window.location.href;
+            const firstConfirmation = confirm("You are about to close: " + currentUrl);
+
+            if (firstConfirmation) {
+                const secondConfirmation = confirm("Are you sure you want to do this? If you're in the middle of something, it might not save!");
+                if (secondConfirmation) {
+                    window.close();
+                }
+            }
+        });
+
+        const officialDomains = [
+            "vplaza.org",
+            "vplaza.mollypornstar.com/",
+            "vplazav1.web.app/",
+            "vplazav1.firebaseapp.com/",
+            "vplazahasa.nudeinpublicblog.com/"
+        ];
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/service-worker.js").then(() => {
+                console.log("Service Worker registered");
+            });
+        }
+
+        document.querySelectorAll('.toolbar-icon').forEach(icon => {
+            if (icon.id === 'music-player-btn') {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const musicPlayerContainer = document.getElementById('music-player-container');
+                    const musicPlayerIframeContainer = document.getElementById('music-player-iframe-container');
+
+                    let iframe = document.getElementById('music-player-iframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.src = "/audio";
+                        iframe.id = "music-player-iframe";
+                        iframe.className = "music-player-iframe";
+
+                        setTimeout(() => {
+                            musicPlayerIframeContainer.appendChild(iframe);
+                        }, 100);
+                    }
+
+                    if (musicPlayerContainer.classList.contains('open')) {
+                        musicPlayerContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
+                        musicPlayerContainer.classList.remove('open');
+                    } else {
+                        musicPlayerContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
+                        musicPlayerContainer.classList.add('open');
+                    }
+                });
+
+                icon.querySelector('ion-icon').removeAttribute('data-url');
+
+                icon.addEventListener('mouseenter', function() {
+                    this.style.textShadow = "0 0 10px rgba(255, 0, 128, 0.7)";
+                    this.style.color = "rgba(255, 0, 128, 0.9)";
+                    this.style.transform = "scale(1.1)";
+                    this.style.transition = "all 0.3s ease";
+                });
+
+                icon.addEventListener('mouseleave', function() {
+                    this.style.textShadow = "";
+                    this.style.color = "";
+                    this.style.transform = "";
+                });
+            }
+            if (icon.id === 'chat-btn') {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const chatContainer = document.getElementById('chat-container');
+                    const chatIframeContainer = document.getElementById('chat-iframe-container');
+
+                    let iframe = document.getElementById('chat-iframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.src = "/chat.html";
+                        iframe.id = "chat-iframe";
+                        iframe.className = "chat-iframe";
+                        iframe.style.width = "100%";
+                        iframe.style.height = "100%";
+                        iframe.style.border = "none";
+                        iframe.style.zIndex = "10000";
+
+                        chatIframeContainer.appendChild(iframe);
+                    }
+
+                    if (chatContainer.classList.contains('open')) {
+                        chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
+                        chatContainer.classList.remove('open');
+                    } else {
+                        chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
+                        chatContainer.classList.add('open');
+                    }
+                });
+
+                icon.querySelector('ion-icon').removeAttribute('data-url');
+
+                icon.addEventListener('mouseenter', function() {
+                    this.style.textShadow = "0 0 10px rgba(0, 128, 255, 0.7)";
+                    this.style.color = "rgba(0, 128, 255, 0.9)";
+                    this.style.transform = "scale(1.1)";
+                    this.style.transition = "all 0.3s ease";
+                });
+
+                icon.addEventListener('mouseleave', function() {
+                    this.style.textShadow = "";
+                    this.style.color = "";
+                    this.style.transform = "";
+                });
+            }
+            if (icon.id === 'clouds-btn') {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const cloudContainer = document.getElementById('cloud-container');
+                    const cloudIframeContainer = document.getElementById('cloud-iframe-container');
+
+                    let iframe = document.getElementById('cloud-iframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.src = "/styles/weather.html";
+                        iframe.id = "cloud-iframe";
+                        iframe.className = "cloud-iframe";
+                        iframe.style.width = "100%";
+                        iframe.style.height = "100%";
+                        iframe.style.border = "none";
+                        iframe.style.zIndex = "10000";
+
+                        cloudIframeContainer.appendChild(iframe);
+                    }
+
+                    if (cloudContainer.classList.contains('open')) {
+                        cloudContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
+                        cloudContainer.classList.remove('open');
+                    } else {
+                        cloudContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease";
+                        cloudContainer.classList.add('open');
+                    }
+                });
+
+                icon.querySelector('ion-icon').removeAttribute('data-url');
+
+                icon.addEventListener('mouseenter', function() {
+                    this.style.textShadow = "0 0 10px rgba(128, 128, 255, 0.7)";
+                    this.style.color = "rgba(128, 128, 255, 0.9)";
+                    this.style.transform = "scale(1.1)";
+                    this.style.transition = "all 0.3s ease";
+                });
+
+                icon.addEventListener('mouseleave', function() {
+                    this.style.textShadow = "";
+                    this.style.color = "";
+                    this.style.transform = "";
+                });
+            }
+        });
+
+        document.getElementById('music-player-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const musicPlayerContainer = document.getElementById('music-player-container');
+            const iframe = document.getElementById('music-player-iframe');
+
+            musicPlayerContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
+            musicPlayerContainer.classList.remove('open');
+
+            if (iframe && iframe.parentNode) {
+                setTimeout(() => {
+                    iframe.parentNode.removeChild(iframe);
+                }, 300);
+            }
+        });
+
+        document.getElementById('chat-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const chatContainer = document.getElementById('chat-container');
+            const chatIframeContainer = document.getElementById('chat-iframe-container');
+
+            chatContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
+            chatContainer.classList.remove('open');
+
+            setTimeout(() => {
+                chatIframeContainer.innerHTML = '';
+            }, 300);
+        });
+
+        document.getElementById('cloud-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const cloudContainer = document.getElementById('cloud-container');
+            const cloudIframeContainer = document.getElementById('cloud-iframe-container');
+
+            cloudContainer.style.transition = "width 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045)";
+            cloudContainer.classList.remove('open');
+
+            setTimeout(() => {
+                cloudIframeContainer.innerHTML = '';
+            }, 300);
+        });
+
+        document.addEventListener('click', function(e) {
+            const musicPlayerContainer = document.getElementById('music-player-container');
+            const musicPlayerBtn = document.getElementById('music-player-btn');
+            const chatContainer = document.getElementById('chat-container');
+            const chatBtn = document.getElementById('chat-btn');
+            const cloudContainer = document.getElementById('cloud-container');
+            const cloudBtn = document.getElementById('clouds-btn');
+
+            if (
+                musicPlayerContainer &&
+                musicPlayerContainer.classList.contains('open') &&
+                !musicPlayerContainer.contains(e.target) &&
+                e.target !== musicPlayerBtn &&
+                !musicPlayerBtn.contains(e.target)
+            ) {
+                musicPlayerContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+                musicPlayerContainer.classList.remove('open');
+            }
+
+            if (
+                chatContainer &&
+                chatContainer.classList.contains('open') &&
+                !chatContainer.contains(e.target) &&
+                e.target !== chatBtn &&
+                !chatBtn.contains(e.target)
+            ) {
+                chatContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+                chatContainer.classList.remove('open');
+            }
+
+            if (
+                cloudContainer &&
+                cloudContainer.classList.contains('open') &&
+                !cloudContainer.contains(e.target) &&
+                e.target !== cloudBtn &&
+                !cloudBtn.contains(e.target)
+            ) {
+                cloudContainer.style.transition = "width 0.4s cubic-bezier(0.16, 1, 0.3, 1)";
+                cloudContainer.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
