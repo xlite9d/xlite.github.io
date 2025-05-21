@@ -1,3 +1,4 @@
+
 <link rel="icon" type="image/png" href="favicons/VAI.png">
 
 <!-- Google tag (gtag.js) -->
@@ -769,7 +770,7 @@
             }
         }
     </style>
-</head>
+<script src="https://lib.youware.com/youware-lib.1747145198.js" id="yourware-lib"></script></head>
 <body>
     <div class="app-container">
         <!-- Sidebar -->
@@ -872,8 +873,8 @@
     // ===== Configuration & Setup =====
 const CONFIG = {
     apiKey: "AIzaSyC1NOWG7RtMkEichQdurfM9sPALAEt-GLY",
-    model: "gemini-2.5-pro",
-    apiEndpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent",
+    model: "gemini-2.0-flash",
+    apiEndpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
     defaultGreeting: "Hello! How can I assist you today?",
     localStorageKeys: {
         chats: 'vaiChats',
@@ -1625,10 +1626,18 @@ const CONFIG = {
 
             try {
                 const chat = AppState.chats[AppState.activeChat];
-                const apiMessages = chat.messages.map(msg => ({
-                    role: msg.role,
-                    content: msg.content
-                }));
+                
+                // Convert messages to Gemini API format
+                const contents = [];
+                
+                for (const msg of chat.messages) {
+                    contents.push({
+                        parts: [{
+                            text: msg.content
+                        }],
+                        role: msg.role === "assistant" ? "model" : "user"
+                    });
+                }
 
                 const aiMessageDiv = document.createElement("div");
                 aiMessageDiv.classList.add("message", "ai");
@@ -1666,25 +1675,22 @@ const CONFIG = {
                 bubbleDiv.classList.add("bubble");
                 aiMessageDiv.appendChild(bubbleDiv);
 
-                const response = await fetch(CONFIG.apiEndpoint, {
+                const response = await fetch(`${CONFIG.apiEndpoint}?key=${CONFIG.apiKey}`, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${CONFIG.apiKey}`
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: CONFIG.model,
-                        messages: apiMessages,
-                        stream: false
+                        contents: contents
                     })
                 });
 
                 const data = await response.json();
-                if (!data.choices || !data.choices[0]) {
+                if (!data.candidates || !data.candidates[0]) {
                     throw new Error("Invalid response from API");
                 }
 
-                const fullMessage = data.choices[0].message?.content ||
+                const fullMessage = data.candidates[0].content?.parts[0]?.text ||
                     "I apologize, but I couldn't generate a response. Please try again.";
 
                 if (typingIndicator) {
@@ -1928,37 +1934,44 @@ const CONFIG = {
             bubble.innerHTML = "Rephrasing...";
 
             try {
+                // Build up the conversation history
+                const contents = [];
+                
+                // Add previous messages
                 const previousMessages = chat.messages.slice(0, messageIndex);
+                for (const msg of previousMessages) {
+                    contents.push({
+                        parts: [{
+                            text: msg.content
+                        }],
+                        role: msg.role === "assistant" ? "model" : "user" 
+                    });
+                }
+                
+                // Add the rephrase request
+                contents.push({
+                    parts: [{
+                        text: "Please rephrase your last response without changing the meaning or content. Make sure to maintain all code examples, but explain them more clearly if possible."
+                    }],
+                    role: "user"
+                });
 
-                const apiMessages = [
-                    ...previousMessages.map(msg => ({
-                        role: msg.role,
-                        content: msg.content
-                    })),
-                    {
-                        role: "user",
-                        content: "Please rephrase your last response without changing the meaning or content. Make sure to maintain all code examples, but explain them more clearly if possible."
-                    }
-                ];
-
-                const response = await fetch(CONFIG.apiEndpoint, {
+                const response = await fetch(`${CONFIG.apiEndpoint}?key=${CONFIG.apiKey}`, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${CONFIG.apiKey}`
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        model: CONFIG.model,
-                        messages: apiMessages
+                        contents: contents
                     })
                 });
 
                 const data = await response.json();
-                if (!data.choices || !data.choices[0]) {
+                if (!data.candidates || !data.candidates[0]) {
                     throw new Error("Invalid response from API");
                 }
 
-                const rephrasedMessage = data.choices[0].message?.content ||
+                const rephrasedMessage = data.candidates[0].content?.parts[0]?.text ||
                     "I apologize, but I couldn't rephrase the message.";
 
                 chat.messages[messageIndex].content = rephrasedMessage;
