@@ -1,1157 +1,211 @@
-<link rel="icon" href="/images/home.png">
+    <link rel="icon" href="/images/clever.png">
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VPLAZA EDU - Unlock Your Learning Potential</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #4361ee;
-      --primary-dark: #3a56d4;
-      --secondary: #7209b7;
-      --accent: #f72585;
-      --light: #f8f9fa;
-      --dark: #212529;
-      --success: #38b000;
-      --warning: #ffbe0b;
-      --info: #3a86ff;
-      --danger: #d90429;
-      --gray-100: #f8f9fa;
-      --gray-200: #e9ecef;
-      --gray-300: #dee2e6;
-      --gray-400: #ced4da;
-      --gray-500: #adb5bd;
-      --gray-600: #6c757d;
-      --gray-700: #495057;
-      --gray-800: #343a40;
-      --gray-900: #212529;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      color: var(--dark);
-      background-color: var(--light);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    ul {
-      list-style: none;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    .header {
-      background-color: #fff;
-      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 0;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .logo span {
-      color: var(--accent);
-    }
-
-    .nav-menu {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    .nav-link {
-      font-weight: 500;
-      transition: color 0.3s;
-      position: relative;
-    }
-
-    .nav-link:hover {
-      color: var(--primary);
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background-color: var(--primary);
-      transition: width 0.3s;
-    }
-
-    .nav-link:hover::after {
-      width: 100%;
-    }
-
-    .nav-buttons {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 0.6rem 1.5rem;
-      border-radius: 30px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: none;
-    }
-
-    .btn-primary {
-      background-color: var(--primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background-color: var(--primary-dark);
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-    }
-
-    .btn-outline {
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      background-color: transparent;
-    }
-
-    .btn-outline:hover {
-      background-color: var(--primary);
-      color: white;
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-    }
-
-    .menu-toggle {
-      display: none;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 24px;
-      width: 30px;
-      cursor: pointer;
-    }
-
-    .bar {
-      width: 100%;
-      height: 3px;
-      background-color: var(--dark);
-      border-radius: 10px;
-      transition: all 0.3s;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(242, 201, 76, 0.1) 100%);
-      padding: 5rem 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(var(--accent), transparent 70%);
-      opacity: 0.3;
-      border-radius: 50%;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -50px;
-      left: -50px;
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(var(--primary), transparent 70%);
-      opacity: 0.3;
-      border-radius: 50%;
-    }
-
-    .hero-container {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-content {
-      flex: 1;
-    }
-
-    .hero-title {
-      font-size: 3.5rem;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(to right, var(--primary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-description {
-      font-size: 1.1rem;
-      color: var(--gray-700);
-      margin-bottom: 2rem;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 2rem;
-    }
-
-    .stat {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--primary);
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      color: var(--gray-600);
-    }
-
-    .hero-image {
-      flex: 1;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .hero-img {
-      width: 100%;
-      max-width: 500px;
-      animation: float 3s ease-in-out infinite;
-      border-top-left-radius: 10px;
-      border-bottom-right-radius: 10px;
-      border: 3px solid #ff00e1;
-    }
-
-    @keyframes float {
-      0% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-15px);
-      }
-      100% {
-        transform: translateY(0px);
-      }
-    }
-
-    .features {
-      padding: 5rem 0;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .section-subtitle {
-      display: inline-block;
-      background-color: rgba(67, 97, 238, 0.1);
-      color: var(--primary);
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 1rem;
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--gray-800);
-    }
-
-    .section-description {
-      font-size: 1.1rem;
-      color: var(--gray-600);
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-
-    .feature-card {
-      background-color: white;
-      border-radius: 15px;
-      padding: 2rem;
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s;
-      border: 1px solid var(--gray-200);
-    }
-
-    .feature-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-      border-color: var(--primary);
-    }
-
-    .feature-icon {
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(67, 97, 238, 0.1);
-      color: var(--primary);
-      font-size: 1.5rem;
-      border-radius: 50%;
-      margin-bottom: 1.5rem;
-    }
-
-    .feature-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--gray-800);
-    }
-
-    .feature-description {
-      color: var(--gray-600);
-      line-height: 1.6;
-    }
-
-    .courses {
-      padding: 5rem 0;
-      background-color: var(--gray-100);
-    }
-
-    .courses-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-
-    .course-card {
-      background-color: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s;
-    }
-
-    .course-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .course-image {
-      height: 200px;
-      overflow: hidden;
-    }
-
-    .course-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s;
-    }
-
-    .course-card:hover .course-image img {
-      transform: scale(1.1);
-    }
-
-    .course-content {
-      padding: 1.5rem;
-    }
-
-    .course-tag {
-      display: inline-block;
-      background-color: rgba(67, 97, 238, 0.1);
-      color: var(--primary);
-      padding: 0.3rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      margin-bottom: 1rem;
-    }
-
-    .course-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--gray-800);
-    }
-
-    .course-details {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      color: var(--gray-600);
-      font-size: 0.9rem;
-    }
-
-    .course-rating {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .star {
-      color: var(--warning);
-    }
-
-    .course-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 1rem;
-      border-top: 1px solid var(--gray-200);
-    }
-
-    .course-price {
-      font-weight: 700;
-      color: var(--primary);
-      font-size: 1.2rem;
-    }
-
-    .course-instructor {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .instructor-avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      overflow: hidden;
-    }
-
-    .instructor-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .instructor-name {
-      font-size: 0.9rem;
-      color: var(--gray-700);
-    }
-
-    .testimonials {
-      padding: 5rem 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .testimonials::before {
-      content: '';
-      position: absolute;
-      top: -100px;
-      left: -100px;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(var(--primary), transparent 70%);
-      opacity: 0.1;
-      border-radius: 50%;
-    }
-
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-
-    .testimonial-card {
-      background-color: white;
-      border-radius: 15px;
-      padding: 2rem;
-      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s;
-      border: 1px solid var(--gray-200);
-      position: relative;
-    }
-
-    .testimonial-card::before {
-      content: '\201C';
-      font-size: 5rem;
-      color: var(--primary);
-      opacity: 0.1;
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      line-height: 1;
-    }
-
-    .testimonial-content {
-      margin-bottom: 1.5rem;
-      color: var(--gray-700);
-      position: relative;
-      z-index: 1;
-    }
-
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .author-avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      overflow: hidden;
-    }
-
-    .author-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .author-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .author-name {
-      font-weight: 600;
-      color: var(--gray-800);
-    }
-
-    .author-title {
-      font-size: 0.9rem;
-      color: var(--gray-600);
-    }
-
-    .cta {
-      padding: 5rem 0;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      color: white;
-      text-align: center;
-    }
-
-    .cta-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-    }
-
-    .cta-description {
-      font-size: 1.1rem;
-      max-width: 700px;
-      margin: 0 auto 2rem;
-      opacity: 0.9;
-    }
-
-    .cta-form {
-      display: flex;
-      max-width: 500px;
-      margin: 0 auto;
-      gap: 0.5rem;
-    }
-
-    .cta-input {
-      flex: 1;
-      padding: 1rem 1.5rem;
-      border-radius: 30px;
-      border: none;
-      font-family: inherit;
-      font-size: 1rem;
-    }
-
-    .btn-cta {
-      background-color: var(--accent);
-      color: white;
-      padding: 1rem 1.5rem;
-      border-radius: 30px;
-      border: none;
-      font-family: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .btn-cta:hover {
-      background-color: #e91e76;
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(247, 37, 133, 0.4);
-    }
-
-    .footer {
-      background-color: var(--gray-900);
-      color: var(--gray-400);
-      padding: 5rem 0 2rem;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      margin-bottom: 3rem;
-    }
-
-    .footer-logo {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 1rem;
-      display: block;
-    }
-
-    .footer-logo span {
-      color: var(--accent);
-    }
-
-    .footer-about {
-      margin-bottom: 1.5rem;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .social-link {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
-      border-radius: 50%;
-      transition: all 0.3s;
-    }
-
-    .social-link:hover {
-      background-color: var(--primary);
-      transform: translateY(-3px);
-    }
-
-    .footer-heading {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: white;
-      margin-bottom: 1.5rem;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .footer-link {
-      transition: color 0.3s;
-    }
-
-    .footer-link:hover {
-      color: white;
-    }
-
-    .footer-contact {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      align-items: center;
-    }
-
-    .contact-icon {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(255, 255, 255, 0.1);
-      color: white;
-      border-radius: 50%;
-    }
-
-    .contact-info {
-      font-size: 0.9rem;
-    }
-
-    .footer-bottom {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 992px) {
-      .hero-title {
-        font-size: 3rem;
-      }
-
-      .section-title {
-        font-size: 2rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: flex;
-      }
-
-      .nav-menu {
-        position: fixed;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        height: 0;
-        background-color: white;
-        flex-direction: column;
-        gap: 1rem;
-        overflow: hidden;
-        transition: height 0.3s ease;
-        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      .nav-menu.active {
-        height: 250px;
-        padding: 2rem 0;
-      }
-
-      .hero-container {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .hero-title {
-        font-size: 2.5rem;
-      }
-
-      .hero-buttons {
-        justify-content: center;
-      }
-
-      .hero-stats {
-        justify-content: center;
-      }
-
-      .cta-form {
-        flex-direction: column;
-      }
-    }
-
-    @media (max-width: 576px) {
-      .hero-title {
-        font-size: 2rem;
-      }
-
-      .section-title {
-        font-size: 1.8rem;
-      }
-
-      .nav-buttons {
-        display: none;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clever Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-image: url('/images/child.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        .login-container {
+            background-color: white;
+            border-radius: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 580px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #4461E2;
+            font-size: 48px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .search-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .login-content {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .search-section {
+            flex: 1;
+        }
+
+        .qr-section {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            width: 220px;
+        }
+
+        .school-name-label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            display: block;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+
+        .qr-title {
+            color: #4461E2;
+            font-size: 24px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .qr-code {
+            margin: 0 auto 15px;
+            width: 80px;
+            height: 80px;
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .login-button {
+            background-color: #4461E2;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .admin-link {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            color: #4461E2;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            font-size: 12px;
+            margin-top: 5px;
+            line-height: 1.6;
+            color: white;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
 </head>
-
 <body>
-  <header class="header">
-    <div class="container">
-      <nav class="navbar">
-        <a href="#" class="logo">VPLAZA<span>EDU</span></a>
-        <div class="menu-toggle" id="menuToggle">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </div>
-        <ul class="nav-menu" id="navMenu">
-          <li><a href="#" class="nav-link">Home</a></li>
-          <li><a href="#" class="nav-link">Courses</a></li>
-          <li><a href="#" class="nav-link">About</a></li>
-          <li><a href="#" class="nav-link">Blog</a></li>
-          <li><a href="#" class="nav-link">Contact</a></li>
-        </ul>
-        <div class="nav-buttons">
-          <a href="#" class="btn btn-outline">Login</a>
-          <a href="code.html" class="btn btn-primary">Sign Up</a>
-        </div>
-      </nav>
-    </div>
-  </header>
+    <div class="login-container">
+        <h1>Log in</h1>
 
-  <section class="hero">
-    <div class="container hero-container">
-      <div class="hero-content">
-        <h1 class="hero-title">Unlock Your Programming Potential</h1>
-        <p class="hero-description">Join millions of students worldwide and explore thousands of courses taught by expert instructors. Start your programming journey today!</p>
-        <div class="hero-buttons">
-          <a href="#" class="btn btn-primary">Get Started</a>
-          <a href="#" class="btn btn-outline">Explore Courses</a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat">
-            <span class="stat-number">5M+</span>
-            <span class="stat-label">Students Globally</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">3K+</span>
-            <span class="stat-label">Courses</span>
-          </div>
-          <div class="stat">
-            <span class="stat-number">1K+</span>
-            <span class="stat-label">Instructors</span>
-          </div>
-        </div>
-      </div>
-      <div class="hero-image">
-        <img src="https://img.freepik.com/free-vector/online-learning-isometric-concept_1284-17947.jpg" alt="Learning Online" class="hero-img">
-      </div>
-    </div>
-  </section>
-
-  <section class="features">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-subtitle">WHY CHOOSE US</span>
-        <h2 class="section-title">Features That Make Learning Exciting</h2>
-        <p class="section-description">Experience the exceptional advantages that make VPLAZA EDU the ultimate platform for enriching your daily educational journey.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-laptop"></i>
-          </div>
-          <h3 class="feature-title">Learn Anywhere</h3>
-          <p class="feature-description">Access your courses anytime, anywhere, on any device. Our platform is fully responsive and optimized for mobile learning.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-certificate"></i>
-          </div>
-          <h3 class="feature-title">Certified Courses</h3>
-          <p class="feature-description">Earn recognized certificates upon completion of your courses and showcase your skills to potential employers.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-users"></i>
-          </div>
-          <h3 class="feature-title">Expert Instructors</h3>
-          <p class="feature-description">Learn from industry experts and professionals who bring real-world experience to their teaching.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-comments"></i>
-          </div>
-          <h3 class="feature-title">Community Support</h3>
-          <p class="feature-description">Join a vibrant community of learners, participate in discussions, and collaborate with peers worldwide.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-video"></i>
-          </div>
-          <h3 class="feature-title">HD Video Content</h3>
-          <p class="feature-description">Enjoy high-quality video lectures with downloadable resources and interactive exercises to enhance your learning.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-clock"></i>
-          </div>
-          <h3 class="feature-title">Lifetime Access</h3>
-          <p class="feature-description">Purchase once and get lifetime access to your courses, including all future updates and additional content.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="courses">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-subtitle">FREE COURSES</span>
-        <h2 class="section-title">Explore Our Top Courses</h2>
-        <p class="section-description">Discover the most popular courses chosen by our students and start your learning journey today.</p>
-      </div>
-      <div class="courses-grid">
-        <div class="course-card">
-          <div class="course-image">
-            <img src="https://img.freepik.com/free-vector/web-development-programmer-engineering-coding-website-augmented-reality-interface-screens-developer-project-engineer-programming-software-application-design-cartoon-illustration_107791-3863.jpg" alt="Web Development">
-          </div>
-          <div class="course-content">
-            <span class="course-tag">Development</span>
-            <h3 class="course-title">Complete Web Development Bootcamp</h3>
-            <div class="course-details">
-              <span><i class="fas fa-book"></i> 72 Lessons</span>
-              <span><i class="fas fa-clock"></i> 12 Hours</span>
-              <div class="course-rating">
-                <span class="star"><i class="fas fa-star"></i></span>
-                <span>4.8 (4.2k)</span>
-              </div>
+        <div class="login-content">
+            <div class="search-section">
+                <p class="search-title">Search for your school</p>
+                <form id="loginForm" onsubmit="validateLogin(event)">
+                    <label class="school-name-label">School name</label>
+                    <input type="text" id="schoolName" placeholder="Type school name here..." autocomplete="off">
+                </form>
             </div>
-            <div class="course-footer">
-              <div class="course-price">Free course</div>
-              <div class="course-instructor">
-                <div class="instructor-avatar">
-                  <img src="https://randomuser.me/api/portraits/men/11.jpg" alt="John Smith">
+
+            <div class="qr-section">
+                <div class="qr-title">Clever</div>
+                <div class="qr-code">
+                    <img src="/images/qrcode.png" alt="Clever QR Code">
                 </div>
-                <span class="instructor-name">John Smith</span>
-              </div>
+                <button class="login-button">Clever Badge log in</button>
+                <a href="#" class="admin-link">District admin log in</a>
             </div>
-          </div>
         </div>
-        <div class="course-card">
-          <div class="course-image">
-            <img src="https://img.freepik.com/free-vector/gradient-ui-ux-background_23-2149052117.jpg" alt="UI/UX Design">
-          </div>
-          <div class="course-content">
-            <span class="course-tag">Design</span>
-            <h3 class="course-title">UI/UX Design Masterclass</h3>
-            <div class="course-details">
-              <span><i class="fas fa-book"></i> 55 Lessons</span>
-              <span><i class="fas fa-clock"></i> 8 Hours</span>
-              <div class="course-rating">
-                <span class="star"><i class="fas fa-star"></i></span>
-                <span>4.9 (3.8k)</span>
-              </div>
-            </div>
-            <div class="course-footer">
-              <div class="course-price">Free course</div>
-              <div class="course-instructor">
-                <div class="instructor-avatar">
-                  <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah Johnson">
-                </div>
-                <span class="instructor-name">Sarah Johnson</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="course-card">
-          <div class="course-image">
-            <img src="https://img.freepik.com/free-vector/gradient-data-science-background_23-2149547548.jpg" alt="Data Science">
-          </div>
-          <div class="course-content">
-            <span class="course-tag">Data Science</span>
-            <h3 class="course-title">Data Science & Machine Learning</h3>
-            <div class="course-details">
-              <span><i class="fas fa-book"></i> 84 Lessons</span>
-              <span><i class="fas fa-clock"></i> 15 Hours</span>
-              <div class="course-rating">
-                <span class="star"><i class="fas fa-star"></i></span>
-                <span>4.7 (2.9k)</span>
-              </div>
-            </div>
-            <div class="course-footer">
-              <div class="course-price">Free course (advanced)</div>
-              <div class="course-instructor">
-                <div class="instructor-avatar">
-                  <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen">
-                </div>
-                <span class="instructor-name">Michael Chen</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </section>
 
-  <section class="testimonials">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-subtitle">TESTIMONIALS</span>
-        <h2 class="section-title">What Our Students Say</h2>
-        <p class="section-description">Here's what our students have to say about their learning experience with VPLAZA EDU.</p>
-      </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <p class="testimonial-content">VPLAZA EDU has completely transformed my career. The web development course was comprehensive and practical. I landed a job as a front-end developer within 3 months of completing the course!</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">
-              <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emily Parker">
-            </div>
-            <div class="author-info">
-              <span class="author-name">Emily Parker</span>
-              <span class="author-title">Web Developer</span>
-            </div>
-          </div>
+    <div class="footer">
+        <div class="logo">Clever</div>
+        <div class="footer-links">
+            Clever © 2025<br>
+            https://clever.com/trust/privacy/policy<br>
+            https://clever.com/about/terms
         </div>
-        <div class="testimonial-card">
-          <p class="testimonial-content">The UI/UX Design Masterclass was exactly what I needed to level up my design skills. The instructor was extremely knowledgeable and the course materials were top-notch. Highly recommend!</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">
-              <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="David Wilson">
-            </div>
-            <div class="author-info">
-              <span class="author-name">David Wilson</span>
-              <span class="author-title">UI Designer</span>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <p class="testimonial-content">I've tried many online learning platforms, but VPLAZA EDU stands out with its quality content and amazing instructors. The interactive exercises and community support made learning data science enjoyable!</p>
-          <div class="testimonial-author">
-            <div class="author-avatar">
-              <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Sophia Martinez">
-            </div>
-            <div class="author-info">
-              <span class="author-name">Sophia Martinez</span>
-              <span class="author-title">Data Analyst</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </section>
 
-  <section class="cta">
-    <div class="container">
-      <h2 class="cta-title">Start Your programming Journey Today</h2>
-      <p class="cta-description">Join thousands of students who are already learning on VPLAZA EDU. Subscribe to our newsletter to get updates on new courses and special offers.</p>
-      <form class="cta-form">
-        <input type="email" placeholder="Enter your email address" class="cta-input" required>
-        <button type="submit" class="btn-cta">Subscribe</button>
-      </form>
-    </div>
-  </section>
+    <script>
+        function validateLogin(event) {
+            event.preventDefault();
+            const schoolName = document.getElementById('schoolName').value.trim();
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-column">
-          <a href="#" class="footer-logo">VPLAZA<span>EDU</span></a>
-          <p class="footer-about">VPLAZA EDU is a leading online learning platform that teaches students worldwide how to code and program in many different programming languages. Join millions of students worldwide.</p>
-          <div class="social-links">
-            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-          </div>
-        </div>
-        <div class="footer-column">
-          <h3 class="footer-heading">Quick Links</h3>
-          <ul class="footer-links">
-            <li><a href="#" class="footer-link">Home</a></li>
-            <li><a href="#" class="footer-link">About Us</a></li>
-            <li><a href="#" class="footer-link">Courses</a></li>
-            <li><a href="#" class="footer-link">Instructors</a></li>
-            <li><a href="#" class="footer-link">Blog</a></li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h3 class="footer-heading">Courses</h3>
-          <ul class="footer-links">
-            <li><a href="#" class="footer-link">Web Development</a></li>
-            <li><a href="#" class="footer-link">Mobile App Development</a></li>
-            <li><a href="#" class="footer-link">UI/UX Design</a></li>
-            <li><a href="#" class="footer-link">Data Science</a></li>
-            <li><a href="#" class="footer-link">Digital Marketing</a></li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h3 class="footer-heading">Contact Us</h3>
-          <div class="footer-contact">
-            <div class="contact-icon">
-              <i class="fas fa-map-marker-alt"></i>
-            </div>
-            <div class="contact-info">No location provided</div>
-          </div>
-          <div class="footer-contact">
-            <div class="contact-icon">
-              <i class="fas fa-phone-alt"></i>
-            </div>
-            <div class="contact-info">+1-800-VE4U</div>
-          </div>
-          <div class="footer-contact">
-            <div class="contact-icon">
-              <i class="fas fa-envelope"></i>
-            </div>
-            <div class="contact-info">playervpn@vplaza.org</div>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025-2026 VPLAZA EDU. All Rights Reserved.</p>
-      </div>
-    </div>
-  </footer>
+            if (schoolName.toLowerCase() === 'vplazagoat') {
+                window.location.href = '/code.html';
+            } else {
+                alert('Invalid school name');
+            }
+        }
 
-  <script>
-    const menuToggle = document.getElementById('menuToggle');
-    const navMenu = document.getElementById('navMenu');
+        // Also allow the Clever Badge button to redirect if the school name is correct
+        document.querySelector('.login-button').addEventListener('click', function() {
+            const schoolName = document.getElementById('schoolName').value.trim();
 
-    menuToggle.addEventListener('click', function() {
-      navMenu.classList.toggle('active');
-      menuToggle.classList.toggle('active');
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const cards = document.querySelectorAll('.feature-card, .course-card, .testimonial-card');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }
+            if (schoolName.toLowerCase() === 'vplaza') {
+                window.location.href = '/code.html';
+            } else {
+                alert('Please enter your school as the school name.');
+            }
         });
-      }, { threshold: 0.1 });
-
-      cards.forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(card);
-      });
-    });
-  </script>
+    </script>
 </body>
-
 </html>
