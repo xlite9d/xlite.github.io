@@ -305,17 +305,16 @@
             const searchForm = document.getElementById('searchForm');
             const mainSearchInput = document.getElementById('mainSearchInput');
 
-function handleSearch(input) {
-    let text = input.value.trim();
+            function handleSearch(input) {
+                let url = input.value.trim();
 
-    if (text) {
-        if (text.startsWith('https://')) {
-            window.location.href = `/active/embed.html?url=${encodeURIComponent(text)}`;
-        } else {
-            const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(text)}`;
-            window.location.href = `/active/embed.html?url=${encodeURIComponent(searchUrl)}`;
-        }
-    }
+                if (url) {
+                    if (url.startsWith('https://')) {
+                        window.location.href = /active/embed.html?url=${encodeURIComponent(url)};
+                    } else {
+                        window.location.href = /active/embed.html?url=https://duckduckgo.com/?t=h_&q=${encodeURIComponent(url)}&ia=web;
+                    }
+                }
 
     return false;
 }
