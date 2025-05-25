@@ -481,7 +481,7 @@
                 } else if (searchTerm.includes('.')) {
                     url = `/active/embed.html?url=${encodeURIComponent('https://' + searchTerm)}`;
                 } else {
-                    url = `/active/embed.html?url=https://duckduckgo.com/?t=h_&q=${encodeURIComponent(searchTerm)}`;
+                    url = `/active/embed.html?url=https://search.brave.com/search?q=${encodeURIComponent(searchTerm)}`;
                 }
 
                 const iframe = document.createElement('iframe');
