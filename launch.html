@@ -18,9 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/ionicons@5.5.2/dist/css/ionicons.min.css" rel="stylesheet">
-    <!-- Animation libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <!-- Three.js for advanced background effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         #loading-screen {
@@ -843,7 +841,6 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
     <div id="loading-screen">
         <div class="smoke-container" id="smoke-container"></div>
         <div class="loading-logo">
@@ -852,7 +849,6 @@
         </div>
     </div>
 
-    <!-- Audio Element -->
     <audio id="loading-sound" preload="auto">
         <source src="audio/vplaza.mp3" type="audio/mpeg">
     </audio>
@@ -910,37 +906,27 @@
     <p class="instructions">Thank You For Using Vplaza! Click "Lets Enter" to continue!</p>
 
     <script>
-        // Loading screen logic with Vplaza logo, Entertainment, smoke, and 5s duration
         window.addEventListener('DOMContentLoaded', function() {
             var loadingScreen = document.getElementById('loading-screen');
             var loadingSound = document.getElementById('loading-sound');
             var smokeContainer = document.getElementById('smoke-container');
-            var minTime = 5000; // 5 seconds minimum
+            var minTime = 5000;
             var start = Date.now();
 
-            // Force audio to play every time
             function forcePlayAudio() {
-                // Set properties for optimal playback
                 loadingSound.volume = 1.0;
                 loadingSound.muted = false;
                 loadingSound.loop = false;
                 loadingSound.currentTime = 0;
 
-                // Apply multiple techniques to ensure playback
                 var promise = loadingSound.play();
 
                 if (promise !== undefined) {
                     promise.catch(function(error) {
-                        console.log("Audio play failed, trying alternative method:", error);
-
-                        // Second attempt with setTimeout
                         setTimeout(function() {
                             loadingSound.play().catch(function() {
-                                console.log("Second attempt failed");
                             });
                         }, 100);
-
-                        // Ensure playback on user interaction
                         document.body.addEventListener('click', function clickToPlay() {
                             loadingSound.play();
                             document.body.removeEventListener('click', clickToPlay);
@@ -948,26 +934,21 @@
                     });
                 }
 
-                // Create a silent audio context as backup
                 try {
                     var AudioContext = window.AudioContext || window.webkitAudioContext;
                     var audioCtx = new AudioContext();
-                    // This creates a short silent sound that unblocks audio
                     var oscillator = audioCtx.createOscillator();
                     oscillator.frequency.value = 400;
                     oscillator.connect(audioCtx.destination);
                     oscillator.start();
                     oscillator.stop(audioCtx.currentTime + 0.001);
                 } catch(e) {
-                    console.log("Audio context failed:", e);
                 }
             }
 
-            // Try multiple times to ensure audio playback
             forcePlayAudio();
             setTimeout(forcePlayAudio, 300);
 
-            // Animate logo letters
             setTimeout(function() {
                 document.querySelector('.loading-v').style.opacity = '1';
             }, 100);
@@ -978,15 +959,14 @@
                 document.querySelector('.loading-entertainment').style.opacity = '1';
             }, 600);
 
-            // Smoke effect
             function randomBetween(a, b) {
                 return a + Math.random() * (b - a);
             }
             function spawnSmoke() {
                 var smoke = document.createElement('div');
                 smoke.className = 'smoke smoke-anim' + (Math.random() > 0.5 ? ' smoke-red' : '');
-                var x = randomBetween(30, 70); // percent
-                var y = randomBetween(60, 80); // percent
+                var x = randomBetween(30, 70);
+                var y = randomBetween(60, 80);
                 var tx = randomBetween(-100, 100) + 'px';
                 var ty = randomBetween(-180, -100) + 'px';
                 smoke.style.left = x + '%';
@@ -999,9 +979,7 @@
                     smoke.remove();
                 }, 2500);
             }
-            // Spawn several smoke puffs at intervals
             var smokeInterval = setInterval(spawnSmoke, 400);
-            // Also spawn a few at the start
             for (let i = 0; i < 4; ++i) setTimeout(spawnSmoke, i * 200);
 
             function hideLoading() {
@@ -1010,8 +988,6 @@
                     loadingScreen.classList.add('hide');
                     setTimeout(function() {
                         loadingScreen.style.display = 'none';
-
-                        // Fade out audio and stop it
                         var fadeAudio = setInterval(function() {
                             if (loadingSound.volume > 0.05) {
                                 loadingSound.volume -= 0.05;
@@ -1025,30 +1001,21 @@
                 }, 350);
             }
 
-            // Wait for all assets and a minimum time
             window.addEventListener('load', function() {
                 var elapsed = Date.now() - start;
                 var wait = Math.max(0, minTime - elapsed);
                 setTimeout(hideLoading, wait);
             });
 
-            // Fallback: hide after 5s max
             setTimeout(hideLoading, minTime);
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Create particles
             createParticles(25);
-
-            // Modern cursor effect
             createCursorEffect();
-
-            // Parallax effect on mouse move
             document.addEventListener('mousemove', function(e) {
                 parallaxEffect(e);
             });
-
-            // Text animation
             animateText();
         });
 
@@ -1099,7 +1066,6 @@
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
 
-                // Scale effect on hoverable elements
                 const hoverable = e.target.closest('.hoverable');
                 if (hoverable) {
                     cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
@@ -1131,7 +1097,6 @@
             if (window.innerWidth > 768) {
                 imageContainer.style.transform = `translateY(-50%) translate(${moveX}px, ${moveY}px)`;
 
-                // Parallax for rings
                 rings.forEach((ring, index) => {
                     const factor = (index + 1) * 0.3;
                     const baseTransform = ring.style.transform.split('rotate')[0] || 'translate(-50%, -50%)';
@@ -1190,6 +1155,26 @@
 });
 
         }
+
+        document.querySelectorAll('.enter-button').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                var url = btn.getAttribute('href');
+                var win = window.open('about:blank', '_blank');
+                if (win) {
+                    win.document.write(`
+                <title>Clever</title>
+                <link rel="icon" type="image/x-icon" href="/images/clever.ico">
+                <style>
+                    html,body {height:100%;margin:0;padding:0;overflow:hidden;background:#111;}
+                    iframe {border:none;width:100vw;height:100vh;display:block;}
+                </style>
+                <iframe src="${url}" allow="autoplay; fullscreen" frameborder="0"></iframe>
+            `);
+                    win.document.close();
+                }
+            });
+        });
     </script>
 </body>
 </html>
