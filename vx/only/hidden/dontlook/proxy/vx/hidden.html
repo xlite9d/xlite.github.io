@@ -683,6 +683,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
+            sandbox: "allow-same-origin allow-scripts allow-forms allow-downloads allow-modals allow-popups allow-popups-to-escape-sandbox";
         }
 
         .loading-bar-container {
@@ -1089,7 +1090,7 @@
             </div>
             <div class="content-area" id="content-area">
                 <div class="tab-content active" id="tab-content-0">
-                    <iframe src="/landin" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
+                    <iframe src="/landin" id="frame-0" onload="frameLoaded(0)" data-is-loading="false" sandbox="allow-same-origin allow-scripts allow-forms allow-downloads allow-modals allow-popups allow-popups-to-escape-sandbox"></iframe>
                 </div>
             </div>
 
@@ -1636,7 +1637,7 @@
             const tabContent = document.createElement('div');
             tabContent.className = 'tab-content';
             tabContent.id = `tab-content-${tabId}`;
-            tabContent.innerHTML = `<iframe src="${newTabData.url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+            tabContent.innerHTML = `<iframe src="${newTabData.url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false" sandbox="allow-same-origin allow-scripts allow-forms allow-downloads allow-modals allow-popups allow-popups-to-escape-sandbox"></iframe>`;
 
             contentArea.appendChild(tabContent);
 
@@ -1799,6 +1800,42 @@
                 }, 500);
             }
 
+            // Add popup blocker and redirect handler
+            try {
+                if (frame.contentWindow) {
+                    // Override window.open to create new tabs in our browser instead
+                    frame.contentWindow.eval(`
+                        const originalOpen = window.open;
+                        window.open = function(url, target, features) {
+                            if (url) {
+                                parent.postMessage({
+                                    type: 'popup',
+                                    url: url
+                                }, '*');
+                            }
+                            return null;
+                        };
+
+                        // Also handle target="_blank" links
+                        document.addEventListener('click', function(e) {
+                            const link = e.target.closest('a');
+                            if (link && (link.target === '_blank' || e.ctrlKey || e.metaKey)) {
+                                e.preventDefault();
+                                if (link.href) {
+                                    parent.postMessage({
+                                        type: 'newTab',
+                                        url: link.href
+                                    }, '*');
+                                }
+                            }
+                        });
+                    `);
+                }
+            } catch (e) {
+                // Cross-origin error - can't inject scripts
+                console.log('Could not inject popup blocker due to cross-origin policy');
+            }
+
             try {
                 const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
                 const frameUrl = frame.src;
@@ -1923,6 +1960,32 @@
 
                         storeHistoryItem(event.data.url);
                     }
+                } else if (event.data.type === 'popup' || event.data.type === 'newTab') {
+                    // Handle popup/new tab requests from iframes
+                    const popupUrl = event.data.url;
+                    if (popupUrl) {
+                        // Create a new tab with the popup URL using /active/embed.html
+                        const embedUrl = popupUrl.startsWith('http') ? `/active/embed.html?url=${encodeURIComponent(popupUrl)}` : popupUrl;
+
+                        const tabId = tabCounter++;
+                        const newTabData = {
+                            id: tabId,
+                            title: 'New Tab',
+                            url: embedUrl,
+                            icon: 'fa-globe'
+                        };
+
+                        createTopTab(tabId, newTabData.title, newTabData.url, newTabData.icon);
+
+                        const tabContent = document.createElement('div');
+                        tabContent.className = 'tab-content';
+                        tabContent.id = `tab-content-${tabId}`;
+                        tabContent.innerHTML = `<iframe src="${newTabData.url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false" sandbox="allow-same-origin allow-scripts allow-forms allow-downloads allow-modals allow-popups allow-popups-to-escape-sandbox"></iframe>`;
+
+                        contentArea.appendChild(tabContent);
+                        switchTab(tabId);
+                        updateTabNumbers();
+                    }
                 }
             }
         });
@@ -1974,7 +2037,7 @@
                         const tabContent = document.createElement('div');
                         tabContent.className = 'tab-content';
                         tabContent.id = `tab-content-${tabId}`;
-                        tabContent.innerHTML = `<iframe src="${url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+                        tabContent.innerHTML = `<iframe src="${url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false" sandbox="allow-same-origin allow-scripts allow-forms allow-downloads allow-modals allow-popups allow-popups-to-escape-sandbox"></iframe>`;
 
                         contentArea.appendChild(tabContent);
                         switchTab(tabId);
