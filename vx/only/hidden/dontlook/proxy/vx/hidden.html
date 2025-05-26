@@ -1800,47 +1800,33 @@
                 }, 500);
             }
 
-            // Add popup blocker and new tab handler - only for external sites
+            // Add popup blocker and redirect handler
             try {
-                if (frame.contentWindow && frame.src.includes('/active/embed.html')) {
-                    // Only inject for embedded external sites, not our internal pages
+                if (frame.contentWindow) {
+                    // Override window.open to create new tabs in our browser instead
                     frame.contentWindow.eval(`
                         const originalOpen = window.open;
-                        let lastPopupTime = 0;
-
                         window.open = function(url, target, features) {
-                            const now = Date.now();
-                            // Prevent multiple rapid popups (within 1 second)
-                            if (now - lastPopupTime < 1000) {
-                                return null;
-                            }
-                            lastPopupTime = now;
-
-                            if (url && target === '_blank') {
+                            if (url) {
                                 parent.postMessage({
                                     type: 'popup',
                                     url: url
                                 }, '*');
-                                return null;
                             }
                             return null;
                         };
 
-                        // Handle target="_blank" links only
+                        // Also handle target="_blank" links
                         document.addEventListener('click', function(e) {
                             const link = e.target.closest('a');
-                            if (link && link.target === '_blank' && link.href) {
+                            if (link && (link.target === '_blank' || e.ctrlKey || e.metaKey)) {
                                 e.preventDefault();
-                                const now = Date.now();
-                                if (now - lastPopupTime < 1000) {
-                                    return;
+                                if (link.href) {
+                                    parent.postMessage({
+                                        type: 'newTab',
+                                        url: link.href
+                                    }, '*');
                                 }
-                                lastPopupTime = now;
-
-                                parent.postMessage({
-                                    type: 'newTab',
-                                    url: link.href
-                                }, '*');
                             }
                         });
                     `);
