@@ -1,4 +1,4 @@
-<link rel="icon" type="image/x-icon" href="/images/clever.ico">
+<link rel="icon" type="image/x-icon" href="/v1/files/v1-info/images/vplazav1.png">
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +12,7 @@
     <meta property="og:description" content="VplazaX, a futuristic gaming site. Watch T.V., movies, and watch tiktok, oh wait, use vtok, a tiktok clone for vplaza! Ah man, we need a logo, use vplaza. Want to be free, use our Opera GX clone proxy!" />
     <meta name="theme-color" content="#FF0000">
     <meta name="orbit:card" content="/v1/files/v1-info/images/vplazav1.png">
-    <title>Clever</title>
+    <title>VPlaza V1</title>
       <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1163,14 +1163,18 @@
                 var win = window.open('about:blank', '_blank');
                 if (win) {
                     win.document.write(`
-                <title>Clever</title>
-                <link rel="icon" type="image/x-icon" href="/images/clever.ico">
-                <style>
-                    html,body {height:100%;margin:0;padding:0;overflow:hidden;background:#111;}
-                    iframe {border:none;width:100vw;height:100vh;display:block;}
-                </style>
-                <iframe src="${url}" allow="autoplay; fullscreen" frameborder="0"></iframe>
-            `);
+        <head>
+            <title>Clever</title>
+            <link rel="icon" type="image/x-icon" href="${location.origin}/images/clever.ico">
+            <style>
+                html,body {height:100%;margin:0;padding:0;overflow:hidden;background:#111;}
+                iframe {border:none;width:100vw;height:100vh;display:block;}
+            </style>
+        </head>
+        <body>
+            <iframe src="${url}" allow="autoplay; fullscreen" frameborder="0"></iframe>
+        </body>
+    `);
                     win.document.close();
                 }
             });
