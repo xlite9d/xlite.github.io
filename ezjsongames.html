@@ -296,7 +296,7 @@
         let allGames = [];
         
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('https://vplaza.pages.dev/list')
+            fetch('https://vplaza.org/list.txt')
                 .then(response => response.text())
                 .then(data => {
                     const tempDiv = document.createElement('div');
