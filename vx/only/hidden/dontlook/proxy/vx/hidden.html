@@ -1,0 +1,2507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors 'none';">
+    <title>Vplaza v1</title>
+    <link rel="icon" type="image/x-icon" href="/v1/files/v1-info/images/vplazav1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #666 #f0f0f0;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toolbar {
+            height: 40px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d1b1b 100%);
+            border-bottom: 1px solid #ff4444;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            justify-content: space-between;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(255, 68, 68, 0.3);
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .toolbar-center {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #bc4646;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background-color: transparent;
+        }
+
+        .toolbar-icon:hover {
+            background-color: rgba(255, 68, 68, 0.2);
+            color: #ff6666;
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.4);
+        }
+
+        .status-item {
+            font-size: 11px;
+            color: #cccccc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
+            min-width: 50px;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: inset 0 1px 2px rgba(255, 68, 68, 0.1);
+        }
+
+        .opera-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        .opera-logo svg {
+            fill: #ff0000d1;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(3px 5px 2px rgba(255, 0, 0, 0.4));
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            height: calc(100vh - 40px);
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .tabs-top-bar {
+            display: flex;
+            height: 30px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            align-items: flex-end;
+            padding: 0 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 4;
+            border-bottom: 1px solid #333333;
+        }
+
+        .history-dropdown-btn {
+            width: 24px;
+            height: 24px;
+            background-color: rgba(40, 40, 40, 0.8);
+            border: 1px solid #444444;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 8px;
+            color: #cccccc;
+            font-size: 10px;
+            transition: all 0.2s ease;
+            margin-bottom: 3px;
+        }
+
+        .history-dropdown-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.3) 0%, rgba(139, 69, 19, 0.3) 100%);
+            border-color: #ff4444;
+            color: #ff9999;
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.4);
+        }
+
+        .tabs-top-bar::-webkit-scrollbar {
+            height: 0;
+            background: transparent;
+        }
+
+        .matrix-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(0deg, transparent 24%, rgba(255, 140, 0, 0.05) 25%, rgba(255, 140, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 140, 0, 0.05) 75%, rgba(255, 140, 0, 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(255, 140, 0, 0.05) 25%, rgba(255, 140, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 140, 0, 0.05) 75%, rgba(255, 140, 0, 0.05) 76%, transparent 77%, transparent);
+            background-size: 8px 8px;
+            background-position: 0 0, 0 0;
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+            border-radius: inherit;
+        }
+
+        .tabs-top-bar .tab {
+            display: flex;
+            align-items: center;
+            height: 30px;
+            margin-right: 1px;
+            padding: 0 16px;
+            cursor: pointer;
+            position: relative;
+            color: #999999;
+            transition: all 0.2s ease;
+            background-color: rgba(40, 40, 40, 0.8);
+            min-width: 120px;
+            max-width: 200px;
+            border-radius: 0;
+            border: 1px solid #444444;
+            border-bottom: none;
+            overflow: hidden;
+        }
+
+        .tabs-top-bar .tab:not(.active) .matrix-bg {
+            display: block;
+        }
+
+        .tabs-top-bar .tab.active .matrix-bg {
+            display: none;
+        }
+
+        .tabs-top-bar .tab .tab-icon {
+            margin-right: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tabs-top-bar .tab .tab-title {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tabs-top-bar .tab .tab-close {
+            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            transition: all 0.2s ease;
+        }
+
+        .tabs-top-bar .tab .tab-close:hover {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
+        }
+
+        .tab-shortcut-number {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 10px;
+            color: #ffffff;
+            font-weight: 700;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            padding: 2px 5px;
+            line-height: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 100;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        body.show-shortcuts .tab-shortcut-number {
+            opacity: 1;
+        }
+
+        .tab-preview {
+            position: absolute;
+            top: 45px;
+            left: 0;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 320px;
+            padding: 12px;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            transform: translateY(-5px);
+            pointer-events: none;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+
+        .tab:hover .tab-preview {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .tab-preview-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab-preview-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            padding: 2px;
+        }
+
+        .tab-preview-icon img {
+            width: 16px;
+            height: 16px;
+        }
+
+        .tab-preview-title {
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            color: #000;
+        }
+
+        .tab-preview-url {
+            font-size: 12px;
+            color: #0066cc;
+            margin-bottom: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 4px 6px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tab-preview-content {
+            width: 100%;
+            height: 180px;
+            background-color: #f5f5f5;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tab-preview-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .tab-preview::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #ffffff;
+        }
+
+        .tabs-top-bar .tab .tab-title {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+        }
+
+        .tabs-top-bar .tab .tab-close {
+            margin-left: 8px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .tabs-top-bar .tab .tab-close:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs-top-bar .tab:hover {
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.2) 0%, rgba(139, 69, 19, 0.2) 100%);
+            color: #ff9999;
+            border-color: rgba(255, 68, 68, 0.5);
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.3);
+        }
+
+        .tabs-top-bar .tab.active {
+            --tab-bg-color: #2a2a2a;
+            background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+            color: #ffffff;
+            position: relative;
+            border: 1px solid #ff4444;
+            border-bottom: 1px solid #2a2a2a;
+            margin-bottom: -1px;
+            z-index: 5;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
+        }
+
+        .tabs-top-bar .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: -8px;
+            width: 8px;
+            height: 8px;
+            background: transparent;
+            border-bottom-right-radius: 8px;
+            box-shadow: 4px 4px 0 0 #2a2a2a;
+            z-index: 1;
+        }
+
+        .tabs-top-bar .tab.active .tab-corner-right {
+            position: absolute;
+            bottom: -1px;
+            right: -8px;
+            width: 8px;
+            height: 8px;
+            background: transparent;
+            border-bottom-left-radius: 8px;
+            box-shadow: -4px 4px 0 0 #2a2a2a;
+            z-index: 1;
+        }
+
+        .tabs-top-bar .new-tab {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cccccc;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            background-color: transparent;
+            margin-left: 8px;
+            margin-bottom: 2px;
+        }
+
+        .tabs-top-bar .new-tab:hover {
+            color: #ff9999;
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.2) 0%, rgba(139, 69, 19, 0.2) 100%);
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.4);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 32px);
+            width: 100%;
+            background-color: #2a2a2a;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .browser-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            height: 48px;
+            position: relative;
+            z-index: 3;
+            border-bottom: 1px solid #333333;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .url-bar-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            font-family: poppins;
+        }
+
+        .browser-actions {
+            display: flex;
+            margin-right: 8px;
+        }
+
+        .action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cccccc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            margin-right: 4px;
+            background-color: transparent;
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.2) 0%, rgba(139, 69, 19, 0.2) 100%);
+            color: #ff9999;
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.4);
+        }
+
+        .url-bar-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            height: 32px;
+            background-color: rgba(40, 40, 40, 0.8);
+            border-radius: 16px;
+            padding: 0 12px;
+            margin: 0 12px;
+            border: 1px solid #444444;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .url-bar-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(0deg, transparent 24%, rgba(255, 140, 0, 0.05) 25%, rgba(255, 140, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 140, 0, 0.05) 75%, rgba(255, 140, 0, 0.05) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(255, 140, 0, 0.05) 25%, rgba(255, 140, 0, 0.05) 26%, transparent 27%, transparent 74%, rgba(255, 140, 0, 0.05) 75%, rgba(255, 140, 0, 0.05) 76%, transparent 77%, transparent);
+            background-size: 8px 8px;
+            background-position: 0 0, 0 0;
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 16px;
+        }
+
+        .flag-container {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .fps-counter {
+            font-size: 12px;
+            color: #666;
+            margin-right: 10px;
+            font-weight: 500;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .flag {
+            width: 24px;
+            height: 16px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 3px;
+            box-shadow: 0 0 3px rgba(255,68,68,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .flag:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 8px rgba(255,68,68,0.5);
+        }
+
+        .flag.active {
+            box-shadow: 0 0 12px rgba(255,68,68,0.8);
+            transform: scale(1.1);
+        }
+
+        .active-ip {
+            font-size: 10px;
+            color: #cccccc;
+            margin-left: 5px;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .url-bar {
+            flex-grow: 1;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #b73b3b;
+            font-size: 14px;
+            padding: 0 10px;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            z-index: 2;
+        }
+
+        .url-bar::placeholder {
+            color: #888888;
+        }
+
+        .url-bar-icon {
+            color: #c44747;
+            font-size: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .window-controls {
+            display: flex;
+            margin-left: auto;
+        }
+
+        .window-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cccccc;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-left: 4px;
+            background-color: transparent;
+            transition: all 0.2s ease;
+        }
+
+        .window-btn:hover {
+            color: #ff9999;
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.2) 0%, rgba(139, 69, 19, 0.2) 100%);
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.4);
+        }
+
+        .window-btn.close:hover {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(255, 68, 68, 0.6);
+        }
+
+        .content-area {
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+            height: calc(100% - 48px);
+            width: 100%;
+        }
+
+        .tab-content {
+            width: 100%;
+            height: 100%;
+            display: none;
+            overflow: hidden;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .loading-bar-container {
+            position: absolute;
+            top: 48px;
+            left: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: transparent;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+
+        .loading-bar {
+            height: 100%;
+            width: 0;
+            background-color: #ff00006e;
+            animation: loading 2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% { width: 0; transform: translateX(0); }
+            50% { width: 50%; transform: translateX(50%); }
+            100% { width: 0; transform: translateX(100%); }
+        }
+
+        .history-panel {
+            position: fixed;
+            top: 75px;
+            left: 5px;
+            width: 400px;
+            max-height: 600px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid #ff4444;
+            border-radius: 8px;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+            z-index: 999999999999999;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+            display: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .history-panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            color: #ffffff;
+        }
+
+        .history-item:hover {
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.2) 0%, rgba(139, 69, 19, 0.2) 100%);
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.3);
+        }
+
+        .history-item-icon {
+            color: #b94848;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .history-item-time {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff9999;
+            margin-right: 12px;
+            min-width: 45px;
+        }
+
+        .history-divider {
+            height: 1px;
+            background-color: #444444;
+            margin: 15px 0;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .history-icon {
+            margin-right: 10px;
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #ff4444;
+        }
+
+        .history-item-url {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+            color: #cccccc;
+        }
+
+        .tab-context-menu {
+            position: absolute;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid #ff4444;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+            width: 200px;
+            z-index: 10000;
+            display: none;
+        }
+
+        .context-menu-item {
+            padding: 8px 16px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .context-menu-item:hover {
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.2) 0%, rgba(139, 69, 19, 0.2) 100%);
+            color: #ff9999;
+        }
+
+        .context-menu-item i {
+            margin-right: 8px;
+            color: #cccccc;
+            width: 16px;
+            text-align: center;
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background-color: #444444;
+            margin: 4px 0;
+        }
+
+        .time-display {
+            font-weight: 500;
+            min-width: 50px;
+        }
+
+        .date-display {
+            min-width: 80px;
+        }
+
+        .battery-display {
+            min-width: 70px;
+        }
+
+        .fps-display {
+            min-width: 55px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .tabs-top-bar .tab.pinned {
+            min-width: 32px;
+            max-width: 32px;
+            width: 32px;
+            padding: 0;
+            justify-content: center;
+            border-radius: 6px 6px 0 0;
+            margin-left: 2px;
+            order: 1;
+        }
+
+        .tabs-top-bar .tab.pinned .tab-title,
+        .tabs-top-bar .tab.pinned .tab-close {
+            display: none;
+        }
+
+        .history-dropdown-btn {
+            order: 0;
+        }
+
+        .tabs-top-bar .tab:not(.pinned) {
+            order: 2;
+        }
+
+        .tabs-top-bar .new-tab {
+            order: 3;
+        }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                height: 36px;
+                padding: 0 8px;
+            }
+
+            .status-item {
+                font-size: 10px;
+                padding: 2px 4px;
+                min-width: 35px;
+            }
+
+            .tabs-top-bar {
+                height: 28px;
+                padding: 0 8px;
+            }
+
+            .tabs-top-bar .tab {
+                height: 26px;
+                font-size: 11px;
+                min-width: 80px;
+                padding: 0 8px;
+                border-radius: 6px 6px 0 0;
+            }
+
+            .history-dropdown-btn {
+                width: 20px;
+                height: 20px;
+                margin-right: 6px;
+                font-size: 8px;
+            }
+
+            .tabs-top-bar .new-tab {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+            }
+
+            .browser-header {
+                height: 40px;
+                padding: 6px 8px;
+            }
+
+            .action-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+            }
+
+            .url-bar-wrapper {
+                height: 28px;
+                padding: 0 8px;
+                margin: 0 6px;
+            }
+
+            .window-btn {
+                width: 24px;
+                height: 24px;
+                margin-left: 4px;
+            }
+
+            .history-panel {
+                width: 90%;
+                left: 5%;
+                top: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tabs-top-bar .tab {
+                min-width: 60px;
+                padding: 0 8px;
+            }
+
+            .url-bar {
+                font-size: 12px;
+            }
+
+            .url-bar-wrapper {
+                padding: 0 6px;
+            }
+
+            .history-panel {
+                max-height: 400px;
+            }
+
+            .toolbar-center {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="background-audio" loop>
+        <source src="/hertz/newesthertzaudiogodefpls.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="toolbar">
+        <div class="toolbar-left">
+            <div class="opera-logo">
+                <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2zm0 22.5c-4.694 0-8.5-3.806-8.5-8.5s3.806-8.5 8.5-8.5 8.5 3.806 8.5 8.5-3.806 8.5-8.5 8.5z" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="toolbar-center">
+            <div class="toolbar-icon" data-url="/active/embed.html?url=https://www.twitch.tv">
+                <ion-icon name="logo-twitch"></ion-icon>
+            </div>
+            <div class="toolbar-icon" data-url="/gamepagev1">
+                <ion-icon name="game-controller"></ion-icon>
+            </div>
+            <div class="toolbar-icon" data-url="/active/embed.html?url=https://play.geforcenow.com">
+                <ion-icon name="happy-outline"></ion-icon>
+            </div>
+            <div class="toolbar-icon" data-url="/tutorials">
+                <ion-icon name="eye-outline"></ion-icon>
+            </div>
+            <div class="toolbar-icon" id="clouds-btn">
+                <ion-icon name="cloud"></ion-icon>
+            </div>
+            <div class="toolbar-icon" data-url="/styles">
+                <ion-icon name="timer"></ion-icon>
+            </div>
+            <div class="toolbar-icon" data-url="/v-ai">
+                <ion-icon name="call-outline"></ion-icon>
+            </div>
+            <div class="toolbar-icon" data-url="/ai">
+                <ion-icon name="logo-ionitron"></ion-icon>
+            </div>
+            <div class="toolbar-icon" data-url="/a">
+                <ion-icon name="logo-apple-appstore"></ion-icon>
+            </div>
+            <div class="toolbar-icon" id="chat-btn" data-url="/chat">
+                <ion-icon name="chatbubble"></ion-icon>
+            </div>
+            <div class="toolbar-icon" id="music-player-btn" data-url="/audio">
+                <ion-icon name="headset"></ion-icon>
+            </div>
+            <div class="toolbar-icon" data-url="/active/embed.html?url=https://www.dropbox.com">
+                <ion-icon name="logo-dropbox"></ion-icon>
+            </div>
+        </div>
+
+        <div class="toolbar-right">
+            <div class="status-item time-display" id="time-display">00:00</div>
+            <div class="status-item date-display" id="date-display">Jan 1</div>
+            <div class="status-item battery-display" id="battery-display">100%</div>
+            <div class="status-item network-display" id="network-display">SECURE</div>
+        </div>
+    </div>
+
+    <div class="tabs-top-bar" id="tabs-top-bar">
+        <div class="history-dropdown-btn" id="history-btn">
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="new-tab" id="new-tab-btn-top">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="browser-header">
+                <div class="url-bar-container">
+                    <div class="browser-actions">
+                        <div class="action-btn" id="back-btn">
+                            <i class="fa-solid fa-arrow-left"></i>
+                        </div>
+                        <div class="action-btn" id="forward-btn">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                        <div class="action-btn" id="reload-btn">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </div>
+                    </div>
+                    <div class="url-bar-wrapper">
+                        <i class="fa-solid fa-magnifying-glass url-bar-icon"></i>
+                        <input type="text" class="url-bar" id="url-bar" placeholder="Enter search or web address">
+                        <div class="flag-container">
+                            <img src="/images/usa.png" alt="American Flag" class="flag active" id="us-flag">
+                            <img src="/images/japan.png" alt="Japanese Flag" class="flag" id="jp-flag">
+                            <span class="active-ip" id="active-ip">IP: Local</span>
+                        </div>
+                    </div>
+                    <div class="window-controls">
+                        <div class="window-btn">
+                            <i class="fa-solid fa-minus"></i>
+                        </div>
+                        <div class="window-btn" id="fullscreen-btn">
+                            <ion-icon name="expand-outline"></ion-icon>
+                        </div>
+                        <div class="window-btn close" id="close-browser">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="loading-bar-container" id="loading-bar-container">
+                    <div class="loading-bar"></div>
+                </div>
+            </div>
+            <div class="content-area" id="content-area">
+                <div class="tab-content active" id="tab-content-0">
+                    <iframe src="/landin" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
+                </div>
+            </div>
+
+            <div class="history-panel" id="history-panel">
+                <div class="history-header">
+                    <div class="history-icon">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWNsb2NrIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCI+PC9jaXJjbGU+PHBvbHlsaW5lIHBvaW50cz0iMTIgNiAxMiAxMiAxNiAxNCI+PC9wb2x5bGluZT48L3N2Zz4=" alt="History" width="24" height="24">
+                    </div>
+                    <div class="history-title">History</div>
+                </div>
+                <div class="history-divider"></div>
+                <div id="history-items-container">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="music-player-container" id="music-player-container" style="position: fixed; top: 0; left: 0; width: 0; height: 100%; overflow: hidden; transition: width 0.4s; z-index: 9999; backdrop-filter: blur(10px);">
+        <div class="music-player-content" style="width: 100%; height: 100%; background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%); display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); border-right: 1px solid #e0e0e0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #f0f0f0; color: #000; height: 50px; font-family: 'Poppins', sans-serif; font-weight: 700; border-bottom: 1px solid #e0e0e0;">
+                <span style="font-size: 18px; text-transform: uppercase; letter-spacing: 2px;">Vplaza Music</span>
+                <span>Slow on your first try!</span>
+            </div>
+            <div id="music-player-iframe-container" style="flex-grow: 1; position: relative; height: calc(100% - 118px); background-color: #fff; overflow: hidden; border-radius: 8px; margin: 10px; border: 1px solid #e0e0e0;">
+            </div>
+            <div id="music-player-close" style="cursor: pointer; color: #000; font-weight: 800; background-color: #f0f0f0; text-align: center; padding: 18px 0; font-size: 16px; font-family: 'Poppins', sans-serif; text-transform: uppercase; letter-spacing: 2px; border-top: 1px solid #e0e0e0;">
+                CLOSE PLAYER <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chat-container" style="position: fixed; top: 0; left: 0; width: 0; height: 100%; overflow: hidden; transition: width 0.4s; z-index: 100000; backdrop-filter: blur(10px);">
+        <div class="chat-content" style="width: 100%; height: 100%; background: linear-gradient(135deg, #d33c3c 0%, #a84141 100%); display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); border-right: 1px solid #e0e0e0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #ce5b5b; color: #000; height: 50px; font-family: 'Poppins', sans-serif; font-weight: 700; border-bottom: 1px solid #e0e0e0;">
+                <span style="font-size: 18px; text-transform: uppercase; letter-spacing: 2px;">Vplaza Chat</span>
+                <span>Chat with friends!</span>
+            </div>
+            <div id="chat-iframe-container" style="flex-grow: 1; position: relative; height: calc(100% - 118px); background-color: #fff; overflow: hidden; border-radius: 8px; margin: 10px; border: 1px solid #e0e0e0;">
+            </div>
+            <div id="chat-close" style="cursor: pointer; color: #000; font-weight: 800; background-color: #c14444; text-align: center; padding: 18px 0; font-size: 16px; font-family: 'Poppins', sans-serif; text-transform: uppercase; letter-spacing: 2px; border-top: 1px solid #e0e0e0;">
+                CLOSE CHAT <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="cloud-container" id="cloud-container" style="position: fixed; top: 0; left: 0; width: 0; height: 100%; overflow: hidden; transition: width 0.4s; z-index: 100000; backdrop-filter: blur(10px);">
+        <div class="cloud-content" style="width: 100%; height: 100%; background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%); display: flex; flex-direction: column; position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); border-right: 1px solid #e0e0e0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #f0f0f0; color: #000; height: 50px; font-family: 'Poppins', sans-serif; font-weight: 700; border-bottom: 1px solid #e0e0e0;">
+                <span style="font-size: 18px; text-transform: uppercase; letter-spacing: 2px;">Vplaza Cloud</span>
+            </div>
+            <div id="cloud-iframe-container" style="flex-grow: 1; position: relative; height: calc(100% - 118px); background-color: #fff; overflow: hidden; border-radius: 8px; margin: 10px; border: 1px solid #e0e0e0;">
+            </div>
+            <div id="cloud-close" style="cursor: pointer; color: #000; font-weight: 800; background-color: #f0f0f0; text-align: center; padding: 18px 0; font-size: 16px; font-family: 'Poppins', sans-serif; text-transform: uppercase; letter-spacing: 2px; border-top: 1px solid #e0e0e0;">
+                CLOSE CLOUD <i class="fa-solid fa-xmark" style="margin-left: 8px;"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-context-menu" id="tab-context-menu">
+        <div class="context-menu-item" id="context-new-tab">
+            <i class="fa-solid fa-plus"></i>New Tab
+        </div>
+        <div class="context-menu-item" id="context-reload">
+            <i class="fa-solid fa-rotate-right"></i>Reload
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="context-duplicate">
+            <i class="fa-solid fa-copy"></i>Duplicate
+        </div>
+        <div class="context-menu-item" id="context-pin">
+            <i class="fa-solid fa-thumbtack"></i>Pin
+        </div>
+        <div class="context-menu-item" id="context-unpin" style="display: none;">
+            <i class="fa-solid fa-thumbtack"></i>Unpin
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="context-mute">
+            <i class="fa-solid fa-volume-xmark"></i>Mute site
+        </div>
+        <div class="context-menu-item" id="context-unmute" style="display: none;">
+            <i class="fa-solid fa-volume-high"></i>Unmute site
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="context-close">
+            <i class="fa-solid fa-xmark"></i>Close
+        </div>
+        <div class="context-menu-item" id="context-close-other">
+            <i class="fa-solid fa-xmark"></i>Close other tabs
+        </div>
+        <div class="context-menu-item" id="context-close-right">
+            <i class="fa-solid fa-xmark"></i>Close tabs to the right
+        </div>
+    </div>
+
+    <script>
+        function updateStatusIndicators() {
+            const now = new Date();
+
+            const timeStr = now.toLocaleTimeString('en-US', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('time-display').textContent = timeStr;
+
+            const dateStr = now.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            });
+            document.getElementById('date-display').textContent = dateStr;
+
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(battery => {
+                    const level = Math.round(battery.level * 100);
+                    document.getElementById('battery-display').textContent = level + '%';
+                });
+            } else {
+                document.getElementById('battery-display').textContent = '100%';
+            }
+
+        }
+
+        updateStatusIndicators();
+        setInterval(updateStatusIndicators, 60000);
+
+        let activeTabId = 0;
+        let tabCounter = 1;
+        let tabsInSidebar = false;
+        let currentIp = "local";
+        let rightClickedTabId = null;
+
+        let frameCount = 0;
+        let lastTime = performance.now();
+        let fps = 0;
+        const fpsCounter = document.getElementById('fps-counter');
+
+        function measureFPS() {
+            frameCount++;
+            const currentTime = performance.now();
+            const elapsedTime = currentTime - lastTime;
+
+            if (elapsedTime >= 1000) {
+                fps = Math.round((frameCount * 1000) / elapsedTime);
+                fpsCounter.textContent = fps + " FPS";
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+
+            requestAnimationFrame(measureFPS);
+        }
+
+        requestAnimationFrame(measureFPS);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('tab-context-menu').style.display = 'none';
+            }
+
+            if (e.ctrlKey && e.shiftKey && !e.altKey && !isNaN(parseInt(e.key))) {
+                const tabNumber = parseInt(e.key);
+
+                if (tabNumber >= 1 && tabNumber <= 9) {
+                    const tabs = Array.from(document.querySelectorAll('.tab'));
+
+                    const tabIndex = tabNumber - 1;
+
+                    if (tabIndex < tabs.length) {
+                        const tabId = tabs[tabIndex].dataset.tabId;
+                        switchTab(tabId);
+                        e.preventDefault();
+                    }
+                }
+            }
+
+            if (e.ctrlKey && e.shiftKey) {
+                document.body.classList.add('show-shortcuts');
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (!e.ctrlKey || !e.shiftKey) {
+                document.body.classList.remove('show-shortcuts');
+            }
+        });
+
+        document.addEventListener('contextmenu', (e) => {
+            if (!e.target.closest('iframe')) {
+                e.preventDefault();
+
+                const contextMenu = document.getElementById('tab-context-menu');
+                let showNew = true;
+                let showReload = true;
+                let showClose = false;
+                let showPin = false;
+                let showUnpin = false;
+                let showCloseOthers = false;
+                let showCloseRight = false;
+                let showMute = false;
+                let showUnmute = false;
+                let showDuplicate = false;
+
+                if (e.target.closest('.tab')) {
+                    const tab = e.target.closest('.tab');
+                    rightClickedTabId = parseInt(tab.dataset.tabId);
+
+                    showClose = true;
+                    showCloseOthers = true;
+                    showCloseRight = true;
+                    showDuplicate = true;
+
+                    const isPinned = tab.classList.contains('pinned');
+                    showPin = !isPinned;
+                    showUnpin = isPinned;
+
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        showMute = !frame.muted;
+                        showUnmute = frame.muted;
+                    }
+                }
+                else if (e.target.closest('.toolbar-icon') || e.target.closest('.opera-logo')) {
+                    showNew = true;
+                    showReload = true;
+                    showClose = false;
+                }
+                else if (e.target.closest('.url-bar-container') || e.target.closest('.browser-actions')) {
+                    showNew = true;
+                    showReload = true;
+                    rightClickedTabId = activeTabId;
+                }
+                else if (e.target.closest('.content-area') && !e.target.closest('iframe')) {
+                    showNew = true;
+                    showReload = true;
+                    rightClickedTabId = activeTabId;
+                }
+                else {
+                    showNew = true;
+                    showReload = true;
+                    rightClickedTabId = activeTabId;
+                }
+
+                document.getElementById('context-new-tab').style.display = showNew ? 'flex' : 'none';
+                document.getElementById('context-reload').style.display = showReload ? 'flex' : 'none';
+                document.getElementById('context-close').style.display = showClose ? 'flex' : 'none';
+                document.getElementById('context-close-other').style.display = showCloseOthers ? 'flex' : 'none';
+                document.getElementById('context-close-right').style.display = showCloseRight ? 'flex' : 'none';
+                document.getElementById('context-pin').style.display = showPin ? 'flex' : 'none';
+                document.getElementById('context-unpin').style.display = showUnpin ? 'flex' : 'none';
+                document.getElementById('context-mute').style.display = showMute ? 'flex' : 'none';
+                document.getElementById('context-unmute').style.display = showUnmute ? 'flex' : 'none';
+                document.getElementById('context-duplicate').style.display = showDuplicate ? 'flex' : 'none';
+
+                const dividers = document.querySelectorAll('.context-menu-divider');
+
+                dividers[0].style.display = (showNew || showReload) && (showDuplicate || showPin || showUnpin) ? 'block' : 'none';
+
+                dividers[1].style.display = (showPin || showUnpin) && (showMute || showUnmute) ? 'block' : 'none';
+
+                dividers[2].style.display = (showMute || showUnmute) && (showClose || showCloseOthers || showCloseRight) ? 'block' : 'none';
+
+                contextMenu.style.display = 'block';
+
+                const menuWidth = contextMenu.offsetWidth;
+                const menuHeight = contextMenu.offsetHeight;
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+                let posX = e.clientX;
+                let posY = e.clientY;
+
+                if (posX + menuWidth > windowWidth) {
+                    posX = windowWidth - menuWidth - 5;
+                }
+
+                if (posY + menuHeight > windowHeight) {
+                    posY = windowHeight - menuHeight - 5;
+                }
+
+                contextMenu.style.left = posX + 'px';
+                contextMenu.style.top = posY + 'px';
+            }
+        });
+
+        let browserHistory = [];
+
+        if (localStorage.getItem('browserHistory')) {
+            try {
+                browserHistory = JSON.parse(localStorage.getItem('browserHistory'));
+            } catch (e) {
+                console.error('Error loading history:', e);
+                browserHistory = [];
+            }
+        }
+
+        const topTabsBar = document.getElementById('tabs-top-bar');
+        const contentArea = document.getElementById('content-area');
+        const urlBar = document.getElementById('url-bar');
+        const newTabBtnTop = document.getElementById('new-tab-btn-top');
+        const backBtn = document.getElementById('back-btn');
+        const forwardBtn = document.getElementById('forward-btn');
+        const reloadBtn = document.getElementById('reload-btn');
+        const loadingBarContainer = document.getElementById('loading-bar-container');
+        const historyPanel = document.getElementById('history-panel');
+        const historyItemsContainer = document.getElementById('history-items-container');
+
+        const historyBtn = document.getElementById('history-btn');
+        historyBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (historyPanel.style.display === 'block') {
+                historyPanel.classList.remove('visible');
+                setTimeout(() => {
+                    historyPanel.style.display = 'none';
+                }, 200);
+            } else {
+                historyPanel.style.display = 'block';
+
+                historyPanel.offsetWidth;
+                historyPanel.classList.add('visible');
+            }
+        });
+
+        function populateHistoryPanel() {
+            historyItemsContainer.innerHTML = '';
+
+            browserHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+
+                historyItem.innerHTML = `
+                    <div class="history-item-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <div class="history-item-time">${item.time}</div>
+                    <div class="history-item-url">${item.displayUrl}</div>
+                `;
+
+                historyItem.addEventListener('click', function() {
+                    const clickedUrl = item.url;
+                    navigateToUrl(clickedUrl);
+
+                    historyPanel.classList.remove('visible');
+                    setTimeout(() => {
+                        historyPanel.style.display = 'none';
+                    }, 200);
+                });
+
+                historyItemsContainer.appendChild(historyItem);
+            });
+        }
+
+        const initialTabs = [
+            { id: 0, title: 'New Tab', url: '/landin', icon: 'fa-home' }
+        ];
+
+        function initializeTabs() {
+            while (topTabsBar.firstChild) {
+                if (topTabsBar.firstChild.id === 'new-tab-btn-top' || topTabsBar.firstChild.id === 'history-btn') {
+                    break;
+                }
+                topTabsBar.removeChild(topTabsBar.firstChild);
+            }
+
+            initialTabs.forEach(tab => {
+                createTopTab(tab.id, tab.title, tab.url, tab.icon);
+            });
+
+            switchTab(activeTabId);
+            updateTabNumbers();
+        }
+
+        function updateTabNumbers() {
+            const tabs = Array.from(document.querySelectorAll('.tab'));
+
+            document.querySelectorAll('.tab-shortcut-number').forEach(num => {
+                num.textContent = '';
+            });
+
+            tabs.slice(0, 9).forEach((tab, index) => {
+                const numberEl = tab.querySelector('.tab-shortcut-number');
+                if (numberEl) {
+                    numberEl.textContent = (index + 1).toString();
+                }
+            });
+        }
+
+        function createTopTab(tabId, title, url, icon) {
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.tabId = tabId;
+            tab.dataset.url = url;
+
+            const faviconUrl = url.startsWith('/landin')
+                ? ''
+                : `https://www.google.com/s2/favicons?domain=${extractDomain(url)}`;
+
+            tab.innerHTML = `
+                <div class="matrix-bg"></div>
+                <div class="tab-icon">
+                    ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<ion-icon name="planet"></ion-icon>`}
+                    <span class="tab-shortcut-number"></span>
+                </div>
+                <div class="tab-title">${title}</div>
+                <div class="tab-close">
+                    <i class="bi bi-x-square"></i>
+                </div>
+                <div class="tab-corner-right"></div>
+
+                <!-- Tab preview on hover -->
+                <div class="tab-preview">
+                    <div class="tab-preview-header">
+                        <div class="tab-preview-icon">
+                            ${faviconUrl ? `<img src="${faviconUrl}" alt="">` : `<ion-icon name="planet"></ion-icon>`}
+                        </div>
+                        <div class="tab-preview-title">${title}</div>
+                    </div>
+                    <div class="tab-preview-url">${url.startsWith('/active/embed.html?url=') ? decodeURIComponent(url.split('/active/embed.html?url=')[1]) : url}</div>
+                    <div class="tab-preview-content">
+                        <div class="tab-preview-thumbnail" id="preview-thumbnail-${tabId}">
+                            <span>Loading preview...</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            topTabsBar.insertBefore(tab, newTabBtnTop);
+
+            tab.addEventListener('click', (e) => {
+                if (!e.target.closest('.tab-close')) {
+                    switchTab(tabId);
+                }
+            });
+
+            tab.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+
+                rightClickedTabId = tabId;
+
+                document.getElementById('context-close').style.display = 'flex';
+                document.getElementById('context-close-other').style.display = 'flex';
+                document.getElementById('context-close-right').style.display = 'flex';
+                document.getElementById('context-mute').style.display = 'flex';
+                document.getElementById('context-duplicate').style.display = 'flex';
+                document.getElementById('context-reload').style.display = 'flex';
+
+                const isPinned = tab.classList.contains('pinned');
+                document.getElementById('context-pin').style.display = isPinned ? 'none' : 'flex';
+                document.getElementById('context-unpin').style.display = isPinned ? 'flex' : 'none';
+
+                const contextMenu = document.getElementById('tab-context-menu');
+                contextMenu.style.display = 'block';
+
+                const menuWidth = contextMenu.offsetWidth;
+                const menuHeight = contextMenu.offsetHeight;
+                const windowWidth = window.innerWidth;
+                const windowHeight = window.innerHeight;
+
+                let posX = e.clientX;
+                let posY = e.clientY;
+
+                if (posX + menuWidth > windowWidth) {
+                    posX = windowWidth - menuWidth - 5;
+                }
+
+                if (posY + menuHeight > windowHeight) {
+                    posY = windowHeight - menuHeight - 5;
+                }
+
+                contextMenu.style.left = posX + 'px';
+                contextMenu.style.top = posY + 'px';
+            });
+
+            const closeBtn = tab.querySelector('.tab-close');
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeTab(tabId);
+            });
+        }
+
+        function extractDomain(url) {
+            if (url.startsWith('/landin')) return '';
+            try {
+
+                if (url.includes('/active/embed.html?url=')) {
+                    const embedUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+                    if (embedUrl.includes('://')) {
+                        return new URL(embedUrl).hostname;
+                    } else if (embedUrl.includes('.')) {
+                        return embedUrl.split('/')[0];
+                    }
+                }
+
+                if (url.includes('://')) {
+                    return new URL(url).hostname;
+                } else if (url.includes('.')) {
+                    return url.split('/')[0];
+                }
+            } catch (e) {
+                console.error('Error extracting domain:', e);
+            }
+            return '';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            const selectedTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            const selectedContent = document.getElementById(`tab-content-${tabId}`);
+
+            if (selectedTab && selectedContent) {
+                selectedTab.classList.add('active');
+                selectedContent.classList.add('active');
+                activeTabId = parseInt(tabId);
+
+                const frameUrl = selectedTab.dataset.url;
+                updateUrlBar(frameUrl);
+            }
+        }
+
+        function updateUrlBar(url) {
+            if (url.includes('/active/embed.html?url=')) {
+                const actualUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+                urlBar.value = actualUrl;
+            } else if (url === '/landin') {
+                urlBar.value = 'vplaza://nt';
+            } else {
+                urlBar.value = url;
+            }
+        }
+
+        function createNewTab() {
+            const tabId = tabCounter++;
+            const newTabData = {
+                id: tabId,
+                title: 'New Tab',
+                url: '/landin',
+                icon: 'fa-globe'
+            };
+
+            createTopTab(tabId, newTabData.title, newTabData.url, newTabData.icon);
+
+            const tabContent = document.createElement('div');
+            tabContent.className = 'tab-content';
+            tabContent.id = `tab-content-${tabId}`;
+            tabContent.innerHTML = `<iframe src="${newTabData.url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+
+            contentArea.appendChild(tabContent);
+
+            switchTab(tabId);
+
+            updateTabNumbers();
+
+            setTimeout(() => {
+                updateTabThumbnail(tabId);
+            }, 500);
+        }
+
+        function closeTab(tabId) {
+            const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+            const tabContent = document.getElementById(`tab-content-${tabId}`);
+
+            if (topTab && tabContent) {
+                if (parseInt(tabId) === activeTabId) {
+                    let nextTabId = null;
+
+                    const allTabIds = Array.from(document.querySelectorAll('.tab'))
+                        .map(tab => parseInt(tab.dataset.tabId))
+                        .filter(id => id !== parseInt(tabId));
+
+                    if (allTabIds.length > 0) {
+                        nextTabId = allTabIds[0];
+                    }
+
+                    if (nextTabId !== null) {
+                        switchTab(nextTabId);
+                    }
+                }
+
+                if (topTab) topTab.remove();
+                tabContent.remove();
+
+                const remainingTabs = document.querySelectorAll('.tab');
+                if (remainingTabs.length === 0) {
+                    createNewTab();
+                }
+
+                updateTabNumbers();
+            }
+        }
+
+        function goBack() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.back();
+                } catch (error) {
+                    console.error("Could not navigate back:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
+            }
+        }
+
+        function goForward() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame && activeFrame.contentWindow) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+                try {
+                    activeFrame.contentWindow.history.forward();
+                } catch (error) {
+                    console.error("Could not navigate forward:", error);
+                    loadingBarContainer.style.display = 'none';
+                    activeFrame.dataset.isLoading = 'false';
+                }
+            }
+        }
+
+        function reloadPage() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+
+                // Try to get the current URL from the iframe content
+                try {
+                    if (activeFrame.contentWindow && activeFrame.contentWindow.location.href !== 'about:blank') {
+                        const currentUrl = activeFrame.contentWindow.location.href;
+                        activeFrame.src = currentUrl;
+                        return;
+                    }
+                } catch (e) {
+                    // Cross-origin error, fall back to src attribute
+                }
+
+                // Fallback to the src attribute
+                activeFrame.src = activeFrame.src;
+            }
+        }
+
+        function navigateToUrl(url) {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                loadingBarContainer.style.display = 'block';
+                activeFrame.dataset.isLoading = 'true';
+
+                const internalPaths = ['/tutorials', '/ai', '/v-ai', '/a', '/landin', '/gamepagev1', '/styles', '/chat', '/audio'];
+
+                let processedUrl = url;
+                if (internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
+                    processedUrl = url;
+                } else if (!url.includes('://') && !url.startsWith('/')) {
+                    processedUrl = `/active/embed.html?url=https://${url}`;
+                } else if (!url.startsWith('/')) {
+                    processedUrl = `/active/embed.html?url=${encodeURIComponent(url)}`;
+                }
+
+                if (currentIp === "japan") {
+                    activeFrame.setAttribute('data-ip-spoofed', 'true');
+                    if (processedUrl.includes('?')) {
+                        processedUrl += '&ip_country=jp&x_forwarded_for=101.102.99.255';
+                    } else {
+                        processedUrl += '?ip_country=jp&x_forwarded_for=101.102.99.255';
+                    }
+                } else {
+                    activeFrame.removeAttribute('data-ip-spoofed');
+                }
+
+                activeFrame.src = processedUrl;
+
+                const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                if (topTab) topTab.dataset.url = processedUrl;
+
+                updateUrlBar(processedUrl);
+                storeHistoryItem(url);
+            }
+        }
+
+        function handleUrlSubmit(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                let url = urlBar.value.trim();
+
+                if (!url.includes('://') && !url.includes('.') && url !== '/landin') {
+                    url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+                } else if (!url.includes('://') && url !== '/landin') {
+                    url = `https://${url}`;
+                }
+
+                navigateToUrl(url);
+            }
+        }
+
+        function frameLoaded(tabId) {
+            const frame = document.getElementById(`frame-${tabId}`);
+            if (!frame) return;
+
+            if (frame.dataset.isLoading === 'true') {
+                setTimeout(() => {
+                    loadingBarContainer.style.display = 'none';
+                    frame.dataset.isLoading = 'false';
+                }, 500);
+            }
+
+            try {
+                const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${tabId}"]`);
+                const frameUrl = frame.src;
+
+                let pageTitle = 'New Tab';
+                try {
+                    if (frame.contentDocument) {
+                        pageTitle = frame.contentDocument.title || 'New Tab';
+                    }
+                } catch (e) {
+                    console.log('Could not access title due to cross-origin policy');
+                }
+
+                const faviconUrl = frameUrl.startsWith('/landin')
+                    ? ''
+                    : `https://www.google.com/s2/favicons?domain=${extractDomain(frameUrl)}`;
+
+                if (topTab) {
+                    const titleElement = topTab.querySelector('.tab-title');
+                    if (titleElement) titleElement.textContent = pageTitle;
+
+                    if (faviconUrl) {
+                        const iconElement = topTab.querySelector('.tab-icon');
+                        if (iconElement) {
+                            iconElement.innerHTML = `<img src="${faviconUrl}" alt="">`;
+                        }
+                    }
+
+                    const previewTitle = topTab.querySelector('.tab-preview-title');
+                    if (previewTitle) previewTitle.textContent = pageTitle;
+
+                    const previewUrl = topTab.querySelector('.tab-preview-url');
+                    if (previewUrl) {
+                        let displayUrl = frameUrl;
+                        if (frameUrl.includes('/active/embed.html?url=')) {
+                            displayUrl = decodeURIComponent(frameUrl.split('/active/embed.html?url=')[1]);
+                        }
+                        previewUrl.textContent = displayUrl;
+                    }
+
+                    const previewIcon = topTab.querySelector('.tab-preview-icon');
+                    if (previewIcon && faviconUrl) {
+                        previewIcon.innerHTML = `<img src="${faviconUrl}" alt="">`;
+                    }
+
+                    updateTabThumbnail(tabId);
+                }
+
+                if (parseInt(tabId) === activeTabId) {
+                    updateUrlBar(frameUrl);
+                }
+            } catch (e) {
+                console.error('Error updating tab info:', e);
+            }
+        }
+
+        function storeHistoryItem(url) {
+            if (!url || url === '/landin') return;
+
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}`;
+
+            let displayUrl = url;
+            if (url.includes('/active/embed.html?url=')) {
+                displayUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+            }
+
+            browserHistory.unshift({
+                url: url,
+                displayUrl: displayUrl,
+                time: timeString,
+                timestamp: now.getTime()
+            });
+
+            if (browserHistory.length > 15) {
+                browserHistory.pop();
+            }
+
+            try {
+                localStorage.setItem('browserHistory', JSON.stringify(browserHistory));
+            } catch (e) {
+                console.error('Error saving history:', e);
+            }
+
+            populateHistoryPanel();
+        }
+
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type) {
+                if (event.data.type === 'search') {
+                    const searchUrl = `/active/embed.html?url=https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = searchUrl;
+
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) topTab.dataset.url = searchUrl;
+
+                        urlBar.value = `https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+
+                        storeHistoryItem(`https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`);
+                    }
+                } else if (event.data.type === 'navigate') {
+                    const url = `/active/embed.html?url=${encodeURIComponent(event.data.url)}`;
+
+                    const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                    if (activeFrame) {
+                        loadingBarContainer.style.display = 'block';
+                        activeFrame.dataset.isLoading = 'true';
+                        activeFrame.src = url;
+
+                        const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+
+                        if (topTab) topTab.dataset.url = url;
+
+                        urlBar.value = event.data.url;
+
+                        storeHistoryItem(event.data.url);
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!historyPanel.contains(event.target) && event.target !== historyBtn && !historyBtn.contains(event.target)) {
+                if (historyPanel.style.display === 'block') {
+                    historyPanel.classList.remove('visible');
+                    setTimeout(() => {
+                        historyPanel.style.display = 'none';
+                    }, 200);
+                }
+            }
+
+            const contextMenu = document.getElementById('tab-context-menu');
+            if (!contextMenu.contains(event.target)) {
+                contextMenu.style.display = 'none';
+            }
+        });
+
+        function setupContextMenu() {
+            const contextMenu = document.getElementById('tab-context-menu');
+
+            document.getElementById('context-new-tab').addEventListener('click', () => {
+                createNewTab();
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-reload').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        frame.src = frame.src;
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-duplicate').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const originalTab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
+                    if (originalTab) {
+                        const url = originalTab.dataset.url;
+                        const title = originalTab.querySelector('.tab-title').textContent;
+                        const tabId = tabCounter++;
+
+                        createTopTab(tabId, title, url);
+
+                        const tabContent = document.createElement('div');
+                        tabContent.className = 'tab-content';
+                        tabContent.id = `tab-content-${tabId}`;
+                        tabContent.innerHTML = `<iframe src="${url}" id="frame-${tabId}" onload="frameLoaded(${tabId})" data-is-loading="false"></iframe>`;
+
+                        contentArea.appendChild(tabContent);
+                        switchTab(tabId);
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-pin').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const tab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
+                    if (tab) {
+                        tab.classList.add('pinned');
+                        topTabsBar.insertBefore(tab, topTabsBar.firstChild);
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-unpin').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const tab = document.querySelector(`.tab[data-tab-id="${rightClickedTabId}"]`);
+                    if (tab) {
+                        tab.classList.remove('pinned');
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-close').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    closeTab(rightClickedTabId);
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-close-right').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const tabs = Array.from(document.querySelectorAll('.tab'));
+                    const tabIds = tabs.map(tab => parseInt(tab.dataset.tabId));
+                    const rightClickedIndex = tabIds.indexOf(parseInt(rightClickedTabId));
+
+                    if (rightClickedIndex !== -1) {
+                        const tabsToClose = tabIds.slice(rightClickedIndex + 1);
+                        tabsToClose.forEach(id => {
+                            closeTab(id);
+                        });
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-close-other').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const tabs = Array.from(document.querySelectorAll('.tab'));
+                    tabs.forEach(tab => {
+                        const tabId = parseInt(tab.dataset.tabId);
+                        if (tabId !== parseInt(rightClickedTabId)) {
+                            closeTab(tabId);
+                        }
+                    });
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-mute').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        frame.muted = true;
+                        document.getElementById('context-mute').style.display = 'none';
+                        document.getElementById('context-unmute').style.display = 'flex';
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+
+            document.getElementById('context-unmute').addEventListener('click', () => {
+                if (rightClickedTabId !== null) {
+                    const frame = document.getElementById(`frame-${rightClickedTabId}`);
+                    if (frame) {
+                        frame.muted = false;
+                        document.getElementById('context-mute').style.display = 'flex';
+                        document.getElementById('context-unmute').style.display = 'none';
+                    }
+                }
+                contextMenu.style.display = 'none';
+            });
+        }
+
+        const usFlag = document.getElementById('us-flag');
+        const jpFlag = document.getElementById('jp-flag');
+        const activeIpDisplay = document.getElementById('active-ip');
+
+        usFlag.addEventListener('click', function() {
+            if (currentIp !== "local") {
+                currentIp = "local";
+                usFlag.classList.add('active');
+                jpFlag.classList.remove('active');
+                activeIpDisplay.textContent = "IP: Local";
+
+                const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                if (activeFrame) {
+                    const currentUrl = activeFrame.src;
+                    activeFrame.removeAttribute('data-ip-spoofed');
+                    let newUrl = currentUrl;
+                    newUrl = newUrl.replace(/[&?]ip_country=jp/, '');
+                    newUrl = newUrl.replace(/[&?]x_forwarded_for=101\.102\.99\.255/, '');
+                    newUrl = newUrl.replace(/\?&/, '?');
+                    newUrl = newUrl.replace(/\?$/, '');
+
+                    activeFrame.src = newUrl;
+                }
+            }
+        });
+
+        jpFlag.addEventListener('click', function() {
+            if (currentIp !== "japan") {
+                currentIp = "japan";
+                jpFlag.classList.add('active');
+                usFlag.classList.remove('active');
+                activeIpDisplay.textContent = "IP: 101.102.99.255";
+
+                const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                if (activeFrame) {
+                    let currentUrl = activeFrame.src;
+                    activeFrame.setAttribute('data-ip-spoofed', 'true');
+
+                    currentUrl = currentUrl.replace(/[&?]ip_country=jp/, '');
+                    currentUrl = currentUrl.replace(/[&?]x_forwarded_for=101\.102\.99\.255/, '');
+
+                    if (currentUrl.includes('?')) {
+                        activeFrame.src = currentUrl + '&ip_country=jp&x_forwarded_for=101.102.99.255';
+                    } else {
+                        activeFrame.src = currentUrl + '?ip_country=jp&x_forwarded_for=101.102.99.255';
+                    }
+                }
+            }
+        });
+
+        function updateTabThumbnail(tabId) {
+            const frame = document.getElementById(`frame-${tabId}`);
+            const thumbnailElement = document.getElementById(`preview-thumbnail-${tabId}`);
+            const tab = document.querySelector(`.tab[data-tab-id="${tabId}"]`);
+
+            if (frame && thumbnailElement) {
+                let pageTitle = 'Loading...';
+                let pageUrl = frame.src || '';
+
+                if (pageUrl.includes('/active/embed.html?url=')) {
+                    pageUrl = decodeURIComponent(pageUrl.split('/active/embed.html?url=')[1]);
+                }
+
+                let faviconUrl = '';
+                if (!pageUrl.startsWith('/landin')) {
+                    faviconUrl = `https://www.google.com/s2/favicons?domain=${extractDomain(pageUrl)}&sz=128`;
+                }
+
+                try {
+                    if (frame.contentDocument) {
+                        pageTitle = frame.contentDocument.title || 'New Tab';
+                    }
+                } catch (e) {
+                    console.log('Could not access title due to cross-origin policy');
+                }
+
+                if (tab) {
+                    const previewTitle = tab.querySelector('.tab-preview-title');
+                    const previewUrl = tab.querySelector('.tab-preview-url');
+
+                    if (previewTitle) previewTitle.textContent = pageTitle;
+                    if (previewUrl) previewUrl.textContent = pageUrl;
+                }
+
+                try {
+                    const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                    if (frameDoc) {
+                        thumbnailElement.style.backgroundColor = '#f5f5f5';
+                        thumbnailElement.innerHTML = '';
+
+                        if (frame.src.includes('google.com')) {
+                            thumbnailElement.style.backgroundColor = '#fff';
+                            thumbnailElement.innerHTML = '<div style="text-align:center;padding:20px;"><img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" style="max-width:80%;margin-bottom:10px;"><br><span style="color:#444;">Google Search</span></div>';
+                        } else if (frame.src.includes('youtube.com')) {
+                            thumbnailElement.style.backgroundColor = '#0f0f0f';
+                            thumbnailElement.innerHTML = '<div style="text-align:center;padding:20px;"><img src="https://www.youtube.com/s/desktop/8f12201e/img/favicon_144x144.png" style="max-width:50px;margin-bottom:10px;"><br><span style="color:#ff0000;">YouTube</span></div>';
+                        } else if (frame.src.includes('github.com')) {
+                            thumbnailElement.style.backgroundColor = '#0d1117';
+                            thumbnailElement.innerHTML = '<div style="text-align:center;padding:20px;"><img src="https://github.githubassets.com/favicons/favicon.svg" style="max-width:50px;margin-bottom:10px;"><br><span style="color:#58a6ff;">GitHub</span></div>';
+                        } else {
+                            if (faviconUrl) {
+                                thumbnailElement.innerHTML = `<div style="text-align:center;padding:20px;">
+                                    <img src="${faviconUrl}" style="max-width:48px;margin-bottom:15px;">
+                                    <br><span style="color:#333;font-weight:500;font-size:14px;">${pageTitle}</span>
+                                    <br><span style="color:#666;font-size:11px;margin-top:5px;display:block;">${pageUrl}</span>
+                                </div>`;
+                            } else {
+                                thumbnailElement.innerHTML = `<div style="text-align:center;padding:20px;">
+                                    <ion-icon name="globe-outline" style="font-size:48px;color:#999;margin-bottom:15px;"></ion-icon>
+                                    <br><span style="color:#333;font-weight:500;font-size:14px;">${pageTitle}</span>
+                                    <br><span style="color:#666;font-size:11px;margin-top:5px;display:block;">${pageUrl}</span>
+                                </div>`;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not access iframe content due to cross-origin policy');
+                    thumbnailElement.style.backgroundColor = '#f5f5f5';
+
+                    if (faviconUrl) {
+                        thumbnailElement.innerHTML = `<div style="text-align:center;padding:20px;">
+                            <img src="${faviconUrl}" style="max-width:48px;margin-bottom:15px;">
+                            <br><span style="color:#333;font-weight:500;font-size:14px;">${pageTitle}</span>
+                            <br><span style="color:#666;font-size:11px;margin-top:5px;display:block;">${pageUrl}</span>
+                        </div>`;
+                    } else {
+                        thumbnailElement.innerHTML = `<div style="text-align:center;padding:20px;">
+                            <ion-icon name="globe-outline" style="font-size:48px;color:#999;margin-bottom:15px;"></ion-icon>
+                            <br><span style="color:#333;font-weight:500;font-size:14px;">${pageTitle}</span>
+                            <br><span style="color:#666;font-size:11px;margin-top:5px;display:block;">${pageUrl}</span>
+                        </div>`;
+                    }
+                }
+            }
+        }
+
+        function updateAllThumbnails() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                const tabId = tab.dataset.tabId;
+                updateTabThumbnail(tabId);
+            });
+        }
+
+        initializeTabs();
+
+        populateHistoryPanel();
+
+        setupContextMenu();
+
+        newTabBtnTop.addEventListener('click', createNewTab);
+        backBtn.addEventListener('click', goBack);
+        forwardBtn.addEventListener('click', goForward);
+        reloadBtn.addEventListener('click', reloadPage);
+        urlBar.addEventListener('keydown', handleUrlSubmit);
+
+        document.querySelectorAll('.toolbar-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (url) {
+                    if (this.id === 'music-player-btn' || this.id === 'chat-btn' || this.id === 'clouds-btn') return;
+
+                    // Only use embed for specific external sites
+                    const embedUrls = [
+                        '/active/embed.html?url=https://www.twitch.tv',
+                        '/active/embed.html?url=https://play.geforcenow.com',
+                        '/active/embed.html?url=https://www.dropbox.com'
+                    ];
+
+                    if (embedUrls.includes(url)) {
+                        navigateToUrl(url);
+                    } else {
+                        // Navigate directly to internal pages
+                        const activeFrame = document.getElementById(`frame-${activeTabId}`);
+                        if (activeFrame) {
+                            loadingBarContainer.style.display = 'block';
+                            activeFrame.dataset.isLoading = 'true';
+                            activeFrame.src = url;
+
+                            const topTab = topTabsBar.querySelector(`.tab[data-tab-id="${activeTabId}"]`);
+                            if (topTab) topTab.dataset.url = url;
+
+                            updateUrlBar(url);
+                            storeHistoryItem(url);
+                        }
+                    }
+                }
+            });
+        });
+
+        document.getElementById('fullscreen-btn').addEventListener('click', function() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            if (activeFrame) {
+                if (activeFrame.requestFullscreen) {
+                    activeFrame.requestFullscreen();
+                } else if (activeFrame.webkitRequestFullscreen) {
+                    activeFrame.webkitRequestFullscreen();
+                } else if (activeFrame.msRequestFullscreen) {
+                    activeFrame.msRequestFullscreen();
+                }
+            }
+        });
+
+        document.getElementById('close-browser').addEventListener('click', function() {
+            const currentUrl = window.location.href;
+            const firstConfirmation = confirm("You are about to close: " + currentUrl);
+
+            if (firstConfirmation) {
+                const secondConfirmation = confirm("Are you sure you want to do this? If you're in the middle of something, it might not save!");
+                if (secondConfirmation) {
+                    window.close();
+                }
+            }
+        });
+
+        const officialDomains = [
+            "vplaza.org",
+            "simplybetterclever.org/",
+            "vplaza.mollypornstar.com/",
+            "vplazav1.web.app/",
+            "vplazav1.firebaseapp.com/",
+            "vplazahasa.nudeinpublicblog.com/"
+        ];
+
+        const currentHost = window.location.hostname;
+
+        if (officialDomains.includes(currentHost)) {
+            alert(":) You are on an official Vplaza link!");
+        } else if (currentHost.includes("vplaza")) {
+            alert(":( You are on an *unofficial* link for Vplaza. Be careful!");
+        }
+
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/service-worker.js").then(() => {
+                console.log("Service Worker registered");
+            });
+        }
+    </script>
+
+    <script>
+        document.querySelectorAll('.toolbar-icon').forEach(icon => {
+            if (icon.id === 'music-player-btn') {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const musicPlayerContainer = document.getElementById('music-player-container');
+                    const musicPlayerIframeContainer = document.getElementById('music-player-iframe-container');
+
+                    let iframe = document.getElementById('music-player-iframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.src = "/audio";
+                        iframe.id = "music-player-iframe";
+                        iframe.style.width = "100%";
+                        iframe.style.height = "100%";
+                        iframe.style.border = "none";
+                        iframe.style.display = "block";
+                        iframe.style.borderRadius = "8px";
+
+                        setTimeout(() => {
+                            musicPlayerIframeContainer.appendChild(iframe);
+                        }, 100);
+                    }
+
+                    if (musicPlayerContainer.style.width === '490px') {
+                        musicPlayerContainer.style.width = '0';
+                    } else {
+                        musicPlayerContainer.style.width = '490px';
+                    }
+                });
+            }
+            if (icon.id === 'chat-btn') {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const chatContainer = document.getElementById('chat-container');
+                    const chatIframeContainer = document.getElementById('chat-iframe-container');
+
+                    let iframe = document.getElementById('chat-iframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.src = "/chat.html";
+                        iframe.id = "chat-iframe";
+                        iframe.style.width = "100%";
+                        iframe.style.height = "100%";
+                        iframe.style.border = "none";
+
+                        chatIframeContainer.appendChild(iframe);
+                    }
+
+                    if (chatContainer.style.width === '490px') {
+                        chatContainer.style.width = '0';
+                    } else {
+                        chatContainer.style.width = '490px';
+                    }
+                });
+            }
+            if (icon.id === 'clouds-btn') {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const cloudContainer = document.getElementById('cloud-container');
+                    const cloudIframeContainer = document.getElementById('cloud-iframe-container');
+
+                    let iframe = document.getElementById('cloud-iframe');
+                    if (!iframe) {
+                        iframe = document.createElement('iframe');
+                        iframe.src = "/styles/weather.html";
+                        iframe.id = "cloud-iframe";
+                        iframe.style.width = "100%";
+                        iframe.style.height = "100%";
+                        iframe.style.border = "none";
+
+                        cloudIframeContainer.appendChild(iframe);
+                    }
+
+                    if (cloudContainer.style.width === '490px') {
+                        cloudContainer.style.width = '0';
+                    } else {
+                        cloudContainer.style.width = '490px';
+                    }
+                });
+            }
+        });
+
+        document.getElementById('music-player-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const musicPlayerContainer = document.getElementById('music-player-container');
+            const iframe = document.getElementById('music-player-iframe');
+
+            musicPlayerContainer.style.width = '0';
+
+            if (iframe && iframe.parentNode) {
+                setTimeout(() => {
+                    iframe.parentNode.removeChild(iframe);
+                }, 300);
+            }
+        });
+
+        document.getElementById('chat-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const chatContainer = document.getElementById('chat-container');
+            const chatIframeContainer = document.getElementById('chat-iframe-container');
+
+            chatContainer.style.width = '0';
+
+            setTimeout(() => {
+                chatIframeContainer.innerHTML = '';
+            }, 300);
+        });
+
+        document.getElementById('cloud-close').addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const cloudContainer = document.getElementById('cloud-container');
+            const cloudIframeContainer = document.getElementById('cloud-iframe-container');
+
+            cloudContainer.style.width = '0';
+
+            setTimeout(() => {
+                cloudIframeContainer.innerHTML = '';
+            }, 300);
+        });
+
+        document.addEventListener('click', function(e) {
+            const musicPlayerContainer = document.getElementById('music-player-container');
+            const musicPlayerBtn = document.getElementById('music-player-btn');
+            const chatContainer = document.getElementById('chat-container');
+            const chatBtn = document.getElementById('chat-btn');
+            const cloudContainer = document.getElementById('cloud-container');
+            const cloudBtn = document.getElementById('clouds-btn');
+
+            if (
+                musicPlayerContainer &&
+                musicPlayerContainer.style.width === '490px' &&
+                !musicPlayerContainer.contains(e.target) &&
+                e.target !== musicPlayerBtn &&
+                !musicPlayerBtn.contains(e.target)
+            ) {
+                musicPlayerContainer.style.width = '0';
+            }
+
+            if (
+                chatContainer &&
+                chatContainer.style.width === '490px' &&
+                !chatContainer.contains(e.target) &&
+                e.target !== chatBtn &&
+                !chatBtn.contains(e.target)
+            ) {
+                chatContainer.style.width = '0';
+            }
+
+            if (
+                cloudContainer &&
+                cloudContainer.style.width === '490px' &&
+                !cloudContainer.contains(e.target) &&
+                e.target !== cloudBtn &&
+                !cloudBtn.contains(e.target)
+            ) {
+                cloudContainer.style.width = '0';
+            }
+        });
+    </script>
+
+    <script>
+        if (location.hostname === 'localhost' || location.search.includes('debug=true')) {
+            var script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+            document.body.appendChild(script);
+            script.onload = function() {
+                eruda.init();
+            };
+        }
+    </script>
+
+    <script>
+        const audio = document.getElementById('background-audio');
+
+        function startAudio() {
+            if (audio.paused) {
+                audio.play().catch((e) => {
+                    console.log('Audio play prevented:', e);
+                });
+            }
+        }
+
+        document.addEventListener('click', startAudio);
+        document.addEventListener('touchstart', startAudio);
+    </script>
+
+</body>
+</html>
