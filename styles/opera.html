@@ -3190,5 +3190,40 @@
 </script>
         
 </script>
+
+    <script>
+        function initNotifications() {
+            if (Notification.permission !== 'granted') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        startNotifications();
+                    } else {
+                        alert('Notification permission denied');
+                    }
+                });
+            } else {
+                startNotifications();
+            }
+        }
+
+        let notificationInterval = null;
+
+        function startNotifications() {
+            sendNotification();
+
+            notificationInterval = setInterval(sendNotification, 5000);
+        }
+
+        function sendNotification() {
+            if (Notification.permission === 'granted') {
+                new Notification('New notification!', {
+                    body: 'Someone (5.9 miles away) wants to meet you!',
+                    icon: 'comingsoongonnabebaddddddlol'
+                });
+            }
+        }
+
+        window.onload = initNotifications;
+    </script>
 </body>
 </html>
