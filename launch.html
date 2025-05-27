@@ -17,9 +17,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/ionicons@5.5.2/dist/css/ionicons.min.css" rel="stylesheet">
-    <!-- Animation libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    <!-- Three.js for advanced background effects -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         #loading-screen {
@@ -154,15 +152,9 @@
 
         :root {
             --primary-color: #ff2d2d;
-            --primary-glow: rgba(255, 45, 45, 0.9);
-            --secondary-color: #ff8a00;
-            --tertiary-color: #8400ff;
-            --background-dark: #0a0204;
-            --background-gradient: radial-gradient(circle at 70% 50%, #4a0010, #0a0204);
+            --background-gradient: linear-gradient(135deg, #000000 0%, #1a0000 50%, #ff2d2d 100%);
             --text-color: #ffffff;
-            --card-bg: rgba(15, 15, 15, 0.5);
-            --card-border: rgba(255, 255, 255, 0.1);
-            --neon-shadow: 0 0 10px rgba(255, 45, 45, 0.5), 0 0 20px rgba(255, 45, 45, 0.3), 0 0 30px rgba(255, 45, 45, 0.1);
+            --card-bg: linear-gradient(135deg, rgba(139, 0, 0, 0.8), rgba(255, 45, 45, 0.6));
             --glass-blur: blur(10px);
         }
 
@@ -174,18 +166,17 @@
         }
 
         body {
-            background-color: var(--background-dark);
-            background-image: var(--background-gradient);
-            height: 100vh; /* Fixed height instead of min-height */
-            overflow: hidden; /* Hide all scrolling */
+            background: var(--background-gradient);
+            height: 100vh;
+            overflow: hidden;
             display: flex;
-            justify-content: flex-start;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 0 2rem;
-            position: relative;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
             color: var(--text-color);
-            scroll-behavior: smooth;
-            cursor: none; /* Hide default cursor for custom cursor */
         }
 
         .noise-overlay {
@@ -838,10 +829,84 @@
         .tag-badge:hover::before {
             opacity: 0.15;
         }
+
+.main-container {
+    text-align: center;
+    z-index: 10;
+}
+
+.welcome-text {
+    margin-bottom: 60px;
+}
+
+.welcome-line, .vplaza-line {
+    display: block;
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--primary-color);
+    text-stroke: 2px var(--primary-color);
+    text-transform: lowercase;
+    line-height: 0.9;
+}
+
+.app-cards {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.app-card {
+    width: 120px;
+    height: 140px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-color);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.app-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255, 45, 45, 0.3);
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.9), rgba(255, 45, 45, 0.7));
+}
+
+.app-icon {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-icon img {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.app-card:hover .app-icon img {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+.app-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
     <div id="loading-screen">
         <div class="smoke-container" id="smoke-container"></div>
         <div class="loading-logo">
@@ -850,96 +915,75 @@
         </div>
     </div>
 
-    <!-- Audio Element -->
     <audio id="loading-sound" preload="auto">
         <source src="audio/vplaza.mp3" type="audio/mpeg">
     </audio>
 
     <div class="noise-overlay"></div>
 
-    <div class="backdrop-ring ring1"></div>
-    <div class="backdrop-ring ring2"></div>
-    <div class="backdrop-ring ring3"></div>
-
-    <div class="particle-container" id="particleContainer"></div>
-
-    <div class="content-container">
-        <div class="headline">
-            <span class="text-white hoverable">YOU'VE</span>
-            <span class="text-red hoverable">COME</span>
-            <span class="text-white hoverable">TO</span>
-            <span class="text-red hoverable">SUCCEED</span>
-        </div>
-
-        <h1 class="brand-name hoverable">Welcome back or welcome to Vplaza</h1>
-
-        <a href="/styles/opera.html" class="enter-button" id="enter-btn">
-            <span class="text-white">Launch</span>
-            <span class="text-red">Vplaza</span>
-            <i class="icon ion-ios-arrow-forward" style="font-size: 1.3em; margin-left: 8px;"></i>
-        </a>
-        <a href="/luma/luma" class="enter-button" id="enter-btn">
-            <span class="text-white">Launch</span>
-            <span class="text-red">Luma</span>
-            <i class="icon ion-ios-arrow-forward" style="font-size: 1.3em; margin-left: 8px;"></i>
-        </a>
-        <a href="/styles/chrome" class="enter-button" id="enter-btn">
-            <span class="text-white">Launch</span>
-            <span class="text-red">CHROME</span>
-            <i class="icon ion-ios-arrow-forward" style="font-size: 1.3em; margin-left: 8px;"></i>
-        </a>
-
-        <div class="glass-card">
-            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px;">
-                Experience the future of entertainment with VplazaX
-            </p>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
-                <span style="background: rgba(255,45,45,0.15); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;">Gaming</span>
-                <span style="background: rgba(255,45,45,0.15); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;">Movies</span>
-                <span style="background: rgba(255,45,45,0.15); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;">VTok</span>
-                <span style="background: rgba(255,45,45,0.15); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem;">Proxy</span>
+    <div class="main-container">
+    <div class="welcome-text">
+        <span class="welcome-line">welcome to</span>
+        <span class="vplaza-line">vplaza</span>
+    </div>
+    
+    <div class="app-cards">
+        <a href="/styles/opera.html" class="app-card">
+            <div class="app-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="#ff2d2d">
+                    <path d="M13 3L4 14h7v7l9-11h-7V3z"/>
+                </svg>
             </div>
-        </div>
+            <span class="app-name">Vplaza</span>
+        </a>
+        
+        <a href="/luma/luma" class="app-card">
+            <div class="app-icon">
+                <img src="/images/luma.png" alt="LUMA" style="width: 40px; height: 40px; object-fit: contain;">
+            </div>
+            <span class="app-name">LUMA</span>
+        </a>
+        
+        <a href="/styles/chrome" class="app-card">
+            <div class="app-icon google-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24">
+                    <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+            </div>
+            <span class="app-name">Chrome</span>
+        </a>
     </div>
-
-    <div class="custom-image-container">
-        <img src="images/vplazav1.png" alt="vplazav1" class="custom-image">
-    </div>
-
-    <p class="instructions">Thank You For Using Vplaza! Click "Lets Enter" to continue!</p>
+</div>
 
     <script>
-        // Loading screen logic with Vplaza logo, Entertainment, smoke, and 5s duration
         window.addEventListener('DOMContentLoaded', function() {
             var loadingScreen = document.getElementById('loading-screen');
             var loadingSound = document.getElementById('loading-sound');
             var smokeContainer = document.getElementById('smoke-container');
-            var minTime = 5000; // 5 seconds minimum
+            var minTime = 5000;
             var start = Date.now();
 
-            // Force audio to play every time
             function forcePlayAudio() {
-                // Set properties for optimal playback
                 loadingSound.volume = 1.0;
                 loadingSound.muted = false;
                 loadingSound.loop = false;
                 loadingSound.currentTime = 0;
 
-                // Apply multiple techniques to ensure playback
                 var promise = loadingSound.play();
 
                 if (promise !== undefined) {
                     promise.catch(function(error) {
                         console.log("Audio play failed, trying alternative method:", error);
 
-                        // Second attempt with setTimeout
                         setTimeout(function() {
                             loadingSound.play().catch(function() {
                                 console.log("Second attempt failed");
                             });
                         }, 100);
 
-                        // Ensure playback on user interaction
                         document.body.addEventListener('click', function clickToPlay() {
                             loadingSound.play();
                             document.body.removeEventListener('click', clickToPlay);
@@ -947,11 +991,9 @@
                     });
                 }
 
-                // Create a silent audio context as backup
                 try {
                     var AudioContext = window.AudioContext || window.webkitAudioContext;
                     var audioCtx = new AudioContext();
-                    // This creates a short silent sound that unblocks audio
                     var oscillator = audioCtx.createOscillator();
                     oscillator.frequency.value = 400;
                     oscillator.connect(audioCtx.destination);
@@ -962,11 +1004,9 @@
                 }
             }
 
-            // Try multiple times to ensure audio playback
             forcePlayAudio();
             setTimeout(forcePlayAudio, 300);
 
-            // Animate logo letters
             setTimeout(function() {
                 document.querySelector('.loading-v').style.opacity = '1';
             }, 100);
@@ -977,15 +1017,14 @@
                 document.querySelector('.loading-entertainment').style.opacity = '1';
             }, 600);
 
-            // Smoke effect
             function randomBetween(a, b) {
                 return a + Math.random() * (b - a);
             }
             function spawnSmoke() {
                 var smoke = document.createElement('div');
                 smoke.className = 'smoke smoke-anim' + (Math.random() > 0.5 ? ' smoke-red' : '');
-                var x = randomBetween(30, 70); // percent
-                var y = randomBetween(60, 80); // percent
+                var x = randomBetween(30, 70);
+                var y = randomBetween(60, 80);
                 var tx = randomBetween(-100, 100) + 'px';
                 var ty = randomBetween(-180, -100) + 'px';
                 smoke.style.left = x + '%';
@@ -998,9 +1037,7 @@
                     smoke.remove();
                 }, 2500);
             }
-            // Spawn several smoke puffs at intervals
             var smokeInterval = setInterval(spawnSmoke, 400);
-            // Also spawn a few at the start
             for (let i = 0; i < 4; ++i) setTimeout(spawnSmoke, i * 200);
 
             function hideLoading() {
@@ -1024,167 +1061,14 @@
                 }, 350);
             }
 
-            // Wait for all assets and a minimum time
             window.addEventListener('load', function() {
                 var elapsed = Date.now() - start;
                 var wait = Math.max(0, minTime - elapsed);
                 setTimeout(hideLoading, wait);
             });
 
-            // Fallback: hide after 5s max
             setTimeout(hideLoading, minTime);
         });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Create particles
-            createParticles(25);
-
-            // Modern cursor effect
-            createCursorEffect();
-
-            // Parallax effect on mouse move
-            document.addEventListener('mousemove', function(e) {
-                parallaxEffect(e);
-            });
-
-            // Text animation
-            animateText();
-        });
-
-        function createParticles(num) {
-            const container = document.getElementById('particleContainer');
-
-            for (let i = 0; i < num; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-
-                const size = Math.random() * 4 + 2;
-                const startPositionX = Math.random() * 100;
-                const startPositionY = Math.random() * 100 + 100;
-                const translateX = (Math.random() - 0.5) * 200;
-                const duration = Math.random() * 20 + 10;
-                const delay = Math.random() * 5;
-                const opacity = Math.random() * 0.3 + 0.1;
-
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${startPositionX}%`;
-                particle.style.top = `${startPositionY}%`;
-                particle.style.setProperty('--particle-translateX', `${translateX}px`);
-                particle.style.setProperty('--particle-opacity', opacity);
-                particle.style.animationDuration = `${duration}s`;
-                particle.style.animationDelay = `${delay}s`;
-
-                container.appendChild(particle);
-            }
-        }
-
-        function createCursorEffect() {
-            const cursor = document.createElement('div');
-            cursor.className = 'cursor-effect';
-            cursor.style.position = 'fixed';
-            cursor.style.width = '30px';
-            cursor.style.height = '30px';
-            cursor.style.borderRadius = '50%';
-            cursor.style.border = '2px solid rgba(255, 45, 45, 0.5)';
-            cursor.style.pointerEvents = 'none';
-            cursor.style.zIndex = '9999';
-            cursor.style.transform = 'translate(-50%, -50%)';
-            cursor.style.transition = 'transform 0.1s ease, opacity 0.2s ease';
-            document.body.appendChild(cursor);
-
-            document.addEventListener('mousemove', function(e) {
-                cursor.style.opacity = '1';
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-
-                // Scale effect on hoverable elements
-                const hoverable = e.target.closest('.hoverable');
-                if (hoverable) {
-                    cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-                    cursor.style.border = '2px solid rgba(255, 45, 45, 0.8)';
-                } else {
-                    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-                    cursor.style.border = '2px solid rgba(255, 45, 45, 0.5)';
-                }
-            });
-
-            document.addEventListener('mouseleave', function() {
-                cursor.style.opacity = '0';
-            });
-        }
-
-        function parallaxEffect(e) {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-
-            const moveX = (mouseX - windowWidth / 2) / 40;
-            const moveY = (mouseY - windowHeight / 2) / 40;
-
-            const imageContainer = document.querySelector('.custom-image-container');
-            const rings = document.querySelectorAll('.backdrop-ring');
-
-            if (window.innerWidth > 768) {
-                imageContainer.style.transform = `translateY(-50%) translate(${moveX}px, ${moveY}px)`;
-
-                // Parallax for rings
-                rings.forEach((ring, index) => {
-                    const factor = (index + 1) * 0.3;
-                    const baseTransform = ring.style.transform.split('rotate')[0] || 'translate(-50%, -50%)';
-                    const rotation = ring.style.transform.match(/rotate\([^)]+\)/)?.[0] || '';
-                    ring.style.transform = `${baseTransform} translate(${moveX * factor}px, ${moveY * factor}px) ${rotation}`;
-                });
-            }
-        }
-
-        function animateText() {
-            const elements = document.querySelectorAll('.text-white, .text-red');
-            elements.forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                el.style.transitionDelay = `${index * 0.1}s`;
-
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, 100);
-            });
-
-            const brandName = document.querySelector('.brand-name');
-            brandName.style.opacity = '0';
-            brandName.style.transition = 'opacity 1s ease';
-            brandName.style.transitionDelay = '0.5s';
-
-            setTimeout(() => {
-                brandName.style.opacity = '1';
-            }, 100);
-
-            const enterButton = document.querySelector('.enter-button');
-            enterButton.style.opacity = '0';
-            enterButton.style.transform = 'translateY(20px)';
-            enterButton.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-            enterButton.style.transitionDelay = '0.7s';
-
-            setTimeout(() => {
-                enterButton.style.opacity = '1';
-                enterButton.style.transform = 'translateY(0)';
-            }, 100);
-
-            const glassCard = document.querySelector('.glass-card');
-            glassCard.style.opacity = '0';
-            glassCard.style.transform = 'translateY(20px) translateZ(0)';
-            glassCard.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-            glassCard.style.transitionDelay = '1s';
-
-            setTimeout(() => {
-                glassCard.style.opacity = '1';
-                glassCard.style.transform = 'translateY(0) translateZ(0)';
-            }, 100);
-        }
     </script>
 </body>
 </html>
