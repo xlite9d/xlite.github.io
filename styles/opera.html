@@ -3198,7 +3198,7 @@
                     if (permission === 'granted') {
                         startNotifications();
                     } else {
-                        alert('Notification permission denied');
+                        console.log(alerts have been denied)
                     }
                 });
             } else {
@@ -3216,9 +3216,9 @@
 
         function sendNotification() {
             if (Notification.permission === 'granted') {
-                new Notification('New notification!', {
-                    body: 'Someone (5.9 miles away) wants to meet you!',
-                    icon: 'comingsoongonnabebaddddddlol'
+                new Notification('New Clever Assignment!', {
+                    body: 'To view this assignment, go to clever.com and view notifications!',
+                    icon: '/images/clever.ico'
                 });
             }
         }
