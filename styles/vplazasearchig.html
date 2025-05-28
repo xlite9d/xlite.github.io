@@ -2422,7 +2422,7 @@
                 if (!url.includes('://') && !url.includes('.') && url !== '/landin' && !url.startsWith('/')) {
                     // It's a search query - redirect to vplaza.html with query parameter
                     const searchQuery = url.replace(/\s+/g, '+'); // Replace spaces with +
-                    const searchUrl = `/styles/vplaza.html?q=${encodeURIComponent(searchQuery)}`;
+                    const searchUrl = `/active/embed.html?url=https://vplaza.org/styles/vplaza.html?q=${encodeURIComponent(searchQuery)}`;
                     navigateToUrl(searchUrl);
                 } else {
                     // It's a URL - handle normally
@@ -2439,7 +2439,7 @@
                 if (event.data.type === 'search') {
                     // Redirect search queries to vplaza.html
                     const searchQuery = event.data.query.replace(/\s+/g, '+');
-                    const searchUrl = `/styles/vplaza.html?q=${encodeURIComponent(searchQuery)}`;
+                    const searchUrl = `/active/embed.html?url=https://vplaza.org/styles/vplaza.html?q=${encodeURIComponent(searchQuery)}`;
                     
                     const activeFrame = document.getElementById(`frame-${activeTabId}`);
                     if (activeFrame) {
