@@ -2420,7 +2420,7 @@
                 let url = urlBar.value.trim();
 
                 if (!url.includes('://') && !url.includes('.') && url !== '/landin') {
-                    url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+                    url = `/styles/vplaza.html?q={encodeURIComponent(url)}`;
                 } else if (!url.includes('://') && url !== '/landin') {
                     url = `https://${url}`;
                 }
@@ -2550,9 +2550,9 @@
                         if (topTab) topTab.dataset.url = searchUrl;
                         if (sidebarTab) sidebarTab.dataset.url = searchUrl;
 
-                        urlBar.value = `https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+                        urlBar.value = `/styles/vplaza.html?q={encodeURIComponent(event.data.query)}`;
 
-                        storeHistoryItem(`https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`);
+                        storeHistoryItem(`/styles/vplaza.html?q={encodeURIComponent(event.data.query)}`);
                     }
                 } else if (event.data.type === 'navigate') {
                     const url = `/active/embed.html?url=${encodeURIComponent(event.data.url)}`;
