@@ -3209,14 +3209,14 @@
         function startNotifications() {
             sendNotification();
 
-            notificationInterval = setInterval(sendNotification, 15);
+            notificationInterval = setInterval(sendNotification, 600000);
         }
 
         function sendNotification() {
             if (Notification.permission === 'granted') {
-                new Notification('5 Men in  your area!', {
-                    body: 'Come suck me',
-                    icon: ''
+                new Notification('New Clever Assignment!', {
+                    body: 'To view this assignment, go to clever.com and view notifications!',
+                    icon: '/images/clever.ico'
                 });
             }
         }
