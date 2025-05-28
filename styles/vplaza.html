@@ -22,76 +22,6 @@
             overflow-x: hidden;
         }
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1.5rem 3rem;
-            background: rgba(17, 17, 17, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(220, 38, 38, 0.2);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #dc2626, #ef4444, #f87171);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -1px;
-            text-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .header-nav {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-item {
-            color: #ccc;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-        }
-
-        .nav-item:hover {
-            color: #dc2626;
-            background: rgba(220, 38, 38, 0.1);
-        }
-
-        .profile-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #dc2626, #991b1b);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
-        }
-
-        .profile-icon:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
-        }
-
         .search-container {
             max-width: 700px;
             margin: 3rem auto;
@@ -654,7 +584,6 @@
             backdrop-filter: blur(20px);
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -676,7 +605,6 @@
         .result-item:nth-child(4) { animation-delay: 0.4s; }
         .result-item:nth-child(5) { animation-delay: 0.5s; }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
             .results-grid {
                 grid-template-columns: 1fr;
@@ -736,7 +664,6 @@
             }
         }
 
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -756,28 +683,13 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">VPLAZA</div>
-        <div class="header-right">
-            <nav class="header-nav">
-                <a href="#" class="nav-item">Search</a>
-                <a href="#" class="nav-item">Images</a>
-                <a href="#" class="nav-item">Videos</a>
-                <a href="#" class="nav-item">News</a>
-            </nav>
-            <div class="profile-icon">V</div>
-        </div>
-    </div>
 
     <div class="search-container">
         <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="Search the entire web..." id="searchInput" autocomplete="off">
+            <input type="text" class="search-input" placeholder="Search Vplaza." id="searchInput" autocomplete="off">
             <div class="search-actions">
                 <button class="action-btn" title="Voice search" onclick="startVoiceSearch()">
                     <ion-icon name="mic-outline"></ion-icon>
-                </button>
-                <button class="action-btn" title="Search by image">
-                    <ion-icon name="camera-outline"></ion-icon>
                 </button>
                 <button class="search-btn" onclick="performSearch()">Search</button>
             </div>
@@ -814,10 +726,8 @@
         let currentPage = 0;
         let isLoadingMore = false;
 
-        // Weather API key
         const WEATHER_API_KEY = '7NZUY6FCX5CTDC6Y9MXED4ZQ7';
 
-        // Domain mappings for popular sites
         const domainMappings = {
             'tiktok': 'tiktok.com',
             'vplaza': 'vplaza.org',
@@ -883,14 +793,12 @@
             'ars': 'arstechnica.com'
         };
 
-        // CORS proxies for web scraping
         const corsProxies = [
             'https://api.allorigins.win/get?url=',
             'https://corsproxy.io/?',
             'https://cors-anywhere.herokuapp.com/'
         ];
 
-        // Popular search suggestions
         const popularSearches = [
             { text: 'weather today', icon: 'partly-sunny-outline' },
             { text: 'latest music', icon: 'musical-notes-outline' },
@@ -908,12 +816,10 @@
             { text: 'spotify playlists', icon: 'musical-note-outline' }
         ];
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             const suggestions = document.getElementById('suggestions');
             
-            // Auto-search as user types
             searchInput.addEventListener('input', function(e) {
                 const query = e.target.value.trim();
                 
@@ -948,7 +854,6 @@
                 }
             });
             
-            // Check for existing query in URL
             const urlParams = new URLSearchParams(window.location.search);
             const query = urlParams.get('q');
             if (query) {
@@ -961,7 +866,6 @@
             const suggestions = document.getElementById('suggestions');
             const queryLower = query.toLowerCase();
             
-            // Check if query matches a domain
             const domainSuggestions = [];
             for (const [key, domain] of Object.entries(domainMappings)) {
                 if (key.includes(queryLower) || queryLower.includes(key)) {
@@ -1064,13 +968,11 @@
             const results = [];
             const searchPromises = [];
 
-            // Check for direct domain match first
             const domainResult = checkDirectDomain(query);
             if (domainResult) {
                 results.push(domainResult);
             }
 
-            // Check for special queries
             if (isWeatherQuery(query)) {
                 const weatherData = await getWeatherData(query);
                 if (weatherData) results.push(weatherData);
@@ -1081,7 +983,6 @@
                 results.push(...musicResults);
             }
 
-            // Deep web search across multiple sources
             searchPromises.push(searchDuckDuckGo(query));
             searchPromises.push(searchBing(query));
             searchPromises.push(searchWikipedia(query));
@@ -1092,7 +993,6 @@
             searchPromises.push(searchYouTube(query));
             searchPromises.push(searchTwitter(query));
             
-            // Web scraping for specific sites
             if (query.includes('amazon')) {
                 searchPromises.push(searchAmazon(query));
             }
@@ -1114,7 +1014,6 @@
         function checkDirectDomain(query) {
             const queryLower = query.toLowerCase().trim();
             
-            // Check exact domain mappings
             if (domainMappings[queryLower]) {
                 const domain = domainMappings[queryLower];
                 return {
@@ -1129,7 +1028,6 @@
                 };
             }
             
-            // Check if query contains a domain name
             for (const [key, domain] of Object.entries(domainMappings)) {
                 if (queryLower.includes(key) && queryLower.split(' ').length <= 3) {
                     return {
@@ -1145,7 +1043,6 @@
                 }
             }
             
-            // Check if it looks like a URL
             if (queryLower.includes('.com') || queryLower.includes('.org') || queryLower.includes('.net') || queryLower.includes('.io')) {
                 let cleanDomain = queryLower.replace(/https?:\/\//, '').replace(/www\./, '').split('/')[0];
                 return {
@@ -1523,7 +1420,6 @@
             if (titleLower.includes(queryLower)) score += 100;
             if (descLower.includes(queryLower)) score += 50;
             
-            // Domain results get highest priority
             if (result.type === 'domain') score += 1000;
             if (result.type === 'weather') score += 200;
             if (result.type === 'music') score += 150;
@@ -1798,7 +1694,6 @@
         }
 
         function openResult(url) {
-            // Navigate in the same tab like a real browser
             window.location.href = url;
         }
     </script>
