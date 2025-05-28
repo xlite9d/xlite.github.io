@@ -29035,7 +29035,7 @@
     const LN = class {
         constructor(e, t) {
           AN.add(this), bN.set(this, []), xN.set(this, []), kN.set(this, []), EN.set(this, void 0), SN.set(this, []), IN(this, EN, t, "f");
-          Promise.all(["summer1.track", "summer2.track", "summer3.track", "summer4.track", "summer5.track", "summer6.track", "summer7.track", "winter1.track", "winter2.track", "winter3.track", "winter4.track", "desert1.track", "desert2.track", "desert3.track", "desert4.track"].map((t => RN(this, AN, "m", MN).call(this, t, e)))).then((e => {
+          Promise.all(["summer1.track", "summer2.track", "summer3.track", "summer4.track", "summer5.track", "summer6.track", "summer7.track", "vplaza.track", "winter1.track", "winter2.track", "winter3.track", "winter4.track", "desert1.track", "desert2.track", "desert3.track", "desert4.track"].map((t => RN(this, AN, "m", MN).call(this, t, e)))).then((e => {
             IN(this, bN, e, "f")
           })).catch((e => {
             console.error(e)
