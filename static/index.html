@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ObsidianX</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100..900&family=Outfit:wght@100..900&family=Figtree:wght@100..900&family=Montserrat:wght@100..900&family=Orbitron:wght@400;700&display=swap');
+:root {
+            --accent-color: #a0a0ff;
+            --accent-gradient: linear-gradient(135deg, #8200ff, #6b46c1);
+            --accent-glow: 0 0 20px rgba(130, 0, 255, 0.5), 0 0 30px rgba(160, 160, 255, 0.3);
+            --pin6-bg: rgba(30, 30, 60, 0.9);
+}
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+}
+
+        body {
+            color: #fff;
+            background-color: #000000;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+}
+
+        .god-rays {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 70% 20%, rgba(107, 70, 193, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            animation: pulse 8s ease-in-out infinite alternate;
+}
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5;
+}
+            50% { opacity: 0.8;
+}
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: -5vh;
+            z-index: 1;
+            animation: fadeIn 1.5s ease;
+}
+
+        @keyframes fadeIn {
+            from { opacity: 0;
+            transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0);
+}
+        }
+
+        h1 {
+            font-size: 180px !important;
+            font-weight: 900;
+            background: linear-gradient(45deg, #a0a0ff 0%, #8200ff 50%, #9370ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(130, 0, 255, 0.4);
+            margin-bottom: 30px;
+            margin-top: 20px;
+            font-family: 'Orbitron', sans-serif;
+            transform: scale(0.75);
+}
+
+        h1:hover {
+            text-shadow: 0 0 30px rgba(130, 0, 255, 0.8);
+        }
+
+        h1::before {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, #a0a0ff, #8200ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        h1:hover::before {
+            opacity: 1;
+        }
+
+        #dynamicParagraph {
+            color: #ffffff;
+            font-size: 1.25rem;
+            margin-top: 25px;
+            margin-bottom: 30px;
+            font-weight: 300;
+            font-family: "Outfit", sans-serif;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2), 0 0 10px rgba(255, 255, 255, 0.1);
+            transition: color 0.3s ease-in-out;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+}
+
+        #dynamicParagraph::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: var(--accent-gradient);
+            transition: all 0.3s ease;
+}
+
+        #dynamicParagraph:hover {
+            color:#ADADAD;
+}
+
+        #dynamicParagraph:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        #search-container {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            position: relative;
+            text-align: center;
+        }
+
+        #uv-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .search-bar-home {
+            width: 800px;
+            padding: 15px 20px;
+            padding-right: 100px; 
+            border-radius: 50px;
+            border: 2px solid #8200ff;
+            background-color: rgba(25, 25, 50, 0.7);
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            font-family: "Outfit", sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(130, 0, 255, 0.3);
+            backdrop-filter: blur(5px);
+            transform: translateY(0);
+            cursor: crosshair;
+        }
+
+        .search-bar-home::placeholder {
+            color: #a0a0a0;
+            opacity: 0.8;
+            font-size: 14px;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+}
+
+        .search-bar-home:focus {
+            border-color: #a0a0ff;
+            background-color: rgba(10, 10, 15, 0.8);
+            box-shadow: 0 0 20px rgba(160, 160, 255, 0.5);
+}
+
+        .search-button {
+            background-color: transparent;
+            border: none;
+            border-radius: 50px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+}
+
+        .search-button:hover {
+            background-color: rgba(130, 0, 255, 0.2);
+            box-shadow: 0 0 15px rgba(130, 0, 255, 0.3);
+            transform: translateY(-50%) scale(1.05);
+}
+        .search-button i {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        #time {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 1.2rem;
+            color: #a0a0ff;
+            font-family: "Outfit", sans-serif;
+            text-shadow: 0 0 5px rgba(160, 160, 255, 0.5);
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            user-select: text;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+}
+
+        #time:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+}
+
+        .pin-menu-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            background-color: rgba(20, 20, 40, 0.8);
+            border: 1px solid #4a00e0;
+            border-radius: 0.75rem;
+            box-shadow: 0 0 20px rgba(74, 0, 224, 0.4);
+            color: #e0e0e0;
+}
+
+        .pin-menu-trigger {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            background-color: #4a00e0;
+            padding: 10px;
+            border: none;
+}
+
+        .pin-menu-trigger:hover {
+            background-color: #8200ff;
+            transform: rotate(90deg);
+}
+        .pin-menu-trigger .material-icons {
+            color: white;
+}
+
+        .pin-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: rgba(15, 15, 20, 0.9); /* Darker than container for depth */
+            border: 1px solid #4a00e0; /* Consistent with container */
+            border-radius: 20px; /* Existing style */
+            min-width: 350px;
+            max-height: 450px;
+            overflow-y: auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            backdrop-filter: blur(10px);
+            color: #e0e0e0; /* Ensured text color from galaxy theme */
+}
+
+        .pin-dropdown::-webkit-scrollbar {
+            width: 8px;
+}
+
+        .pin-dropdown::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+}
+
+        .pin-dropdown::-webkit-scrollbar-thumb {
+            background: rgba(107, 70, 193, 0.5);
+            border-radius: 10px;
+}
+
+        .pin-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+}
+
+        .pin-section {
+            padding: 20px;
+}
+
+        .pin-section-title {
+            color: #a0a0ff;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(107, 70, 193, 0.3);
+}
+
+        .pin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 15px;
+            min-height: 50px;
+}
+
+        .pin-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 10px;
+            border-radius: 15px;
+            cursor: grab;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+}
+
+        .pin-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(107, 70, 193, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+}
+
+        .pin-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            border-color: rgba(107, 70, 193, 0.5);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+        .pin-item:hover::before {
+            opacity: 1;
+}
+
+        .pin-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(1.05);
+}
+
+        .pin-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+        .pin-item:hover img {
+            transform: scale(1.1);
+}
+
+        .pin-item-name {
+            font-size: 12px;
+            font-family: "Outfit", sans-serif;
+            color: #fff;
+            margin-top: 10px;
+            text-align: center;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+}
+
+        .pin-item:hover .pin-item-name {
+            color: #9f7aea;
+}
+
+        .pin-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(107, 70, 193, 0.5), transparent);
+            margin: 15px 0;
+}
+
+        .add-pin-section {
+            padding: 20px;
+            text-align: center;
+}
+
+        .add-pin-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%; /* Galaxy theme uses 50% for round buttons */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            font-size: 28px;
+            background-color: #8200ff; /* Galaxy theme color */
+            border: 2px dashed rgba(107, 70, 193, 0.5); /* Kept dashed border for distinction */
+            color: #fff; /* Icon color */
+}
+
+        .add-pin-btn:hover {
+            background-color: #a0a0ff; /* Galaxy theme hover color */
+            border-color: #9f7aea;
+            color: #fff;
+            transform: rotate(90deg);
+}
+        .add-pin-btn .material-icons {
+            color: white;
+}
+
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 40px;
+            z-index: 1000;
+            animation: popupFadeIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            min-width: 450px;
+            max-width: 500px;
+            backdrop-filter: blur(20px);
+            background-color: rgba(20, 20, 40, 0.9); /* Darker translucent for popup */
+            border: 1px solid #4a00e0;
+            border-radius: 0.75rem; /* Match galaxy theme */
+            box-shadow: 0 0 20px rgba(74, 0, 224, 0.4), inset 0 0 20px rgba(107, 70, 193, 0.1);
+            color: #e0e0e0;
+}
+
+        @keyframes popupFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .popup h3 {
+            margin: 0 0 25px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-family: "Orbitron", sans-serif; /* Galaxy theme font */
+            font-size: 24px;
+            background: linear-gradient(135deg, #ffffff, #9f7aea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+}
+
+        .input-group {
+            margin: 20px 0;
+            position: relative;
+}
+
+        .popup input[type="text"] {
+            width: 100%;
+            color: #e0e0e0; /* Galaxy text color */
+            padding: 15px 20px;
+            border-radius: 0.5rem; /* Galaxy theme border radius */
+            transition: all 0.3s ease;
+            font-family: "Outfit", sans-serif;
+            font-size: 16px;
+            background-color: rgba(30, 30, 60, 0.7); /* Galaxy input bg */
+            border: 1px solid #4a00e0; /* Galaxy input border */
+}
+
+        .popup input[type="text"]:focus {
+            border-color: #a0a0ff; /* Galaxy theme accent */
+            background: rgba(40, 40, 70, 0.8); /* Slightly lighter on focus */
+            box-shadow: 0 0 15px rgba(107, 70, 193, 0.2);
+            outline: none;
+}
+
+        .popup input[type="file"] {
+            margin: 25px 0 15px;
+            color: #e0e0e0; /* Galaxy text color */
+            width: 100%;
+            font-family: "Outfit", sans-serif;
+            background-color: rgba(30, 30, 60, 0.7); /* Galaxy input bg */
+            border: 1px solid #4a00e0; /* Galaxy input border */
+            border-radius: 0.5rem;
+            padding: 10px;
+}
+
+        .popup input[type="file"]::-webkit-file-upload-button {
+            background: var(--accent-gradient);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px; /* Matched to galaxy theme buttons */
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: "Outfit", sans-serif;
+            margin-right: 15px;
+}
+
+        .popup input[type="file"]::-webkit-file-upload-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(107, 70, 193, 0.4);
+}
+
+        .popup-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+            margin-top: 30px;
+}
+
+        .popup button {
+            padding: 14px 25px;
+            border-radius: 0.5rem; /* Galaxy theme buttons */
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            font-family: "Orbitron", sans-serif; /* Galaxy theme font */
+            font-weight: 600;
+            font-size: 16px;
+            flex: 1;
+            min-width: 120px;
+}
+
+        .popup button#cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+        .popup button#cancel-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+        .popup button#add-btn {
+            background: var(--accent-gradient);
+            border: none;
+            box-shadow: 0 5px 15px rgba(107, 70, 193, 0.3);
+}
+
+        .popup button#add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(107, 70, 193, 0.5);
+}
+
+        .drop-area {
+            min-height: 50px;
+            border: 2px dashed transparent;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+}
+
+        .drop-area.drag-over {
+            border-color: var(--accent-color);
+            background: rgba(107, 70, 193, 0.1);
+}
+
+        .pin-item .delete-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 22px;
+            height: 22px;
+            background: #ff4444;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+}
+
+        .pin-item:hover .delete-btn {
+            display: flex;
+}
+
+        .pin-item .delete-btn:hover {
+            background: #ff0000;
+            transform: scale(1.2);
+}
+        
+        body {
+            font-family: 'Orbitron', sans-serif; 
+            overflow: hidden; 
+            background-color: #000; 
+            color: #fff; 
+        }
+        #vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2; 
+        }
+
+        .shooting-star-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; 
+            overflow: hidden;
+            z-index: 0; 
+        }
+
+        .shooting-star {
+            position: absolute;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 100%);
+            border-radius: 50%;
+            animation: shootGalaxyStar 5s linear infinite;
+            opacity: 0;
+            width: 5px;
+            height: 5px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+        @keyframes shootGalaxyStar {
+            0% {
+                transform: rotate(45deg) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(45deg) translateX(calc(100vw + 100vh)); 
+                opacity: 0;
+            }
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; 
+            position: relative;
+            z-index: 1; 
+            padding: 20px; 
+            text-align: center;
+}
+        #connection-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(20, 20, 40, 0.8);
+            padding: 10px 15px;
+            border-radius: 0.75rem;
+            border: 1px solid #4a00e0;
+            box-shadow: 0 0 15px rgba(74, 0, 224, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+}
+
+        #status-text {
+            font-size: 0.9rem;
+            font-family: "Outfit", sans-serif;
+            color: #a0a0ff;
+}
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #8200ff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+}
+
+        @keyframes spin {
+            0% { transform: rotate(0deg);
+}
+            100% { transform: rotate(360deg);
+}
+        }
+        #uv-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="vanta-bg"></div>
+
+    <div class="shooting-star-container"></div>
+
+    <div class="god-rays"></div>
+    <div class="main-content">
+        <h1 data-text="ObsidianX">ObsidianX</h1>
+        <div id="search-container">
+            <form id="uv-form">
+                <input id="uv-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden"/>
+                <input id="uv-address" type="text" class="search-bar-home" placeholder="Search or input URL" />
+                <button class="search-button" id="search-button" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+            <div class="desc left-margin">
+                <p id="uv-error"></p>
+                <pre id="uv-error-code"></pre>
+            </div>
+        </div>
+        <p id="dynamicParagraph"></p>
+    </div>
+
+    <div class="pin-menu-container">
+        <div class="pin-menu-trigger" id="pin-menu-trigger">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <div class="pin-dropdown" id="pin-dropdown">
+            <div class="pin-section">
+                <div class="pin-section-title">Pinned Sites</div>
+                <div class="pin-grid drop-area" id="pin-grid"></div>
+            </div>
+            <div class="pin-divider"></div>
+            <div class="add-pin-section">
+                <div class="add-pin-btn" id="add-pin-btn">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div style="margin-top: 10px; font-size: 12px; color: #a0a0a0; font-family: 'Outfit', sans-serif;">Add a pin</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-pin-popup" class="popup">
+        <h3>Add New Pin</h3>
+        <input type="text" id="pin-name" placeholder="Enter pin name">
+        <input type="text" id="pin-url" placeholder="Enter URL (https:// required)">
+        <input type="file" id="pin-image" accept="image/*">
+        <div class="popup-buttons">
+            <button id="cancel-btn">Cancel</button>
+            <button id="add-btn">Add</button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            VANTA.GLOBE({
+                el: "#vanta-bg",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: 0x8200ff,      /* Main Vanta globe color - purple */
+                color2: 0xa0a0ff,     /* Secondary Vanta globe color - lighter purple */
+                backgroundColor: 0x000000, /* Black background */
+                size: 1.20,           /* Globe size adjustment */
+                points: 10.00,        /* Number of points */
+            });
+            
+            const shootingStarContainer = document.querySelector('.shooting-star-container');
+            const numStars = 15; 
+
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('shooting-star');
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.animationDelay = `${Math.random() * 5}s`; 
+                shootingStarContainer.appendChild(star);
+            }
+        });
+    </script>
+    <script>
+    const phrases = [
+        "Math can wait… this can't.",
+        "Discord.gg/ObsidianX",
+        "Lag? Blame the school Wi-Fi.",
+        "Ask us anything… except math homework.",
+        "Privacy made Perfect",
+        "If the teacher asks, this is a calculator.",
+        "We'd go faster, but the Wi-Fi said no.",
+        "Warning: May cause extreme fun.",
+        "Running on hopes and 1 bar of Wi-Fi.",
+        "Still loading… unlike your motivation.",
+        "Running smoother than your last group project.",
+        "Blocked? Never heard of her.",
+    ]
+
+    const paragraph = document.getElementById('dynamicParagraph');
+
+    function changeText() {
+        const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+        paragraph.textContent = randomPhrase;
+    }
+
+    paragraph.addEventListener('click', changeText);
+    window.onload = changeText;
+
+    function updateTime() {
+        const timeElement = document.getElementById("time");
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        hours = hours.toString().padStart(2, '0');
+        
+        timeElement.textContent = `${hours}:${minutes}:${seconds} ${ampm}`;
+    }
+
+    setInterval(updateTime, 1000);
+    const pinMenuTrigger = document.getElementById('pin-menu-trigger');
+    const pinDropdown = document.getElementById('pin-dropdown');
+    const addPinBtn = document.getElementById('add-pin-btn');
+    const popup = document.getElementById('add-pin-popup');
+    const addBtn = document.getElementById('add-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const pinGrid = document.getElementById('pin-grid');
+    const searchInput = document.getElementById('uv-address');
+    const searchButton = document.getElementById('search-button');
+
+    let draggedElement = null;
+    function submitSearch() {
+        const form = document.getElementById('uv-form');
+        if (form) {
+            form.dispatchEvent(new Event('submit'));
+        }
+    }
+
+    searchButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        submitSearch();
+    });
+    pinMenuTrigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        pinDropdown.classList.toggle('show');
+    });
+    document.addEventListener('click', function(e) {
+        if (!pinDropdown.contains(e.target) && !pinMenuTrigger.contains(e.target)) {
+            pinDropdown.classList.remove('show');
+        }
+    });
+    function loadSavedPins() {
+        const savedPins = JSON.parse(localStorage.getItem('pinnedBookmarks') || '[]');
+        savedPins.forEach(pin => {
+            createPinElement(pin.name, pin.url, pin.image);
+        });
+    }
+
+    function createPinElement(name, url, imageData) {
+        const pinItem = document.createElement('div');
+        pinItem.className = 'pin-item';
+        pinItem.draggable = true;
+        pinItem.dataset.url = url;
+        pinItem.dataset.name = name;
+        pinItem.dataset.image = imageData;
+
+        const img = document.createElement('img');
+        img.src = imageData;
+        img.alt = name;
+
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'pin-item-name';
+        nameDiv.textContent = name;
+
+        const deleteBtn = document.createElement('div');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.innerHTML = '×';
+        deleteBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            deletePin(pinItem);
+        });
+        pinItem.appendChild(img);
+        pinItem.appendChild(nameDiv);
+        pinItem.appendChild(deleteBtn);
+
+        pinItem.addEventListener('click', function(e) {
+            e.preventDefault();
+            searchInput.value = url;
+            pinDropdown.classList.remove('show');
+            setTimeout(() => {
+                 submitSearch();
+            }, 100);
+        });
+        pinItem.addEventListener('dragstart', function(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            try {
+                 e.dataTransfer.setData('text/html', this.outerHTML);
+            } catch (ex) {
+                 e.dataTransfer.setData('text', this.outerHTML);
+            }
+        });
+        pinItem.addEventListener('dragend', function() {
+            this.classList.remove('dragging');
+            draggedElement = null;
+            savePinsOrder();
+        });
+        pinGrid.appendChild(pinItem);
+    }
+
+    function deletePin(pinElement) {
+        if (confirm(`Are you sure you want to delete the pin "${pinElement.dataset.name}"?`)) {
+            pinElement.remove();
+            savePinsOrder();
+        }
+    }
+
+    pinGrid.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('drag-over');
+        
+        const afterElement = getDragAfterElement(this, e.clientY);
+        if (afterElement == null) {
+            this.appendChild(draggedElement);
+        } else {
+            this.insertBefore(draggedElement, afterElement);
+        }
+    });
+
+    pinGrid.addEventListener('dragleave', function() {
+        this.classList.remove('drag-over');
+    });
+    pinGrid.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+    });
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.pin-item:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function savePinsOrder() {
+        const pins = [];
+        pinGrid.querySelectorAll('.pin-item').forEach(item => {
+            pins.push({
+                name: item.dataset.name,
+                url: item.dataset.url,
+                image: item.dataset.image
+            });
+        });
+        localStorage.setItem('pinnedBookmarks', JSON.stringify(pins));
+    }
+
+    function savePin(name, url, imageData) {
+        const savedPins = JSON.parse(localStorage.getItem('pinnedBookmarks') || '[]');
+        savedPins.push({ name, url, image: imageData });
+        localStorage.setItem('pinnedBookmarks', JSON.stringify(savedPins));
+    }
+
+    addPinBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        popup.style.display = 'block';
+    });
+    addBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const nameInput = document.getElementById('pin-name').value;
+        const urlInput = document.getElementById('pin-url').value;
+        const imageInput = document.getElementById('pin-image').files[0];
+
+        if (!nameInput) {
+            alert('Please enter a name for the pin');
+            return;
+        }
+
+        if (!urlInput.startsWith('https://')) {
+            alert('URL must start with https://');
+            return;
+        }
+
+        if (!imageInput) {
+            alert('Please select an image');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imageData = e.target.result;
+            createPinElement(nameInput, urlInput, imageData);
+            savePin(nameInput, urlInput, imageData);
+            popup.style.display = 'none';
+            document.getElementById('pin-name').value = '';
+            document.getElementById('pin-url').value = '';
+            document.getElementById('pin-image').value = '';
+        };
+        reader.readAsDataURL(imageInput);
+    });
+
+    cancelBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        popup.style.display = 'none';
+        document.getElementById('pin-name').value = '';
+        document.getElementById('pin-url').value = '';
+        document.getElementById('pin-image').value = '';
+    });
+    window.addEventListener('load', loadSavedPins);
+    </script>
+    
+    <script src="/static/uv/uv.bundle.js" defer></script>
+    <script src="/static/uv/uv.config.js" defer></script>
+    <script src="/static/register-sw.js" defer></script>
+    <script src="/static/search.js" defer></script>
+    <script src="/static/index.js" defer></script>
+</body>
+</html>
