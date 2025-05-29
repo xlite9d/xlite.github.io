@@ -1,6 +1,6 @@
 self.__uv$config = {
 	prefix: "/static/r/",
-	bare: "https://bare.cbgames.org/",
+	bare: "/bare",
 	encodeUrl: Ultraviolet.codec.xor.encode,
 	decodeUrl: Ultraviolet.codec.xor.decode,
 	handler: "/static/uv/uv.handler.js",
