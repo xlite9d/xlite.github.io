@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Network Zipper - Panel</title>
-    <link rel="stylesheet" href="panel.css">
+    <link rel="stylesheet" href="panel.css" />
 </head>
 <body>
     <div class="panel-container">
@@ -11,6 +11,13 @@
             <h1>Network Zipper <span id="version"></span></h1>
             <p>Download network resources as a zip file.</p>
         </header>
+
+        <!-- New section for site URL input -->
+        <section class="site-input-section" style="margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+            <label for="siteUrl">Enter site URL to download resources from:</label>
+            <input type="text" id="siteUrl" placeholder="https://example.com" style="width: 300px; margin-left: 10px;">
+            <button id="loadSite" class="button">Load Site</button>
+        </section>
 
         <section class="controls">
             <button id="download" class="button primary" 
@@ -22,13 +29,13 @@
             <label class="checkbox-button" 
                 title="Formats HTML, CSS and Javascript files."
             >
-                <input type="checkbox" id="beautify">
+                <input type="checkbox" id="beautify" />
                 <span class="button">Beautify Files</span>
             </label>
             <label class="checkbox-button" 
                 title="Add the '.html' extension to files that have no extension. Could be useful for websites but some games have extension-less engine files."
             >
-                <input type="checkbox" id="addhtml">
+                <input type="checkbox" id="addhtml" />
                 <span class="button">Add .html to extension-less files</span>
             </label>
         </section>
@@ -40,7 +47,7 @@
         <section class="download-status-container">
             <div id="downloadStatus" class="download-status">Waiting...</div>
         </section>
-        <br>
+        <br />
         <section class="file-info">
             <span>Files: <span id="fileCount">0</span></span>
         </section>
@@ -68,10 +75,37 @@
             <button id="discord" class="button">Discord</button>
         </div>
     </div>
+
+    <!-- JS libraries -->
     <script src="lib/jszip.js"></script>
     <script src="lib/beautify.js"></script>
     <script src="lib/beautify-css.js"></script>
     <script src="lib/beautify-html.js"></script>
-    <script src="panel.js"></script>
+    <!-- Your script -->
+    <script>
+        // Example function to handle site URL (you should implement your logic here)
+        function handleSiteUrl(url) {
+            alert('Loading resources from: ' + url);
+            // You can add your existing code to scan or fetch resources here
+        }
+
+        // When page loads, prompt user for site URL
+        window.onload = function() {
+            const siteUrl = prompt('Enter the site URL you want to download resources from:');
+            if (siteUrl) {
+                handleSiteUrl(siteUrl.trim());
+            }
+        };
+
+        // Add event listener for Load Site button
+        document.getElementById('loadSite').addEventListener('click', function() {
+            const siteUrl = document.getElementById('siteUrl').value.trim();
+            if (siteUrl) {
+                handleSiteUrl(siteUrl);
+            } else {
+                alert('Please enter a valid site URL.');
+            }
+        });
+    </script>
 </body>
 </html>
