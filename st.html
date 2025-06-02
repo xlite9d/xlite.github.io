@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>vmusic - Spotify Edition</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+			color: white;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		#app {
+			display: flex;
+			flex-direction: column;
+			height: 100vh;
+		}
+
+		header {
+			display: flex;
+			align-items: center;
+			padding: 20px;
+			background: rgba(0, 0, 0, 0.2);
+			backdrop-filter: blur(10px);
+		}
+
+		#search-bar {
+			flex: 1;
+			padding: 12px 16px;
+			border: none;
+			border-radius: 25px;
+			background: rgba(255, 255, 255, 0.1);
+			color: white;
+			font-size: 16px;
+			margin-right: 12px;
+		}
+
+		#search-bar::placeholder {
+			color: rgba(255, 255, 255, 0.7);
+		}
+
+		#search-bar:focus {
+			outline: none;
+			background: rgba(255, 255, 255, 0.2);
+		}
+
+		#search-button {
+			background: #1db954;
+			border: none;
+			border-radius: 50%;
+			width: 48px;
+			height: 48px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		#search-button:hover {
+			background: #1ed760;
+			transform: scale(1.05);
+		}
+
+		.tabs {
+			display: flex;
+			background: rgba(0, 0, 0, 0.1);
+			padding: 0 20px;
+		}
+
+		.tab-button {
+			background: none;
+			border: none;
+			color: rgba(255, 255, 255, 0.7);
+			padding: 16px 24px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			border-bottom: 2px solid transparent;
+		}
+
+		.tab-button.active {
+			color: white;
+			border-bottom-color: #1db954;
+		}
+
+		.tab-button:hover {
+			color: white;
+		}
+
+		main {
+			flex: 1;
+			overflow-y: auto;
+			padding: 20px;
+		}
+
+		#placeholder {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 200px;
+			font-size: 64px;
+			color: rgba(255, 255, 255, 0.3);
+		}
+
+		#placeholder-text {
+			text-align: center;
+			color: rgba(255, 255, 255, 0.6);
+			margin-top: 20px;
+		}
+
+		.search-result-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 16px;
+			margin-bottom: 8px;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 12px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.search-result-item:hover {
+			background: rgba(255, 255, 255, 0.2);
+			transform: translateY(-2px);
+		}
+
+		.search-result-item.now-playing {
+			background: rgba(29, 185, 84, 0.3);
+			border: 2px solid #1db954;
+		}
+
+		.song-info {
+			flex: 1;
+		}
+
+		.song-title {
+			font-weight: 600;
+			margin-bottom: 4px;
+		}
+
+		.song-artist {
+			color: rgba(255, 255, 255, 0.7);
+			font-size: 14px;
+		}
+
+		.like-button {
+			background: none;
+			border: none;
+			color: rgba(255, 255, 255, 0.7);
+			font-size: 20px;
+			cursor: pointer;
+			padding: 8px;
+			border-radius: 50%;
+			transition: all 0.3s ease;
+		}
+
+		.like-button:hover {
+			color: #1db954;
+			background: rgba(29, 185, 84, 0.1);
+		}
+
+		.like-button.liked {
+			color: #1db954;
+		}
+
+		footer {
+			background: rgba(0, 0, 0, 0.3);
+			backdrop-filter: blur(10px);
+			padding: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		#player-controls {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+			flex: 1;
+		}
+
+		#player-controls > div:first-child {
+			display: flex;
+			gap: 12px;
+		}
+
+		#player-controls button {
+			background: none;
+			border: none;
+			color: white;
+			font-size: 20px;
+			cursor: pointer;
+			padding: 8px;
+			border-radius: 50%;
+			transition: all 0.3s ease;
+		}
+
+		#player-controls button:hover {
+			background: rgba(255, 255, 255, 0.1);
+		}
+
+		#play {
+			background: #1db954;
+			font-size: 24px;
+		}
+
+		#play:hover {
+			background: #1ed760;
+		}
+
+		#scrub-bar {
+			flex: 1;
+			height: 6px;
+			background: rgba(255, 255, 255, 0.3);
+			border-radius: 3px;
+			cursor: pointer;
+			margin: 0 20px;
+		}
+
+		#scrub-bar-progress {
+			height: 100%;
+			background: #1db954;
+			border-radius: 3px;
+			width: 0%;
+			transition: width 0.1s ease;
+		}
+
+		#time-display {
+			display: flex;
+			gap: 8px;
+			font-size: 12px;
+			color: rgba(255, 255, 255, 0.7);
+		}
+
+		.hidden {
+			display: none !important;
+		}
+
+		.loading {
+			text-align: center;
+			padding: 40px;
+			color: rgba(255, 255, 255, 0.7);
+		}
+
+		.no-results {
+			text-align: center;
+			padding: 40px;
+			color: rgba(255, 255, 255, 0.7);
+		}
+
+		.loop-active {
+			color: #1db954 !important;
+		}
+
+		#auth-section {
+			background: rgba(0, 0, 0, 0.3);
+			padding: 20px;
+			text-align: center;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		#auth-button {
+			background: #1db954;
+			border: none;
+			color: white;
+			padding: 12px 24px;
+			border-radius: 25px;
+			cursor: pointer;
+			font-size: 16px;
+			font-weight: 600;
+			transition: all 0.3s ease;
+		}
+
+		#auth-button:hover {
+			background: #1ed760;
+			transform: scale(1.05);
+		}
+
+		.preview-notice {
+			background: rgba(255, 193, 7, 0.2);
+			border: 1px solid rgba(255, 193, 7, 0.5);
+			border-radius: 8px;
+			padding: 12px;
+			margin-bottom: 20px;
+			text-align: center;
+			color: #ffc107;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<div id="auth-section">
+			<button id="auth-button">Connect to Spotify</button>
+			<div id="auth-status" style="margin-top: 10px; color: rgba(255, 255, 255, 0.7);"></div>
+		</div>
+
+		<header>
+			<input type="text" id="search-bar" placeholder="Search for music..." disabled>
+			<button id="search-button" disabled>
+				<i class="bi bi-search"></i>
+			</button>
+		</header>
+
+		<div class="tabs">
+			<button class="tab-button active" data-tab="all">All Songs</button>
+			<button class="tab-button" data-tab="liked">Liked Songs</button>
+		</div>
+
+		<main>
+			<div class="preview-notice hidden">
+				<i class="bi bi-info-circle"></i>
+				Playing 30-second previews. Full playback requires Spotify Premium.
+			</div>
+			<div id="placeholder">
+				<i class="bi bi-spotify"></i>
+			</div>
+			<div id="placeholder-text">
+				<p>Connect to Spotify and search to get started</p>
+			</div>
+			<section id="search-results" class="hidden"></section>
+			<section id="liked-songs" class="hidden"></section>
+		</main>
+
+		<footer>
+			<div id="player-controls">
+				<div>
+					<button id="prev" onclick="playPrevious()"><i class="bi bi-skip-start"></i></button>
+					<button id="play" onclick="togglePlayPause()"><i class="bi bi-play-fill"></i></button>
+					<button id="next" onclick="playNext()"><i class="bi bi-skip-end"></i></button>
+					<button id="loop" onclick="toggleLoop()"><i class="bi bi-arrow-repeat"></i></button>
+				</div>
+				<div id="scrub-bar" onclick="seekTo(event)">
+					<div id="scrub-bar-progress"></div>
+				</div>
+				<div id="time-display">
+					<span id="current-time">0:00</span>
+					<span id="duration-time">0:30</span>
+				</div>
+			</div>
+		</footer>
+
+		<audio id="audio-player" style="display: none;"></audio>
+	</div>
+
+	<script>
+		// Spotify API credentials
+		const CLIENT_ID = '2ed6e4720540490c93301a12f5937daf';
+		const CLIENT_SECRET = '498eede215984401b0a7cb4119a3667c';
+		const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+		// App state
+		let accessToken = null;
+		let currentSearchResults = [];
+		let currentTrackIndex = -1;
+		let likedSongs = [];
+		let isPlaying = false;
+		let isLooping = false;
+		let currentAudio = null;
+		let progressInterval = null;
+
+		// Initialize the app
+		function init() {
+			loadLikedSongs();
+			setupEventListeners();
+			checkAuthStatus();
+		}
+
+		// Load liked songs from memory (no localStorage in artifacts)
+		function loadLikedSongs() {
+			// In a real implementation, this would load from localStorage
+			// For artifacts, we start with empty array
+			likedSongs = [];
+			updateLikedSongsTab();
+		}
+
+		// Save liked songs (placeholder for artifacts)
+		function saveLikedSongs() {
+			// In a real implementation, this would save to localStorage
+			// For artifacts, we just keep in memory
+		}
+
+		// Setup event listeners
+		function setupEventListeners() {
+			// Auth button
+			document.getElementById('auth-button').addEventListener('click', authenticateSpotify);
+
+			// Search input
+			document.getElementById('search-bar').addEventListener('keyup', (e) => {
+				if (e.key === 'Enter' && accessToken) {
+					searchTracks(e.target.value);
+				}
+			});
+
+			// Search button
+			document.getElementById('search-button').addEventListener('click', () => {
+				if (accessToken) {
+					searchTracks(document.getElementById('search-bar').value);
+				}
+			});
+
+			// Tab switching
+			document.querySelectorAll('.tab-button').forEach(tab => {
+				tab.addEventListener('click', function() {
+					const tabName = this.getAttribute('data-tab');
+
+					// Set active tab
+					document.querySelectorAll('.tab-button').forEach(t => t.classList.remove('active'));
+					this.classList.add('active');
+
+					// Hide all content
+					document.getElementById('search-results').classList.add('hidden');
+					document.getElementById('liked-songs').classList.add('hidden');
+
+					// Hide placeholder
+					document.getElementById('placeholder').classList.add('hidden');
+					document.getElementById('placeholder-text').classList.add('hidden');
+
+					if (tabName === 'all') {
+						if (!currentSearchResults || currentSearchResults.length === 0) {
+							document.getElementById('placeholder').classList.remove('hidden');
+							document.getElementById('placeholder-text').classList.remove('hidden');
+						} else {
+							document.getElementById('search-results').classList.remove('hidden');
+						}
+					} else if (tabName === 'liked') {
+						updateLikedSongsList();
+						document.getElementById('liked-songs').classList.remove('hidden');
+					}
+				});
+			});
+		}
+
+		// Check if user is already authenticated
+		function checkAuthStatus() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const code = urlParams.get('code');
+
+			if (code) {
+				// Exchange code for access token
+				exchangeCodeForToken(code);
+				// Clean up URL
+				window.history.replaceState({}, document.title, window.location.pathname);
+			} else {
+				// Check if we have a stored token (in real app, check localStorage)
+				document.getElementById('auth-status').textContent = 'Please connect to Spotify to start using the app';
+			}
+		}
+
+		// Authenticate with Spotify
+		function authenticateSpotify() {
+			const scopes = 'user-read-private user-read-email user-library-read user-library-modify';
+			const authUrl = `https://accounts.spotify.com/authorize?` +
+				`client_id=${CLIENT_ID}&` +
+				`response_type=code&` +
+				`redirect_uri=${encodeURIComponent(REDIRECT_URI)}&` +
+				`scope=${encodeURIComponent(scopes)}`;
+
+			window.location.href = authUrl;
+		}
+
+		// Exchange authorization code for access token
+		async function exchangeCodeForToken(code) {
+			try {
+				const response = await fetch('https://accounts.spotify.com/api/token', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': `Basic ${btoa(CLIENT_ID + ':' + CLIENT_SECRET)}`
+					},
+					body: new URLSearchParams({
+						grant_type: 'authorization_code',
+						code: code,
+						redirect_uri: REDIRECT_URI
+					})
+				});
+
+				const data = await response.json();
+				
+				if (data.access_token) {
+					accessToken = data.access_token;
+					onAuthSuccess();
+				} else {
+					throw new Error('Failed to get access token');
+				}
+			} catch (error) {
+				console.error('Auth error:', error);
+				document.getElementById('auth-status').textContent = 'Authentication failed. Please try again.';
+			}
+		}
+
+		// Handle successful authentication
+		function onAuthSuccess() {
+			document.getElementById('auth-section').style.display = 'none';
+			document.getElementById('search-bar').disabled = false;
+			document.getElementById('search-button').disabled = false;
+			document.querySelector('.preview-notice').classList.remove('hidden');
+			
+			// Update placeholder text
+			document.getElementById('placeholder-text').innerHTML = '<p>Search for music to get started</p>';
+		}
+
+		// Search for tracks using Spotify API
+		async function searchTracks(query) {
+			if (!query || query.trim() === '' || !accessToken) return;
+
+			const searchResults = document.getElementById('search-results');
+			searchResults.innerHTML = '<div class="loading">Searching Spotify...</div>';
+			searchResults.classList.remove('hidden');
+
+			// Show search results tab
+			document.querySelectorAll('.tab-button').forEach(tab => tab.classList.remove('active'));
+			document.querySelector('[data-tab="all"]').classList.add('active');
+			document.getElementById('liked-songs').classList.add('hidden');
+
+			currentTrackIndex = -1;
+
+			try {
+				const response = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=track&limit=50`, {
+					headers: {
+						'Authorization': `Bearer ${accessToken}`
+					}
+				});
+
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+
+				const data = await response.json();
+				const results = document.getElementById('search-results');
+				const placeholder = document.getElementById('placeholder');
+				const placeholderText = document.getElementById('placeholder-text');
+
+				placeholder.classList.add('hidden');
+				placeholderText.classList.add('hidden');
+
+				currentSearchResults = data.tracks.items;
+				results.innerHTML = '';
+
+				if (currentSearchResults.length === 0) {
+					results.innerHTML = '<div class="no-results">No tracks found. Try another search.</div>';
+					return;
+				}
+
+				currentSearchResults.forEach((track, index) => {
+					const div = document.createElement('div');
+					div.classList.add('search-result-item');
+
+					// Check if song is liked
+					const isLiked = likedSongs.some(song => song.id === track.id);
+					const likeIcon = isLiked ? 'bi-heart-fill' : 'bi-heart';
+					const likeClass = isLiked ? 'liked' : '';
+
+					// Show preview availability
+					const hasPreview = track.preview_url ? '' : ' (No preview)';
+
+					div.innerHTML = `
+						<div class="song-info">
+							<div class="song-title">${track.name}${hasPreview}</div>
+							<div class="song-artist">${track.artists.map(a => a.name).join(', ')}</div>
+						</div>
+						<button class="like-button ${likeClass}" data-id="${track.id}" data-index="${index}">
+							<i class="bi ${likeIcon}"></i>
+						</button>
+					`;
+
+					// Make entire item clickable to play
+					div.addEventListener('click', function(e) {
+						if (e.target.closest('.like-button')) return;
+						if (track.preview_url) {
+							playTrack(track, index);
+						}
+					});
+
+					// Add like button functionality
+					div.querySelector('.like-button').addEventListener('click', function(e) {
+						e.stopPropagation();
+						toggleLike(this, track);
+					});
+
+					results.appendChild(div);
+				});
+
+			} catch (error) {
+				console.error('Search error:', error);
+				document.getElementById('search-results').innerHTML = 
+					'<div class="no-results">Error searching Spotify. Please try again.</div>';
+			}
+		}
+
+		// Play a track
+		function playTrack(track, index) {
+			if (!track.preview_url) {
+				console.log('No preview available for this track');
+				return;
+			}
+
+			// Stop current audio if playing
+			if (currentAudio) {
+				currentAudio.pause();
+				currentAudio = null;
+			}
+
+			// Clear progress interval
+			if (progressInterval) {
+				clearInterval(progressInterval);
+			}
+
+			// Remove now-playing class from all items
+			document.querySelectorAll('.search-result-item').forEach(item => {
+				item.classList.remove('now-playing');
+			});
+
+			// Add now-playing class to current track
+			const currentTab = document.querySelector('.tab-button.active').getAttribute('data-tab');
+			if (currentTab === 'all') {
+				const songItems = document.querySelectorAll('#search-results .search-result-item');
+				if (songItems.length > index) {
+					songItems[index].classList.add('now-playing');
+				}
+			} else if (currentTab === 'liked') {
+				const songItems = document.querySelectorAll('#liked-songs .search-result-item');
+				songItems.forEach(item => {
+					const likeButton = item.querySelector('.like-button');
+					if (likeButton && likeButton.getAttribute('data-id') === track.id) {
+						item.classList.add('now-playing');
+					}
+				});
+			}
+
+			// Create new audio element
+			currentAudio = new Audio(track.preview_url);
+			currentAudio.volume = 0.8;
+			
+			currentAudio.addEventListener('loadedmetadata', () => {
+				updatePlayButton();
+				startProgressTracking();
+			});
+
+			currentAudio.addEventListener('ended', () => {
+				if (isLooping) {
+					currentAudio.currentTime = 0;
+					currentAudio.play();
+				} else {
+					playNext();
+				}
+			});
+
+			currentAudio.play();
+			isPlaying = true;
+			currentTrackIndex = index;
+			updatePlayButton();
+		}
+
+		// Toggle play/pause
+		function togglePlayPause() {
+			if (!currentAudio) return;
+
+			if (isPlaying) {
+				currentAudio.pause();
+				isPlaying = false;
+			} else {
+				currentAudio.play();
+				isPlaying = true;
+			}
+			updatePlayButton();
+		}
+
+		// Update play button
+		function updatePlayButton() {
+			document.getElementById('play').innerHTML = isPlaying ?
+				'<i class="bi bi-pause-fill"></i>' :
+				'<i class="bi bi-play-fill"></i>';
+		}
+
+		// Start tracking progress
+		function startProgressTracking() {
+			progressInterval = setInterval(() => {
+				if (currentAudio) {
+					const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
+					document.getElementById('scrub-bar-progress').style.width = progress + '%';
+
+					// Update time display
+					const currentMinutes = Math.floor(currentAudio.currentTime / 60);
+					const currentSeconds = Math.floor(currentAudio.currentTime % 60);
+					document.getElementById('current-time').textContent = 
+						`${currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds}`;
+
+					const durationMinutes = Math.floor(currentAudio.duration / 60);
+					const durationSeconds = Math.floor(currentAudio.duration % 60);
+					document.getElementById('duration-time').textContent = 
+						`${durationMinutes}:${durationSeconds < 10 ? '0' + durationSeconds : durationSeconds}`;
+				}
+			}, 200);
+		}
+
+		// Seek to position
+		function seekTo(event) {
+			if (!currentAudio) return;
+
+			const scrubBar = document.getElementById('scrub-bar');
+			const rect = scrubBar.getBoundingClientRect();
+			const clickX = event.clientX - rect.left;
+			const percentage = clickX / rect.width;
+			const newTime = percentage * currentAudio.duration;
+
+			currentAudio.currentTime = newTime;
+		}
+
+		// Play next track
+		function playNext() {
+			const activeTab = document.querySelector('.tab-button.active').getAttribute('data-tab');
+
+			if (activeTab === 'all') {
+				if (currentTrackIndex === -1 || !currentSearchResults || currentTrackIndex >= currentSearchResults.length - 1) {
+					if (currentSearchResults && currentSearchResults.length > 0) {
+						const firstTrack = currentSearchResults.find(t => t.preview_url);
+						if (firstTrack) {
+							const index = currentSearchResults.indexOf(firstTrack);
+							playTrack(firstTrack, index);
+						}
+					}
+					return;
+				}
+
+				// Find next track with preview
+				for (let i = currentTrackIndex + 1; i < currentSearchResults.length; i++) {
+					if (currentSearchResults[i].preview_url) {
+						playTrack(currentSearchResults[i], i);
+						return;
+					}
+				}
+			} else if (activeTab === 'liked') {
+				if (likedSongs.length === 0) return;
+
+				let nextIndex = 0;
+				if (currentTrackIndex >= 0 && currentTrackIndex < likedSongs.length - 1) {
+					nextIndex = currentTrackIndex + 1;
+				}
+
+				// Find the track in current search results or create a track object
+				const likedTrack = likedSongs[nextIndex];
+				playTrack(likedTrack, nextIndex);
+			}
+		}
+
+		// Play previous track
+		function playPrevious() {
+			const activeTab = document.querySelector('.tab-button.active').getAttribute('data-tab');
+
+			if (activeTab === 'all') {
+				if (currentTrackIndex <= 0) {
+					if (currentSearchResults && currentSearchResults.length > 0) {
+						// Find last track with preview
+						for (let i = currentSearchResults.length - 1; i >= 0; i--) {
+							if (currentSearchResults[i].preview_url) {
+								playTrack(currentSearchResults[i], i);
+								return;
+							}
+						}
+					}
+					return;
+				}
+
+				// Find previous track with preview
+				for (let i = currentTrackIndex - 1; i >= 0; i--) {
+					if (currentSearchResults[i].preview_url) {
+						playTrack(currentSearchResults[i], i);
+						return;
+					}
+				}
+			} else if (activeTab === 'liked') {
+				if (likedSongs.length === 0) return;
+
+				let prevIndex = likedSongs.length - 1;
+				if (currentTrackIndex > 0 && currentTrackIndex < likedSongs.length) {
+					prevIndex = currentTrackIndex - 1;
+				}
+
+				const likedTrack = likedSongs[prevIndex];
+				playTrack(likedTrack, prevIndex);
+			}
+		}
+
+		// Toggle loop
+		function toggleLoop() {
+			isLooping = !isLooping;
+			const loopButton = document.getElementById('loop');
+
+			if (isLooping) {
+				loopButton.classList.add('loop-active');
+			} else {
+				loopButton.classList.remove('loop-active');
+			}
+		}
+
+		// Toggle like status
+		function toggleLike(button, track) {
+			if (!button || !track) return;
+
+			const trackId = track.id;
+			const likedIndex = likedSongs.findIndex(song => song.id === trackId);
+
+			if (likedIndex === -1) {
+				// Add to liked songs
+				likedSongs.push({
+					id: track.id,
+					name: track.name,
+					artists: track.artists,
+					preview_url: track.preview_url
+				});
+				button.classList.add('liked');
+				button.innerHTML = '<i class="bi bi-heart-fill"></i>';
+			} else {
+				// Remove from liked songs
+				likedSongs.splice(likedIndex, 1);
+				button.classList.remove('liked');
+				button.innerHTML = '<i class="bi bi-heart"></i>';
+
+				// Update liked songs list if currently viewing
+				if (document.querySelector('[data-tab="liked"].active')) {
+					updateLikedSongsList();
+				}
+			}
+
+			updateLikedSongsTab();
+			saveLikedSongs();
+		}
+
+		// Update liked songs tab
+		function updateLikedSongsTab() {
+			const likedTab = document.querySelector('[data-tab="liked"]');
+			likedTab.textContent = likedSongs.length > 0 ? `Liked Songs (${likedSongs.length})` : 'Liked Songs';
+		}
+
+		// Update liked songs list
+		function updateLikedSongsList() {
+			const likedSongsSection = document.getElementById('liked-songs');
+			likedSongsSection.innerHTML = '';
+
+			document.getElementById('placeholder').classList.add('hidden');
+			document.getElementById('placeholder-text').classList.add('hidden');
+
+			if (likedSongs.length === 0) {
+				likedSongsSection.innerHTML = '<div class="no-results">No liked songs yet. Heart some songs to add them here.</div>';
+				return;
+			}
+
+			likedSongs.forEach((song, idx) => {
+				const div = document.createElement('div');
+				div.classList.add('search-result-item');
+
+				if (currentTrackIndex === idx && document.querySelector('[data-tab="liked"].active')) {
+					div.classList.add('now-playing');
+				}
+
+				const hasPreview = song.preview_url ? '' : ' (No preview)';
+
+				div.innerHTML = `
+					<div class="song-info">
+						<div class="song-title">${song.name}${hasPreview}</div>
+						<div class="song-artist">${song.artists.map(a => a.name).join(', ')}</div>
+					</div>
+					<button class="like-button liked" data-id="${song.id}">
+						<i class="bi bi-heart-fill"></i>
+					</button>
+				`;
+
+				div.addEventListener('click', function(e) {
+					if (e.target.closest('.like-button')) return;
+					if (song.preview_url) {
+						playTrack(song, idx);
+					}
+				});
+
+				div.querySelector('.like-button').addEventListener('click', function(e) {
+					e.stopPropagation();
+					toggleLike(this, song);
+				});
+
+				likedSongsSection.appendChild(div);
+			});
+		}
+
+		// Initialize when page loads
+		document.addEventListener('DOMContentLoaded', init);
+	</script>
+</body>
+</html>
