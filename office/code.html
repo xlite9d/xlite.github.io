@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VSCode Clone with AI Helper</title>
+<!-- Remix icons for icons -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet" />
+<!-- Prism for syntax highlighting -->
+<link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+<style>
+/* Reset & base styles */
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color:#1e1e2f;
+  display:flex; height:100vh; overflow:hidden; user-select:none;
+}
+
+/* Sidebar styles */
+#sidebar {
+  width:250px; background:#2d2d3f; display:flex; flex-direction:column; padding:10px; overflow-y:auto; transition:width 0.2s;
+}
+#sidebar:hover { width:280px; }
+#folder-tree {
+  margin-top:10px; flex:1; font-size:0.95em; overflow:auto;
+}
+.node {
+  display:flex; align-items:center; padding:4px 8px; cursor:pointer; border-radius:4px; user-select:none;
+}
+.node:hover { background:#44445a; }
+.node.selected { background:#55565f; }
+.node i { margin-right:8px; font-size:1.2em; }
+
+/* controls buttons */
+#sidebar-controls {
+  display:flex; gap:8px; margin-bottom:10px;
+}
+#sidebar-controls button {
+  background:none; border:none; color:#ccc; cursor:pointer; font-size:1.3em; padding:4px;
+}
+#sidebar-controls button:hover { color:#fff; }
+
+/* Main area styles */
+#main {
+  flex:1; display:flex; flex-direction:column; height:100%;
+}
+#topbar {
+  height:40px; background:#2d2d3f; display:flex; align-items:center; padding:0 12px; font-size:0.9em; color:#aaa; justify-content:space-between;
+}
+#path {
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%;
+}
+#actions button {
+  background:none; border:none; color:#ccc; cursor:pointer; font-size:1.2em; margin-left:8px;
+}
+#actions button:hover { color:#fff; }
+
+#editor-container {
+  flex:1; display:flex; position:relative; background:#1e1e2f; font-family:monospace; padding:10px; overflow:auto; font-size:14px; line-height:1.4em;
+}
+#line-numbers {
+  position:absolute; top:50px; left:0; width:40px; padding:10px 0; text-align:right; font-family:monospace; color:#555; user-select:none;
+}
+#code-area {
+  margin-left:50px; white-space:pre; outline:none; flex:1; height:100%; overflow:auto; font-family: monospace; font-size:14px; line-height:1.4em;
+}
+#ghost-helper {
+  position:absolute; font-family:monospace; font-size:14px; color:rgba(255,255,255,0.3); pointer-events:none; white-space:pre; z-index:10; padding:2px;
+}
+#statusbar {
+  height:25px; background:#2d2d3f; display:flex; align-items:center; padding:0 12px; font-size:0.8em; color:#aaa;
+}
+
+/* Upload image button */
+#uploadImage {
+  font-size:1.2em; cursor:pointer; background:none; border:none; color:#ccc; padding:4px;
+}
+#uploadImage:hover { color:#fff; }
+
+/* Custom context menu styling to match your theme, e.g., dark red background and white text */
+#contextMenu {
+  position:absolute; background:#8B0000; border:1px solid #555; border-radius:4px; display:none; flex-direction:column; z-index:999; min-width:180px;
+}
+#contextMenu button {
+  padding:8px 12px; background:none; border:none; color:#fff; text-align:left; width:100%; cursor:pointer;
+}
+#contextMenu button:hover { background:#a52a2a; }
+
+/* Additional styles for menu icons if needed (optional) */
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <div id="sidebar-controls">
+    <button title="Add Folder" id="addFolder"><i class="ri-folder-line"></i></button>
+    <button title="Add File" id="addFile"><i class="ri-file-line"></i></button>
+    <button title="Upload Image" id="uploadImage"><i class="ri-image-line"></i></button>
+    <button title="Rename" id="rename"><i class="ri-pencil-line"></i></button>
+    <button title="Delete" id="delete"><i class="ri-delete-bin-line"></i></button>
+    <button title="Toggle AI" id="toggleAI"><i class="ri-body-scan-line"></i></button>
+  </div>
+  <div id="folder-tree"></div>
+</div>
+
+<!-- Main -->
+<div id="main">
+  <div id="topbar">
+    <div id="path">/workspace</div>
+    <div id="actions">
+      <button title="Save" id="save"><i class="ri-save-line"></i></button>
+    </div>
+  </div>
+  <div id="editor-container" style="position:relative;">
+    <div id="line-numbers"></div>
+    <div id="code-area" contenteditable="true"></div>
+    <div id="ghost-helper"></div>
+  </div>
+  <div id="statusbar">Ready</div>
+</div>
+
+<!-- Hidden input for images -->
+<input type="file" id="imageInput" style="display:none" accept="image/*" />
+
+<!-- Custom context menu -->
+<div id="contextMenu"></div>
+
+<!-- Prism JS for syntax highlighting -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.js"></script>
+
+<script>
+/* =================== Data Structures =================== */
+let root = {
+  id: 'root',
+  name: 'workspace',
+  type: 'folder',
+  children: [],
+  parent: null
+};
+let currentFolder = root;
+let selectedNode = null;
+
+/* =================== DOM Elements =================== */
+const folderTreeEl = document.getElementById('folder-tree');
+const pathEl = document.getElementById('path');
+const codeArea = document.getElementById('code-area');
+const lineNumbersEl = document.getElementById('line-numbers');
+const ghostHelper = document.getElementById('ghost-helper');
+const contextMenu = document.getElementById('contextMenu');
+
+const addFolderBtn = document.getElementById('addFolder');
+const addFileBtn = document.getElementById('addFile');
+const uploadImageBtn = document.getElementById('uploadImage');
+const renameBtn = document.getElementById('rename');
+const deleteBtn = document.getElementById('delete');
+const toggleAIBtn = document.getElementById('toggleAI');
+const saveBtn = document.getElementById('save');
+const imageInput = document.getElementById('imageInput');
+
+/* =================== Utility Functions =================== */
+function generateId() { return 'id-' + Math.random().toString(36).substr(2,9); }
+
+function getPath(node) {
+  const parts = [];
+  let current = node;
+  while(current){ parts.unshift(current.name); current=current.parent; }
+  return '/' + parts.join('/');
+}
+
+function renderTree() {
+  folderTreeEl.innerHTML='';
+  function recurse(node, parentEl) {
+    node.children?.forEach(c => {
+      const el = document.createElement('div');
+      el.className='node';
+      el.dataset.id=c.id;
+      el.onclick=(e) => { e.stopPropagation(); selectNode(c,el); };
+      el.oncontextmenu=(e)=> { e.preventDefault(); selectNode(c,el); showContextMenu(e.pageX,e.pageY); };
+      const icon = document.createElement('i');
+      icon.className= c.type==='folder'?'ri-folder-line':'ri-file-line';
+      el.appendChild(icon);
+      const span = document.createElement('span');
+      span.innerText=c.name;
+      el.appendChild(span);
+      parentEl.appendChild(el);
+      if(c.type==='folder') recurse(c,el);
+    });
+  }
+  recurse(root, folderTreeEl);
+  if(selectedNode) {
+    document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+    const sel = document.querySelector(`.node[data-id="${selectedNode.id}"]`);
+    if(sel) sel.classList.add('selected');
+    pathEl.innerText = getPath(selectedNode);
+  } else {
+    pathEl.innerText = '/workspace';
+  }
+}
+
+function selectNode(node, el) {
+  selectedNode=node;
+  if(node.type==='file'){ loadFile(node); }
+  document.querySelectorAll('.node').forEach(n => n.classList.remove('selected'));
+  if(el) el.classList.add('selected');
+  pathEl.innerText=getPath(node);
+}
+
+function loadFile(node) {
+  codeArea.innerText = node.content || '';
+  updateLineNumbers();
+  highlightSyntax(node.name);
+  if(aiHelperEnabled) generateAIAssist();
+  statusBar.innerText='File: '+node.name;
+}
+
+function createNode(name, type, parent) {
+  const node = { id: generateId(), name, type, parent, children: type==='folder'?[]:null, content: '' };
+  if(parent) {
+    parent.children.push(node);
+  }
+  return node;
+}
+
+/* =================== Tree Operations =================== */
+// Add folder
+function addFolder() {
+  if(!selectedNode || selectedNode.type!=='folder'){ alert('Select a folder'); return; }
+  const name=prompt('Folder name:');
+  if(name){
+    createNode(name,'folder',selectedNode);
+    renderTree();
+  }
+}
+
+// Add file
+function addFile() {
+  if(!selectedNode || selectedNode.type!=='folder'){ alert('Select a folder'); return; }
+  const name=prompt('File name:');
+  if(name){
+    createNode(name,'file',selectedNode);
+    renderTree();
+  }
+}
+
+// Rename node
+function renameNode() {
+  if(!selectedNode){ alert('Select a node'); return; }
+  const newName=prompt('New name:', selectedNode.name);
+  if(newName){ selectedNode.name=newName; renderTree(); if(selectedNode.type==='file') loadFile(selectedNode); }
+}
+
+// Delete node
+function deleteNode() {
+  if(!selectedNode || !selectedNode.parent){ alert('Cannot delete root'); return; }
+  const parent=selectedNode.parent;
+  parent.children=parent.children.filter(c=>c!==selectedNode);
+  selectedNode=null;
+  codeArea.innerText='';
+  updateLineNumbers();
+  renderTree();
+  statusBar.innerText='Deleted.';
+}
+
+/* =================== Upload Image =================== */
+document.getElementById('uploadImage').onclick=()=>{ imageInput.click(); }
+imageInput.onchange=()=>{
+  const file= imageInput.files[0];
+  if(!file) return;
+  const reader= new FileReader();
+  reader.onload=()=> {
+    insertAtCursor(`![${file.name}](${reader.result})`);
+  }
+  reader.readAsDataURL(file);
+}
+
+/* =================== Insert Text at Cursor =================== */
+function insertAtCursor(text) {
+  const sel=window.getSelection();
+  if(!sel.rangeCount) return;
+  const range=sel.getRangeAt(0);
+  range.deleteContents();
+  const textNode=document.createTextNode(text);
+  range.insertNode(textNode);
+  // move cursor
+  range.setStartAfter(textNode);
+  range.setEndAfter(textNode);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+/* =================== Syntax Highlighting =================== */
+function highlightSyntax(filename) {
+  // Use Prism for syntax highlighting based on extension
+  Prism.highlightAll();
+}
+
+/* =================== Line Numbers =================== */
+function updateLineNumbers() {
+  const lines = codeArea.innerText.split('\n').length;
+  lineNumbersEl.innerHTML='';
+  for(let i=1; i<=lines; i++) {
+    const line = document.createElement('div');
+    line.innerText=i;
+    lineNumbersEl.appendChild(line);
+  }
+}
+
+/* =================== Save File =================== */
+document.getElementById('save').onclick=()=>{
+  if(selectedNode && selectedNode.type==='file'){
+    selectedNode.content=codeArea.innerText;
+    statusBar.innerText='File saved.';
+  }
+}
+
+/* =================== AI Helper =================== */
+async function generateAIAssist() {
+  if(!selectedNode || selectedNode.type!=='file') return;
+  // Simulate AI suggestion
+  aiSuggestion='// Helpful suggestion: console.log("Hello World");';
+  aiActive=true;
+  updateGhost();
+}
+function updateGhost() {
+  if(aiHelperEnabled && aiActive) {
+    document.getElementById('ghost-helper').innerText=aiSuggestion;
+  } else {
+    document.getElementById('ghost-helper').innerText='';
+  }
+}
+document.getElementById('toggleAI').onclick=()=>{
+  aiHelperEnabled=!aiHelperEnabled;
+  statusBar.innerText=aiHelperEnabled?'AI Helper: ON':'AI Helper: OFF';
+  if(aiHelperEnabled) generateAIAssist();
+  else { document.getElementById('ghost-helper').innerText=''; }
+}
+document.getElementById('code-area').addEventListener('keydown', (e)=>{
+  if(e.key==='Tab'){
+    e.preventDefault();
+    if(aiHelperEnabled && aiSuggestion && aiActive){
+      insertAtCursor(aiSuggestion);
+      aiActive=false;
+      updateGhost();
+    } else {
+      insertAtCursor('  ');
+    }
+  }
+}
+
+/* =================== Custom Context Menu =================== */
+const ctxMenu = document.getElementById('contextMenu');
+let ctxNode = null;
+
+function showContextMenu(x,y) {
+  ctxMenu.innerHTML='';
+  if(!ctxNode) return;
+  // Custom options for creating folder, file, uploading image
+  createContextItem('Create Folder', ()=>{ addFolder(); });
+  createContextItem('Create File', ()=>{ addFile(); });
+  createContextItem('Upload Image', ()=>{ imageInput.click(); });
+  createContextItem('Rename', ()=>{ renameNode(); });
+  createContextItem('Delete', ()=>{ deleteNode(); });
+  ctxMenu.style.top=y+'px'; ctxMenu.style.left=x+'px'; ctxMenu.style.display='flex';
+}
+function createContextItem(text, callback) {
+  const btn=document.createElement('button');
+  btn.innerText=text;
+  btn.onclick=()=>{ callback(); ctxMenu.style.display='none'; };
+  ctxMenu.appendChild(btn);
+}
+document.addEventListener('click', ()=>{ ctxMenu.style.display='none'; });
+
+// Handle right click on directory tree
+function attachRightClickHandlers() {
+  document.querySelectorAll('.node').forEach(n => {
+    n.oncontextmenu = (e)=>{
+      e.preventDefault();
+      selectNodeByElement(e.target.closest('.node'));
+      showContextMenu(e.pageX,e.pageY);
+    };
+  });
+}
+function refreshRightClickHandlers() {
+  document.querySelectorAll('.node').forEach(n => {
+    n.oncontextmenu = (e)=>{
+      e.preventDefault();
+      selectNodeByElement(e.target.closest('.node'));
+      showContextMenu(e.pageX,e.pageY);
+    };
+  });
+}
+
+// Select node by clicking in the tree
+function selectNodeByElement(el) {
+  const id=el.dataset.id;
+  const node=findNodeById(id, root);
+  if(node) {
+    selectedNode=node;
+    selectNode(node,el);
+  }
+}
+// Find node by id
+function findNodeById(id, node) {
+  if(node.id===id) return node;
+  if(node.children){
+    for(let c of node.children){
+      const res= findNodeById(id,c);
+      if(res) return res;
+    }
+  }
+  return null;
+}
+
+// Call this after adding/removing nodes to attach event handlers
+function reattachTreeHandlers() {
+  attachRightClickHandlers();
+}
+</script>
+<script>
+/* =================== Initialize =================== */
+renderTree();
+updateLineNumbers();
+
+const observer = new MutationObserver(reattachTreeHandlers);
+observer.observe(document.querySelector('#folder-tree'), { childList: true, subtree: true });
+</script>
+</body>
+</html>
