@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Category Checker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        .blocked {
+            background-color: #ffebee;
+            border-left: 5px solid #f44336;
+        }
+        .allowed {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+        }
+        .result-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .result-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .api-guide {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 30px;
+        }
+        .api-guide h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .api-endpoint {
+            background-color: #ffffff;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        .api-endpoint h4 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        .api-endpoint code {
+            display: inline-block;
+            background-color: #e9f5ff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 8px 0;
+        }
+        .api-endpoint pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .endpoint-note {
+            background-color: #fffde7;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            border-radius: 0 4px 4px 0;
+        }
+        .endpoint-note code {
+            display: block;
+            background-color: #fff8e1;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin-top: 8px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Domain Category Checker</h1>
+        
+        <div class="input-group">
+            <input type="text" id="domainInput" placeholder="Enter a domain (e.g., example.com)" autocomplete="off">
+            <button id="checkButton">Check</button>
+        </div>
+        
+        <div class="loader" id="loader"></div>
+        
+        <div id="result"></div>
+        
+        <div class="api-guide">
+            <h3>API Usage Guide</h3>
+            <p>You can directly access the domain checking API with these endpoints:</p>
+            
+            <div class="api-endpoint">
+                <h4>Check a domain</h4>
+                <code>GET /api/domain?domain=example.com</code>
+                <p>Returns whether the domain is blocked and its category.</p>
+                <p><strong>Example Response:</strong></p>
+                <pre>Blocked: True
+Category: Unknown</pre>
+            </div>
+
+            <div class="endpoint-note">
+                <p><strong>Note:</strong> You can use this API endpoint in your own applications by making a GET request to:</p>
+                <code id="api-url-example">[current-url]/api/domain?domain=example.com</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-fill the current URL in the API example
+            const apiUrlExample = document.getElementById('api-url-example');
+            const currentUrl = window.location.origin;
+            apiUrlExample.textContent = apiUrlExample.textContent.replace('[current-url]', currentUrl);
+            
+            // Category mapping
+            const categoryMap = {
+                '13': 'games',
+                '12': 'gambling',
+                '16': 'security',
+                '57': 'computers',
+                '113': 'parked',
+                '85': 'safe search',
+                '43': 'family.health',
+                '29': 'shopping',
+                '21': 'porn',
+                '94': 'porn.illicit',
+                '14': 'general',
+                '28': 'security.proxy',
+                '141': 'artificial-Intelligence.generative',
+                '9': 'education',
+                '15': 'government',
+                '144': 'domain-sharing',
+                '4': 'education.videos',
+                '39': 'forums.personals',
+                '117': 'forums.social_networking',
+                '45': 'entertainment',
+                '-1': 'Unknown',
+                '0': 'Unknown',
+                '18': 'business.jobs'
+            };
+            
+            // Blocked categories (as defined in the server.js)
+            const blockedCategories = ['117', '144', '141', '28', '21', '94', '113', '12', '16', '-1', '0', '13'];
+            
+            // DOM elements
+            const domainInput = document.getElementById('domainInput');
+            const checkButton = document.getElementById('checkButton');
+            const resultDiv = document.getElementById('result');
+            const loader = document.getElementById('loader');
+            
+            // Event listeners
+            checkButton.addEventListener('click', checkDomain);
+            domainInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkDomain();
+                }
+            });
+            
+            // Function to truncate long domains (matches backend logic)
+            function truncateDomain(domain) {
+                // Remove protocol and www if present
+                let cleanDomain = domain.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/.*$/, '');
+                
+                // If domain is too long (more than 100 characters) or has too many subdomains (more than 5 parts)
+                const parts = cleanDomain.split('.');
+                const maxLength = 100;
+                const maxParts = 5;
+                
+                if (cleanDomain.length > maxLength || parts.length > maxParts) {
+                    // Strategy: Keep the last few meaningful parts of the domain
+                    // Usually the main domain and TLD, plus 1-2 subdomains
+                    
+                    if (parts.length > 3) {
+                        // Keep the last 3-4 parts (subdomain.domain.tld or subdomain.subdomain.domain.tld)
+                        const truncatedParts = parts.slice(-4);
+                        cleanDomain = truncatedParts.join('.');
+                        
+                        // If still too long, keep only the last 3 parts
+                        if (cleanDomain.length > maxLength && truncatedParts.length > 3) {
+                            cleanDomain = parts.slice(-3).join('.');
+                        }
+                    }
+                }
+                
+                return cleanDomain;
+            }
+            
+            // Function to check domain
+            function checkDomain() {
+                const domain = domainInput.value.trim();
+                
+                if (!domain) {
+                    alert('Please enter a domain');
+                    return;
+                }
+                
+                // Show loader
+                loader.style.display = 'block';
+                resultDiv.style.display = 'none';
+                
+                // Sanitize and truncate domain input
+                const sanitizedDomain = truncateDomain(domain);
+                
+                // Call the Vercel API route
+                fetch(`/api/domain?domain=${encodeURIComponent(sanitizedDomain)}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        // Hide loader
+                        loader.style.display = 'none';
+                        
+                        // Parse the response
+                        const lines = data.split('\n');
+                        const blocked = lines[0].split(': ')[1];
+                        const category = lines[1].split(': ')[1];
+                        const categoryCode = getCategoryCode(category);
+                        
+                        // Display the result
+                        resultDiv.style.display = 'block';
+                        resultDiv.className = blocked === 'True' ? 'blocked' : 'allowed';
+                        
+                        resultDiv.innerHTML = `
+                            <div class="result-header">${sanitizedDomain}</div>
+                            <div class="result-info">
+                                <span>Status:</span>
+                                <span><strong>${blocked === 'True' ? 'Blocked' : 'Allowed'}</strong></span>
+                            </div>
+                            <div class="result-info">
+                                <span>Category:</span>
+                                <span><strong>${category}</strong> (Code: ${categoryCode})</span>
+                            </div>
+                        `;
+                    })
+                    .catch(error => {
+                        // Hide loader
+                        loader.style.display = 'none';
+                        
+                        // Display error
+                        resultDiv.style.display = 'block';
+                        resultDiv.className = 'blocked';
+                        resultDiv.innerHTML = `
+                            <div class="result-header">Error</div>
+                            <div>Failed to check domain: ${error.message}</div>
+                        `;
+                    });
+            }
+            
+            // Function to get category code from category name
+            function getCategoryCode(categoryName) {
+                for (const [code, name] of Object.entries(categoryMap)) {
+                    if (name === categoryName.toLowerCase()) {
+                        return code;
+                    }
+                }
+                return 'Unknown';
+            }
+        });
+    </script>
+</body>
+</html>
