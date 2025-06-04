@@ -561,6 +561,9 @@ body[data-wallpaper-type="animated"] {
             <div class="bg-option" data-bg="images/world.png" onclick="selectBackground(this)">
                 <img src="images/world.png" alt="Background Option">
             </div>
+            <div class="bg-option" data-bg="images/microsoft.png" onclick="selectBackground(this)">
+                <img src="images/microsoft.png" alt="Background Option">
+            </div>
             <!-- Add Upload Wallpaper Button -->
             <div class="bg-option bg-upload" onclick="openUploadModal()">
                 <span class="plus-icon">+</span>
@@ -980,13 +983,13 @@ function deleteSelectedWallpapers() {
     // If we deleted all custom wallpapers or the current background was deleted
     if (customWallpapers.length === 0 || backgroundWasDeleted) {
         // Set default background
-        document.body.style.backgroundImage = "url('images/download.png')";
-        localStorage.setItem('backgroundImage', 'images/download.png');
+        document.body.style.backgroundImage = "url('images/microsoft.png')";
+        localStorage.setItem('backgroundImage', 'images/microsoft.png');
         localStorage.setItem('isAnimatedWallpaper', false);
         document.body.removeAttribute('data-wallpaper-type');
 
         // Update selected state in the UI
-        const defaultOption = document.querySelector('.bg-option[data-bg="images/download.png"]');
+        const defaultOption = document.querySelector('.bg-option[data-bg="images/microsoft.png"]');
         if (defaultOption) {
             const allOptions = document.querySelectorAll('.bg-option');
             allOptions.forEach(option => option.classList.remove('selected'));
