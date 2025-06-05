@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:description" content="VPlaza is a game/pr_xy site full of games all kids want and need. Meet your expectations with Vplaza Games V1">
+    <link rel="stylesheet" href="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <title>Vplaza - Games</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a0a 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Enhanced Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(220, 38, 38, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Enhanced Navbar */
+        .navbar {
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid rgba(220, 38, 38, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            padding: 24px 0;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(220, 38, 38, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .navbar::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dc2626, transparent);
+            opacity: 0.6;
+        }
+
+        .navbar header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .head-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .head-left img {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .head-left img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 24px rgba(220, 38, 38, 0.5);
+        }
+
+        .head-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .head-right p {
+            margin: 0;
+        }
+
+        .head-right a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 18px;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .head-right a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #dc2626, #f97316);
+            transition: width 0.3s ease;
+        }
+
+        .head-right a:hover {
+            color: #dc2626;
+            text-shadow: 0 0 12px rgba(220, 38, 38, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .head-right a:hover::after {
+            width: 100%;
+        }
+
+        .discord-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 54px;
+            height: 54px;
+            background: linear-gradient(135deg, #1f1f1f, #0f0f0f);
+            border: 2px solid #dc2626;
+            border-radius: 16px;
+            box-shadow: 
+                0 0 24px rgba(220, 38, 38, 0.4), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 4px 16px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-left: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discord-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .discord-btn:hover::before {
+            opacity: 1;
+        }
+
+        .discord-btn:hover {
+            box-shadow: 
+                0 0 36px rgba(220, 38, 38, 0.7), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 8px 24px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #2f1f1f, #1f0f0f);
+            transform: translateY(-3px) scale(1.05);
+            border-color: #f97316;
+        }
+
+        .support-us {
+            margin-left: 18px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #dc2626, #b91c1c, #991b1b);
+            color: #fff;
+            border: 2px solid #dc2626;
+            border-radius: 16px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 
+                0 0 20px rgba(220, 38, 38, 0.4), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 4px 16px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-us::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .support-us:hover::before {
+            left: 100%;
+        }
+
+        .support-us:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b, #7f1d1d);
+            box-shadow: 
+                0 0 32px rgba(220, 38, 38, 0.6), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 8px 24px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            border-color: #f97316;
+        }
+
+        .discord-icon {
+            font-size: 26px;
+            color: #dc2626;
+            filter: drop-shadow(0 0 12px rgba(220, 38, 38, 0.6));
+            transition: all 0.3s ease;
+        }
+
+        .discord-btn:hover .discord-icon {
+            filter: drop-shadow(0 0 20px rgba(220, 38, 38, 0.9));
+            color: #f97316;
+            transform: scale(1.1);
+        }
+
+        .search-container {
+            margin-top: 24px;
+            max-width: 420px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(31, 41, 55, 0.9);
+            border: 2px solid rgba(220, 38, 38, 0.3);
+            border-radius: 16px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 
+                0 0 24px rgba(220, 38, 38, 0.4),
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            background: rgba(31, 41, 55, 1);
+            transform: translateY(-1px);
+        }
+
+        .search-bar::placeholder {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        /* Enhanced Games Section */
+        .games-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        .section {
+            margin-bottom: 64px;
+        }
+
+        .section h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 36px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #dc2626, #f97316);
+            border-radius: 2px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        /* Enhanced Continue Playing Carousel */
+        .continue-playing-container {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 36px;
+            height: 150px;
+            border-radius: 20px;
+            background: rgba(31, 41, 55, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+        }
+
+        .continue-playing-scroll {
+            display: flex;
+            gap: 24px;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0 70px;
+            height: 100%;
+        }
+
+        .continue-playing-card {
+            flex: 0 0 340px;
+            height: 120px;
+            background: linear-gradient(135deg, #1f2937, #111827, #0f172a);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(220, 38, 38, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(220, 38, 38, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            display: flex;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .continue-playing-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .continue-playing-card:hover::before {
+            opacity: 1;
+        }
+
+        .continue-playing-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 
+                0 16px 48px rgba(220, 38, 38, 0.3),
+                0 0 0 1px rgba(220, 38, 38, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-color: rgba(220, 38, 38, 0.6);
+        }
+
+        .continue-playing-card .game-image {
+            width: 170px;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px 0 0 14px;
+            transition: all 0.3s ease;
+        }
+
+        .continue-playing-card:hover .game-image {
+            transform: scale(1.05);
+        }
+
+        .continue-playing-card .game-info {
+            flex: 1;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .continue-playing-card .game-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 10px;
+            line-height: 1.2;
+            letter-spacing: 0.3px;
+        }
+
+        .continue-playing-card .play-time-info {
+            margin: 0;
+        }
+
+        .continue-playing-card .play-time-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .continue-playing-card .progress-bar {
+            height: 7px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: rgba(55, 65, 81, 0.8);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .continue-playing-card .last-played {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.95), rgba(185, 28, 28, 0.95));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            box-shadow: 
+                0 4px 16px rgba(220, 38, 38, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .scroll-btn:hover {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 1), rgba(249, 115, 22, 0.9));
+            box-shadow: 
+                0 8px 32px rgba(220, 38, 38, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .scroll-btn.left {
+            left: 15px;
+        }
+
+        .scroll-btn.right {
+            right: 15px;
+        }
+
+        .scroll-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-50%) scale(0.8);
+        }
+
+        /* Enhanced Game Cards */
+        .game-card {
+            background: linear-gradient(135deg, #1f2937, #111827, #0f172a);
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(220, 38, 38, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(220, 38, 38, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover::before {
+            opacity: 1;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 60px rgba(220, 38, 38, 0.3),
+                0 0 0 1px rgba(220, 38, 38, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-color: rgba(220, 38, 38, 0.6);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .game-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .game-info {
+            padding: 20px;
+        }
+
+        .game-info h3 {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+            letter-spacing: 0.3px;
+        }
+
+        .game-info a {
+            color: #dc2626;
+            font-size: 14px;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-shadow: 0 0 8px rgba(220, 38, 38, 0.3);
+        }
+
+        /* Enhanced Progress Elements */
+        .play-time-info {
+            margin-top: 14px;
+        }
+
+        .play-time-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .play-time-label {
+            color: #9ca3af;
+        }
+
+        .play-time-value {
+            color: #dc2626;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(55, 65, 81, 0.8);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #dc2626, #f97316, #eab308);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 16px rgba(220, 38, 38, 0.6);
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .last-played {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Enhanced Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(20px);
+        }
+
+        .loading-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loading-image-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: visible;
+        }
+
+        .loading-image-container {
+            position: relative;
+            width: 340px;
+            height: 204px;
+            border-radius: 20px;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .loading-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .loading-border {
+            position: absolute;
+            inset: -8px;
+            border-radius: 28px;
+            background: linear-gradient(45deg, #000000, #dc2626, #000000, #dc2626);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            z-index: 1;
+        }
+
+        .loading-glow {
+            position: absolute;
+            inset: -16px;
+            border-radius: 36px;
+            background: linear-gradient(45deg, #000000, #dc2626, #000000, #dc2626);
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+            opacity: 0.6;
+            filter: blur(20px);
+            z-index: 0;
+        }
+
+        .loading-text {
+            margin-top: 36px;
+            text-align: center;
+        }
+
+        .loading-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #fff;
+            text-shadow: 0 0 16px rgba(220, 38, 38, 0.6);
+            letter-spacing: 0.5px;
+        }
+
+        .loading-subtitle {
+            color: #9ca3af;
+            font-size: 17px;
+            font-weight: 500;
+        }
+
+        .no-results-message {
+            text-align: center;
+            padding: 64px 0;
+        }
+
+        .no-results-message h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .no-results-message p {
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .head-right {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .support-us {
+                padding: 10px 20px;
+                font-size: 13px;
+                margin-left: 8px;
+            }
+            
+            .discord-btn {
+                width: 48px;
+                height: 48px;
+            }
+
+            .continue-playing-scroll {
+                padding: 0 50px;
+            }
+
+            .continue-playing-card {
+                flex: 0 0 300px;
+            }
+
+            .continue-playing-card .game-image {
+                width: 140px;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-container">
+            <div class="loading-image-wrapper">
+                <div class="loading-glow"></div>
+                <div class="loading-border"></div>
+                <div class="loading-image-container">
+                    <img id="loadingImage" src="/placeholder.svg" alt="" class="loading-image">
+                </div>
+            </div>
+            <div class="loading-text">
+                <div class="loading-title" id="loadingTitle"></div>
+                <div class="loading-subtitle">Loading game...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="navbar">
+        <header>
+            <div class="head-left">
+                <img src="V.png" alt="logo">
+            </div>
+            <div class="head-right">
+                <p><a href="#">Home</a></p>
+                <p><a href="a">Apps</a></p>
+                <p><a href="ai">AI</a></p>
+                <p><a href="info">Pr_xy</a></p>
+                <a href="https://www.youtube.com/@vplaza-s9f" target="_blank" class="support-us">Support Us</a>
+                <a href="/proxiedpage.html" class="support-us">Proxied Games (400+)</a>
+                <div class="discord-btn" title="Join our Discord" onclick="window.open('https://dsc.gg/vplazagamespage', '_blank')">
+                    <ion-icon class="discord-icon" name="logo-discord"></ion-icon>
+                </div>
+            </div>
+            <div class="search-container">
+                <input type="text" placeholder="Search games..." class="search-bar" id="searchInput">
+            </div>
+        </header>
+    </div>
+
+    <!-- No Results Message -->
+    <div class="no-results-message" id="noResultsMessage" style="display:none;">
+        <h2>No results found...</h2>
+        <p>Try a different search term!</p>
+    </div>
+
+    <!-- Main Content -->
+    <main class="games-section">
+        <!-- Continue Playing Section -->
+        <section id="continuePlayingSection" class="section hidden">
+            <h2>Continue Playing</h2>
+            <div class="continue-playing-container">
+                <button class="scroll-btn left hidden" id="scrollLeft">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15,18 9,12 15,6"></polyline>
+                    </svg>
+                </button>
+                <div class="continue-playing-scroll" id="continuePlayingScroll">
+                    <!-- Continue playing games will be populated here -->
+                </div>
+                <button class="scroll-btn right hidden" id="scrollRight">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- Popular/All Games Section -->
+        <section class="section">
+            <h2 id="mainSectionTitle">Popular Titles</h2>
+            <div id="allGamesGrid" class="games-grid">
+                <!-- All games will be populated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Complete game data from original HTML
+        const allGames = [
+            { id: "fortnite", title: "Fortnite", image: "images/fortnite.png", url: "/active/go/hvtrs8%2F-pna%7B.eedopcgnmw%2Ccmm-gcmgs%3Dgcmg-kd%3F44bda%6004-f844%2F445f-%3Be76%2F2f9g47cfeg0c%26nalg%3Fel_WS%24aqsgt%2Fif%3D21%5D7644f78f-2d12%2F46f2-%604f0%2Fcdea563c5423", tag: "Most Popular" },
+            { id: "pubg", title: "Pixel Pubg", image: "images/pubg.png", url: "/games/pubg.html", tag: "Newly added" },
+            { id: "tomb-mask", title: "Tomb of the Mask", image: "images/totm.png", url: "games/tombofthemask.html" },
+            { id: "crossy-road", title: "Crossy Road", image: "images/crossy-road.jpg", url: "games/crossyroad" },
+            { id: "retro-bowl", title: "Retro Bowl", image: "images/retro-bowl.jpg", url: "games/retro-bowl" },
+            { id: "1v1lol", title: "1v1 lol", image: "images/1v1lol.jpg", url: "games/1v1lol" },
+            { id: "slope", title: "Slope", image: "images/slope.jpg", url: "games/slope" },
+            { id: "subway-surfers", title: "Subway Surfers", image: "images/subway-surferss.png", url: "games/subwaysurfers" },
+            { id: "basketball-stars", title: "Basket Ball Stars", image: "images/basketball-stars.jpg", url: "games/baskball-stars" },
+            { id: "drive-mad", title: "Drive mad", image: "images/drive-mad.jpg", url: "games/drive-mad" },
+            { id: "death-run", title: "Death Run", image: "images/death-run-3d.jpg", url: "games/death-run-3d" },
+            { id: "basket-random", title: "Basket Random", image: "images/basket-random.jpg", url: "games/basket-random" },
+            { id: "motox3m", title: "MotoX3M", image: "images/motox3m.jpg", url: "games/motox3m2" },
+            { id: "bitlife", title: "Bitlife", image: "images/bitlife.jpg", url: "games/bitlife" },
+            { id: "getaway", title: "Get Away Shootout", image: "images/getaway-shootout.jpg", url: "games/get-away" },
+            { id: "justfall", title: "Just Fall", image: "images/justfall-lol.jpg", url: "games/justfall-lol" },
+            { id: "rooftop-snipers", title: "Rooftop Snipers", image: "images/rooftop-snipers.jpg", url: "games/rooftop-snipers" },
+            { id: "cookie-clicker", title: "Cookie Clicker", image: "images/cookie-clicker.jpg", url: "games/cookieclicker" },
+            { id: "2048", title: "2048", image: "images/2048.jpg", url: "games/2048" },
+            { id: "snow-rider", title: "Snow Rider", image: "images/snow-rider3d.jpg", url: "games/snowrider.html" },
+            { id: "minecraft", title: "Minecraft", image: "images/minecraft.jpg", url: "games/eagler" },
+            { id: "learn-to-fly", title: "Learn to fly 2", image: "images/learn-to-fly-2.jpg", url: "games/learn-to-fly-2" },
+            { id: "idle-mining", title: "Idle Mining Empire", image: "images/idle-mining-empire.jpg", url: "games/idle-mining-empire" },
+            { id: "among-us", title: "Among Us", image: "images/among-us.jpg", url: "games/among-us" },
+            { id: "paper-io-2", title: "Paper IO 2", image: "images/paper-io-2.jpg", url: "games/paper-io-2" },
+            { id: "flappy-bird", title: "Flappy Bird", image: "images/flappy-bird.jpg", url: "games/flappybird" },
+            { id: "krunker", title: "Krunker", image: "images/krunker.jpg", url: "active/embed.html?url=https://ny.browserfps.com", tag: "Most Popular" },
+            { id: "geometry-dash", title: "Geometry Dash", image: "images/geometry-dash.jpg", url: "games/geometry-dash-lite" },
+            { id: "baldis-basics", title: "Baldis Basics", image: "images/baldis-basics.jpg", url: "games/baldis-basics" },
+            { id: "superhot", title: "Super Hot", image: "images/superhot.jpg", url: "games/superhot", tag: "Very Popular" },
+            { id: "temple-run", title: "Temple Run 2", image: "images/temple-run-2.jpg", url: "games/temple-run-2" },
+            { id: "happy-wheels", title: "Happy Wheels", image: "images/happy-wheels.jpg", url: "games/happy-wheels" },
+            { id: "stickman-hook", title: "Stickman Hook", image: "images/stickmanhook.jpg", url: "games/stickmanhook" },
+            { id: "tag", title: "Tag", image: "images/tag.jpg", url: "games/tag" },
+            { id: "poly-track", title: "Poly Track", image: "images/polytrack.jpg", url: "games/poly-track" },
+            { id: "tetris", title: "Tetris", image: "images/tetris.jpg", url: "games/tetris" },
+            { id: "counter-strike", title: "Counter Strike", image: "images/csgo.png", url: "games/counter-strike" },
+            { id: "super-mario-64", title: "Super Mario 64", image: "images/supermario64.png", url: "games/supermario64.html" },
+            { id: "rocket-league", title: "Rocket League", image: "images/rocket-league.png", url: "games/rocket-league" },
+            { id: "candy-crush", title: "Candy Crush", image: "images/candycrush.png", url: "games/candycrush" },
+            { id: "helix-jump", title: "Helix Jump", image: "games/helixjump/helixjump.png", url: "games/helixjump" },
+            { id: "yohoho", title: "Yohoho.io", image: "images/yohoho.png", url: "games/yohoho" },
+            { id: "drift-hunters", title: "Drift Hunters", image: "images/drifthunters.png", url: "games/drifthunters" },
+            { id: "little-giant", title: "The Little Giant", image: "games/thelittlegiant/thelittlegiant.png", url: "games/thelittlegiant" },
+            { id: "death-soul", title: "Death Soul", image: "games/deathsoul/deathsoul.png", url: "games/deathsoul" },
+            { id: "fnaf", title: "FNAF", image: "images/fnaf.png", url: "games/fnaf" },
+            { id: "fnaw", title: "FNAW", image: "images/fnaw.png", url: "games/fnaw" },
+            { id: "bloxorz", title: "Bloxorz", image: "images/bloxorz.png", url: "games/bloxorz.html" },
+            { id: "tiny-fishing", title: "Tiny Fishing", image: "images/tiny-fishing.png", url: "games/tiny-fishing.html" },
+            { id: "time-shooter", title: "Time Shooter", image: "images/time-shooter.png", url: "games/time-shooter.html" },
+            { id: "watermelon", title: "Suika Watermelon mix", image: "images/watermelon.png", url: "games/watermelon.html" },
+            { id: "territory", title: "Territorial.io", image: "images/territory.png", url: "games/territory" },
+            { id: "survival-race", title: "Survival Race", image: "images/survivalrace.png", url: "games/survivalrace.html" },
+            { id: "stack", title: "Stack", image: "images/stack.png", url: "games/stack.html" },
+            { id: "basket-bros", title: "Basket Bros", image: "images/basket-bros.png", url: "games/basketbrosio" },
+            { id: "backrooms", title: "Backrooms", image: "images/backrooms.png", url: "games/backrooms" },
+            { id: "impossible-quiz", title: "Impossible Quiz", image: "images/impossible.png", url: "games/impossiblequiz" },
+            { id: "block-blast", title: "Block Blast", image: "images/blockblast.png", url: "games/BlockBlast" },
+            { id: "my-friend-pedro", title: "My friend Pedro", image: "games/my-freind-pedro/my-friend-pedro.png", url: "games/my-freind-pedro" },
+            { id: "scrambled-eggs", title: "Scrambled Eggs", image: "games/scrambled-eggs/scrambled-eggs.png", url: "games/scrambled-eggs" },
+            { id: "run-3", title: "RUN", image: "images/run.png", url: "games/run-3" },
+            { id: "impossible-quiz-2", title: "Impossible quiz 2", image: "images/iq2.png", url: "games/impossible-quiz2", tag: "A brain game." },
+            { id: "goober-world", title: "Goober World", image: "games/goober-world/favicon.png", url: "games/goober-world", tag: "Goober Dash but offline" },
+            { id: "core-ball", title: "Core Ball", image: "images/coreball.png", url: "games/coreball" },
+            { id: "drift-boss", title: "Drift Boss", image: "images/driftboss.png", url: "games/driftboss" },
+            { id: "gunspin", title: "Gunspin", image: "images/gunspin.png", url: "games/gunspin" },
+            { id: "doors", title: "Doors", image: "images/doors.png", url: "games/doors-online", tag: "Coming eventually..." },
+            { id: "wordle", title: "Wordle", image: "images/wordle.png", url: "games/wordle", tag: "finally!" },
+            { id: "og-polytrack", title: "OG Polytrack", image: "images/polytrack.png", url: "games/polytrackog", tag: "Polytrack | OG" },
+            { id: "space-waves", title: "Space waves", image: "images/spacewaves.png", url: "games/crazygames", tag: "Geometry Dash but more fun" },
+            { id: "zombie-apocalypse", title: "Zombie Appocalypse", image: "games/zombocalypse/zombocalypse-2.webp", url: "games/zombocalypse" },
+            { id: "hextris", title: "Hextris", image: "games/hextris/favicon.ico", url: "games/hextris" },
+            { id: "google-snake", title: "Google Snake", image: "games/google-snake/img/snake.png", url: "games/google-snake" },
+            { id: "monkey-mart", title: "Monkey Mart", image: "images/monkeymart.png", url: "games/monkeymart" },
+            { id: "crazy-cattle", title: "Crazy Cattle 3D", image: "images/cattle.png", url: "/active/embed.html?url=https://yujiandemo.com/" },
+            { id: "google-baseball", title: "Google Doodle Baseball", image: "images/baseball.png", url: "/active/embed.html?url=https://www.google.com/logos/2019/july4th19/r6/july4th19.html" },
+            { id: "big-tower", title: "Big tower tiny square", image: "images/btts.png", url: "games/tinysquare.html" },
+            { id: "paper-io-3d", title: "Paper IO 3D", image: "images/paperio3.png", url: "games/paper-3", tag: "Press down on mouse then move it" },
+            { id: "elastic-man", title: "Elastic Man", image: "images/elasticman.png", url: "games/elasticman.html", tag: "Pull my f'ing skin I dare you 😈" },
+            { id: "snowball-io", title: "Snowball IO", image: "images/snowball.png", url: "games/snowball.html", tag: "ooo snow" },
+            { id: "foodstars-io", title: "Foodstars IO", image: "images/foodstars.png", url: "games/foodstars.html", tag: "Brawl stars but for homeless ppl..." },
+            { id: "flappy-dunk", title: "Flappy Dunk", image: "images/flappydunk.png", url: "games/flappydunk.html" },
+            { id: "smash-karts", title: "Smash Karts", image: "images/smashkarts.png", url: "active/embed.html?url=https://smashkarts.io", tag: "you can play with your friends!" },
+            { id: "pacman", title: "Pacman", image: "images/pacman.png", url: "active/embed.html?url=https://freepacman.org" },
+            { id: "cubefield-proxied", title: "Cubefield", image: "images/cubefield1.png", url: "active/embed.html?url=https://cubefield.stackblitz.io/", tag: "Proxied" },
+            { id: "cubefield", title: "Cubefield", image: "images/cubefield.png", url: "games/cubefield", tag: "NON Proxied" },
+            { id: "bladeball", title: "Bladeball", image: "images/bladeball.png", url: "games/bladeball.html" },
+            { id: "swerve", title: "Swerve", image: "images/swerve.png", url: "/active/embed.html?url=https://s3-eu-west-1.amazonaws.com/apps.playcanvas.com/VecAxR3e/index.html" },
+            { id: "highway-traffic", title: "Highway Traffic", image: "images/highway.png", url: "/games/highwaytraffic", tag: "Says \"invalid domain\", it WILL work tho." },
+            { id: "slice-it", title: "Slice It", image: "images/slicemaster.png", url: "/games/slice.html", tag: "We got the code!" },
+            { id: "bodycam", title: "Bodycam - CG", image: "images/bodycam.png", url: "/games/bodycam.html", tag: "Click continue offline, it will work, trust." },
+            { id: "roblox", title: "Roblox", image: "images/roblox.png", url: "/EasyNow/ezfn.html", tag: "The first img should be roblox." },
+            { id: "sky-riders", title: "Sky Riders", image: "images/skyriders.png", url: "/games/skyriders", tag: "Ride the sky ig" },
+            { id: "go-battle", title: "GO BATTLE", image: "images/gobattle.png", url: "/games/gobattle", tag: "1 game with 2000 games" },
+            { id: "speed-king", title: "Speed King", image: "images/speedking.png", url: "/games/speedkind", tag: "3D tomb of the mask" },
+            { id: "blumgi-ball", title: "Blumgi Ball", image: "images/blumgi.png", url: "/games/blumgiball", tag: "Basket Ball" },
+            { id: "blumgi-paintball", title: "Blumgi Paintball", image: "images/paintball.png", url: "/games/paintball", tag: "paintball" },
+            { id: "blumgi-slime", title: "Blumgi Slime", image: "images/slime.png", url: "/games/slime", tag: "parkour" },
+            { id: "blumgi-racers", title: "Blumgi Racers", image: "images/racers.png", url: "/games/racers", tag: "race now" },
+            { id: "cow-bay", title: "Cow-bay", image: "images/cow.png", url: "/games/cow-bay", tag: "Chop CHoP CHOP" },
+            { id: "ping-pong", title: "Ping Pong", image: "images/pingpong.png", url: "/games/pingpong", tag: "I will beat you..." },
+            { id: "soccer", title: "Soccer", image: "images/soccer.png", url: "/games/soccer", tag: "ugh SOLS are soon 🙄 pfh" },
+            { id: "uno", title: "UNO", image: "images/uno.png", url: "/games/uno", tag: "Aw man ur right..." },
+            { id: "checkers", title: "Checkers", image: "images/checkers.png", url: "/games/checkers", tag: "I hate 4th quarters" },
+            { id: "dadish", title: "Dadish", image: "images/dadish.png", url: "/games/dadish-3", tag: "Its not 3d so get tf over it" },
+            { id: "curveball", title: "Curveball", image: "images/curve.png", url: "/games/curveball/index.html" },
+            { id: "infinite-craft", title: "Infinite Craft", image: "images/infinite.png", url: "/games/infcraft/index.html" },
+            { id: "no-game", title: "There is no game...", image: "images/nothere.png", url: "/games/tisng/index.html" },
+            { id: "jetpack-joyride", title: "Jetpack Joyride", image: "images/jetpack.png", url: "/games/jj.html" },
+            { id: "bank-robbery", title: "Bank Robbery 2", image: "images/br.png", url: "/games/br.html" },
+            { id: "vex-challenges", title: "Vex Challenges", image: "images/vex.png", url: "/games/vex/challenges.html" },
+            { id: "3dash", title: "3Dash", image: "images/3dash.png", url: "/games/gdash.html" },
+            { id: "gun-mayhem", title: "Gun Mayhem Redux", image: "images/gunmayhemredux.png", url: "/games/gunmayhemredux.html" },
+            { id: "granny", title: "Granny", image: "images/granny.png", url: "/games/granny.html", tag: "Run, hide, horror." },
+            { id: "granny-2", title: "Granny 2", image: "images/granny2.png", url: "/games/granny2.html", tag: "No errors. it just takes a while to load." },
+            { id: "escape-road", title: "Escape Road 2", image: "images/esc.png", url: "/games/escaperoad.html", tag: "Surprising where I got this code..." },
+            { id: "fireboy-watergirl", title: "Fireboy and Watergirl...", image: "images/fire.png", url: "/games/fire.html", tag: "Help, im desperate to add games! 😭" },
+            { id: "bottle-flip", title: "Bottle Flip", image: "images/bf.png", url: "/games/bottleflip.html", tag: "Sols are over, in your faces re-takers!" },
+            { id: "tunnel-rush", title: "Tunnel Rush", image: "images/tunnelrush.png", url: "/games/tunnelrush.html", tag: "OMFG SOMETHING FUN????" },
+            { id: "bazooka-boy", title: "Bazooka Boy", image: "images/bb.png", url: "/bazooka-boy", tag: "Mr.bullet ripoff" },
+            { id: "basketball-frvr", title: "Basketball FRVR", image: "images/basket.png", url: "/games/basketball/frvr/", tag: "Shot scored..." },
+            { id: "polytrack-5", title: "PolyTrack 0.5.0", image: "images/p5.png", url: "/games/polytrack-5/", tag: "Thank you Ab.Yz :)" },
+            { id: "archery", title: "Archery", image: "images/awt.png", url: "/games/awt.html/", tag: "open in /games/awt.html" },
+            { id: "bouncy-flappy", title: "Bouncy Flappy", image: "images/bounce.png", url: "/games/bouncyflappy.html/", tag: "i said bounce 😜" },
+            { id: "crossy-roads-original", title: "Crossy Roads | original", image: "images/chicken.png", url: "/games/grassycrossyroad/", tag: "go to /games/grassycrossyroad/ | Stupid fu**in CDN files." },
+            { id: "hide-and-seek", title: "Hide and seek!", image: "images/has.png", url: "/games/has/", tag: "☠ Go to /games/has/" },
+            { id: "chrome-dino", title: "Chrome Dino", image: "images/dino.png", url: "/games/chromedino", tag: ":) yw i enjoy this :p and mb u will need to go to /games/chromedino.html :( ts aint no W" }
+        ];
+
+        // State management
+        let playedGames = [];
+        let filteredGames = [...allGames];
+        let gameStartTimes = {}; // Track when games are started
+        let scrollPosition = 0;
+        const cardsToShow = 3;
+
+        // DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const continuePlayingSection = document.getElementById('continuePlayingSection');
+        const continuePlayingScroll = document.getElementById('continuePlayingScroll');
+        const allGamesGrid = document.getElementById('allGamesGrid');
+        const mainSectionTitle = document.getElementById('mainSectionTitle');
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingImage = document.getElementById('loadingImage');
+        const loadingTitle = document.getElementById('loadingTitle');
+        const scrollLeft = document.getElementById('scrollLeft');
+        const scrollRight = document.getElementById('scrollRight');
+
+        // Utility functions
+        function formatPlayTime(minutes) {
+            const hours = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            if (hours > 0) {
+                return `${hours}h ${mins}m`;
+            }
+            return `${mins}m`;
+        }
+
+        function getProgressValue(playTime) {
+            return Math.min((playTime / 300) * 100, 100);
+        }
+
+        function savePlayedGames() {
+            localStorage.setItem('vplaza-played-games', JSON.stringify(playedGames));
+            localStorage.setItem('vplaza-game-start-times', JSON.stringify(gameStartTimes));
+        }
+
+        function loadPlayedGames() {
+            const saved = localStorage.getItem('vplaza-played-games');
+            const savedStartTimes = localStorage.getItem('vplaza-game-start-times');
+            
+            if (saved) {
+                playedGames = JSON.parse(saved).map(game => ({
+                    ...game,
+                    lastPlayed: new Date(game.lastPlayed)
+                }));
+            }
+            
+            if (savedStartTimes) {
+                gameStartTimes = JSON.parse(savedStartTimes);
+            }
+        }
+
+        function updatePlayTime(gameId) {
+            const startTime = gameStartTimes[gameId];
+            if (startTime) {
+                const playTime = Math.floor((Date.now() - startTime) / 60000); // Convert to minutes
+                const gameIndex = playedGames.findIndex(g => g.id === gameId);
+                if (gameIndex !== -1) {
+                    playedGames[gameIndex].playTime += playTime;
+                    playedGames[gameIndex].lastPlayed = new Date();
+                    console.log(`Updated ${playedGames[gameIndex].title}: +${playTime} minutes (Total: ${playedGames[gameIndex].playTime}m)`);
+                }
+                delete gameStartTimes[gameId];
+                savePlayedGames();
+            }
+        }
+
+        // Game card creation
+        function createGameCard(game, isPlayedGame = false) {
+            const card = document.createElement('div');
+            card.className = isPlayedGame ? 'continue-playing-card' : 'game-card';
+            card.onclick = () => handleGameClick(game);
+
+            if (isPlayedGame) {
+                const progressValue = getProgressValue(game.playTime);
+                card.innerHTML = `
+                    <img src="${game.image}" alt="${game.title}" class="game-image">
+                    <div class="game-info">
+                        <h3 class="game-title">${game.title}</h3>
+                        <div class="play-time-info">
+                            <div class="play-time-row">
+                                <span class="play-time-label">Play time:</span>
+                                <span class="play-time-value">${formatPlayTime(game.playTime)}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progressValue}%"></div>
+                            </div>
+                            <div class="last-played">Last played: ${game.lastPlayed.toLocaleDateString()}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <img src="${game.image}" alt="${game.title}">
+                    <div class="game-info">
+                        ${game.tag ? `<a>${game.tag}</a>` : ''}
+                        <h3>${game.title}</h3>
+                    </div>
+                `;
+            }
+
+            return card;
+        }
+
+        // Game click handler with improved tracking
+        function handleGameClick(game) {
+            console.log(`Game clicked: ${game.title} (ID: ${game.id})`);
+            
+            // Update any existing play time before starting new session
+            Object.keys(gameStartTimes).forEach(gameId => {
+                console.log(`Updating existing session for game: ${gameId}`);
+                updatePlayTime(gameId);
+            });
+
+            // Show loading overlay
+            loadingImage.src = game.image;
+            loadingTitle.textContent = game.title;
+            loadingOverlay.classList.remove('hidden');
+
+            // Record start time
+            gameStartTimes[game.id] = Date.now();
+            console.log(`Started tracking time for: ${game.title} at ${new Date()}`);
+
+            // Update played games
+            const existingGameIndex = playedGames.findIndex(p => p.id === game.id);
+            if (existingGameIndex === -1) {
+                // Add new game with 1 minute initial play time (for testing)
+                const newGame = {
+                    ...game,
+                    playTime: 1, // Start with 1 minute for immediate feedback
+                    lastPlayed: new Date()
+                };
+                playedGames.push(newGame);
+                console.log(`Added new game to played list: ${game.title}`);
+            } else {
+                playedGames[existingGameIndex].lastPlayed = new Date();
+                console.log(`Updated last played time for: ${game.title}`);
+            }
+
+            savePlayedGames();
+
+            // Simulate loading for 5 seconds, then add more time
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+                
+                // Add the 5 seconds of "loading" time
+                const gameIndex = playedGames.findIndex(p => p.id === game.id);
+                if (gameIndex !== -1) {
+                    playedGames[gameIndex].playTime += 1; // Add 1 more minute for the loading time
+                    console.log(`Added loading time to ${game.title}: Total now ${playedGames[gameIndex].playTime}m`);
+                }
+                
+                savePlayedGames();
+                renderGames();
+                
+                // Navigate to the game URL
+                window.location.href = game.url;
+            }, 5000);
+        }
+
+        // Carousel functions
+        function updateScrollButtons() {
+            const maxScroll = Math.max(0, playedGames.length - cardsToShow);
+            scrollLeft.classList.toggle('hidden', scrollPosition === 0);
+            scrollRight.classList.toggle('hidden', scrollPosition >= maxScroll);
+        }
+
+        function scrollCarousel(direction) {
+            const maxScroll = Math.max(0, playedGames.length - cardsToShow);
+            
+            if (direction === 'left' && scrollPosition > 0) {
+                scrollPosition--;
+            } else if (direction === 'right' && scrollPosition < maxScroll) {
+                scrollPosition++;
+            }
+            
+            const translateX = -scrollPosition * (340 + 24); // card width + gap
+            continuePlayingScroll.style.transform = `translateX(${translateX}px)`;
+            updateScrollButtons();
+        }
+
+        // Render functions
+        function renderContinuePlayingGames() {
+            continuePlayingScroll.innerHTML = '';
+            
+            if (playedGames.length === 0) {
+                continuePlayingSection.classList.add('hidden');
+                return;
+            }
+
+            continuePlayingSection.classList.remove('hidden');
+            
+            // Show all played games, sorted by last played
+            const recentGames = playedGames
+                .sort((a, b) => new Date(b.lastPlayed) - new Date(a.lastPlayed));
+
+            recentGames.forEach(game => {
+                const card = createGameCard(game, true);
+                continuePlayingScroll.appendChild(card);
+            });
+
+            // Reset scroll position if needed
+            if (scrollPosition >= playedGames.length - cardsToShow) {
+                scrollPosition = Math.max(0, playedGames.length - cardsToShow);
+            }
+
+            const translateX = -scrollPosition * (340 + 24);
+            continuePlayingScroll.style.transform = `translateX(${translateX}px)`;
+            updateScrollButtons();
+        }
+
+        function renderAllGames() {
+            allGamesGrid.innerHTML = '';
+            
+            if (filteredGames.length === 0) {
+                noResultsMessage.style.display = 'block';
+                return;
+            }
+
+            noResultsMessage.style.display = 'none';
+
+            filteredGames.forEach(game => {
+                const card = createGameCard(game);
+                allGamesGrid.appendChild(card);
+            });
+        }
+
+        function renderGames() {
+            renderContinuePlayingGames();
+            renderAllGames();
+            
+            // Update section title
+            if (playedGames.length > 0) {
+                mainSectionTitle.textContent = 'All Titles';
+            } else {
+                mainSectionTitle.textContent = 'Popular Titles';
+            }
+        }
+
+        // Search functionality
+        function handleSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            filteredGames = allGames.filter(game => 
+                game.title.toLowerCase().includes(searchTerm)
+            );
+            renderAllGames();
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', handleSearch);
+        scrollLeft.addEventListener('click', () => scrollCarousel('left'));
+        scrollRight.addEventListener('click', () => scrollCarousel('right'));
+
+        // Track play time when user leaves the page
+        window.addEventListener('beforeunload', () => {
+            console.log('Page unloading, updating all active game sessions...');
+            Object.keys(gameStartTimes).forEach(gameId => {
+                updatePlayTime(gameId);
+            });
+        });
+
+        // Update play time periodically for active sessions (every 30 seconds for testing)
+        setInterval(() => {
+            Object.keys(gameStartTimes).forEach(gameId => {
+                const startTime = gameStartTimes[gameId];
+                if (startTime && Date.now() - startTime > 30000) { // Update every 30 seconds for testing
+                    console.log(`Periodic update for game: ${gameId}`);
+                    updatePlayTime(gameId);
+                    gameStartTimes[gameId] = Date.now(); // Reset start time
+                    renderGames(); // Re-render to show updated times
+                }
+            });
+        }, 30000); // Check every 30 seconds
+
+        // Initialize
+        function init() {
+            console.log('Initializing VPlaza...');
+            loadPlayedGames();
+            console.log('Loaded played games:', playedGames);
+            renderGames();
+        }
+
+        // Start the app
+        init();
+    </script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
