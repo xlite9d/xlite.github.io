@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ENWVC</title>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <style>
+
+    @font-face {
+        font-family: Simple Break;
+        src: url(Simple\ Break.otf);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      color: #fff;
+      font-family: Simple Break;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: #0f0;
+    }
+
+    #counter {
+      color: #0ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Website Visit Count: <span id="counter">Loading...</span></h1>
+  <h2 id="message"></h2>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCwvJluJCVYraqifDOELu5iszuXXoF8rX4",
+      authDomain: "tickcounter-d7f05.firebaseapp.com",
+      projectId: "tickcounter-d7f05",
+      storageBucket: "tickcounter-d7f05.firebasestorage.app",
+      messagingSenderId: "1046484267191",
+      appId: "1:1046484267191:web:29fc4078ecc6c2d0675d32",
+      measurementId: "G-P9WS37SVPW"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const counterSpan = document.getElementById('counter');
+    const messageEl = document.getElementById('message');
+
+    const counterRef = db.ref('visitCount');
+
+    counterRef.transaction(current => (current || 0) + 1);
+
+    counterRef.on('value', snapshot => {
+      const count = snapshot.val() || 0;
+      counterSpan.textContent = count;
+
+      messageEl.textContent = count >= 1000 ? "Thank you for supporting Eclipse!!!" : "";
+    });
+  </script>
+</body>
+</html>
