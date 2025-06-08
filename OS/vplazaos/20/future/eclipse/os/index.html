@@ -146,32 +146,32 @@
         }
 
         .dock-toggle {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 20px;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(20px);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-            z-index: 1001;
-            transition: all 0.3s ease;
-        }
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 20px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 1001;
+    transition: all 0.3s ease;
+}
 
-        .dock-toggle.hidden {
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 20px;
-            border-radius: 10px;
-        }
+.dock-toggle.hidden {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 20px;
+    border-radius: 10px;
+}
 
         .dock-toggle i {
             font-size: 0.8rem;
@@ -305,6 +305,7 @@
             opacity: 0;
         }
 
+        /* Custom fullscreen that doesn't actually fill the entire screen */
         .window.custom-fullscreen {
             top: 40px !important;
             left: 40px !important;
@@ -326,6 +327,34 @@
             overflow: hidden !important;
             max-width: 100% !important;
             max-height: 100% !important;
+        }
+
+        .window.snap-left {
+            top: 0 !important;
+            left: 0 !important;
+            width: 50vw !important;
+            height: 100vh !important;
+            border-radius: 0;
+            z-index: 150;
+        }
+
+        .window.snap-left .window-content iframe {
+            max-width: 100% !important;
+            max-height: calc(100vh - 60px) !important;
+        }
+
+        .window.snap-right {
+            top: 0 !important;
+            left: 50vw !important;
+            width: 50vw !important;
+            height: 100vh !important;
+            border-radius: 0;
+            z-index: 150;
+        }
+
+        .window.snap-right .window-content iframe {
+            max-width: 100% !important;
+            max-height: calc(100vh - 60px) !important;
         }
 
         @keyframes windowOpen {
@@ -359,10 +388,11 @@
             color: #e0e0e0;
         }
 
+        /* Linux-style window controls */
         .window-controls {
             display: flex;
             gap: 6px;
-            order: -1;
+            order: -1; /* Move controls to the left side like Linux */
         }
 
         .window-control {
@@ -395,6 +425,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
+        /* Add symbols to controls on hover */
         .window-control.close:hover::after {
             content: '×';
             color: #fff;
@@ -459,23 +490,138 @@
             transform: scale(1.1);
         }
 
-        .notification {
+        .settings-panel {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: rgba(20,20,20,0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255,255,255,0.1);
+            transition: right 0.3s ease;
+            z-index: 2000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .settings-panel.open {
+            right: 0;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .settings-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #007AFF;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .setting-toggle {
+            width: 50px;
+            height: 25px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .setting-toggle.active {
+            background: #007AFF;
+        }
+
+        .setting-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .setting-toggle.active::after {
+            left: 27px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            background: rgba(0,122,255,0.8);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .file-input-wrapper:hover {
+            background: rgba(0,122,255,1);
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .context-menu {
+            position: fixed;
             background: rgba(20,20,20,0.95);
             backdrop-filter: blur(20px);
             border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.1);
-            padding: 15px 20px;
-            max-width: 300px;
-            z-index: 4000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
+            padding: 5px 0;
+            min-width: 200px;
+            z-index: 3000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        .notification.show {
-            transform: translateX(0);
+        .context-menu-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .context-menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .terminal {
+            background: #1a1a1a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            width: 100%;
         }
 
         .resize-handle {
@@ -496,23 +642,117 @@
             display: none !important;
         }
 
-        .terminal {
-            background: #1a1a1a;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            padding: 20px;
-            height: 100%;
-            overflow-y: auto;
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(20,20,20,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 20px;
+            max-width: 300px;
+            z-index: 4000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
         }
 
-        .terminal-input {
-            background: transparent;
-            border: none;
-            color: #00ff00;
-            font-family: inherit;
-            font-size: inherit;
-            outline: none;
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .split-screen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .split-screen-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .split-screen-options {
+            background: rgba(20,20,20,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .split-screen-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #007AFF;
+        }
+
+        .split-screen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .split-screen-option {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .split-screen-option:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: #007AFF;
+            transform: translateY(-2px);
+        }
+
+        .split-screen-option i {
+            font-size: 2rem;
+            color: #007AFF;
+        }
+
+        .option-label {
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .snap-indicator {
+            position: fixed;
+            background: rgba(0,122,255,0.3);
+            border: 2px solid #007AFF;
+            border-radius: 8px;
+            pointer-events: none;
+            z-index: 4999;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .snap-indicator.show {
+            opacity: 1;
+        }
+
+        .window.dragging {
+            z-index: 1001;
         }
     </style>
 </head>
@@ -588,6 +828,9 @@
             <div class="dock-item" onclick="openApp('texteditor')">
                 <i class="bi bi-file-text"></i>
             </div>
+            <div class="dock-item" onclick="toggleSettings()">
+                <i class="bi bi-gear"></i>
+            </div>
         </div>
     </div>
 
@@ -600,15 +843,92 @@
         <i class="bi bi-battery-full"></i>
     </div>
 
+    <div class="settings-panel" id="settingsPanel">
+        <h2>Settings</h2>
+        
+        <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="setting-item">
+                <span>Dark Mode</span>
+                <div class="setting-toggle active" onclick="toggleDarkMode(this)"></div>
+            </div>
+            <div class="setting-item">
+                <span>Transparency Effects</span>
+                <div class="setting-toggle active" onclick="toggleTransparency(this)"></div>
+            </div>
+            <div class="setting-item">
+                <span>Animations</span>
+                <div class="setting-toggle active" onclick="toggleAnimations(this)"></div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Background</h3>
+            <div class="setting-item">
+                <label class="file-input-wrapper">
+                    Upload Background
+                    <input type="file" accept="image/*" onchange="uploadBackground(this)">
+                </label>
+            </div>
+            <div class="setting-item">
+                <button onclick="resetBackground()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 6px; color: white; cursor: pointer;">Reset to Default</button>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>System</h3>
+            <div class="setting-item">
+                <span>Auto-hide Dock</span>
+                <div class="setting-toggle" onclick="toggleDockHide(this)"></div>
+            </div>
+            <div class="setting-item">
+                <span>Window Snapping</span>
+                <div class="setting-toggle active" onclick="toggleWindowSnap(this)"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" onclick="openApp('browser')">
+            <i class="bi bi-globe"></i>
+            <span>Open Browser</span>
+        </div>
+        <div class="context-menu-item" onclick="document.querySelector('.file-input-wrapper input').click()">
+            <i class="bi bi-image"></i>
+            <span>Change Background</span>
+        </div>
+        <div class="context-menu-item" onclick="toggleSettings()">
+            <i class="bi bi-gear"></i>
+            <span>Settings</span>
+        </div>
+    </div>
+
+    
+
+    <div class="split-screen-overlay" id="splitScreenOverlay">
+        <div class="split-screen-options">
+            <div class="split-screen-title">Choose a window to split with</div>
+            <div class="split-screen-grid" id="splitScreenGrid">
+            </div>
+        </div>
+    </div>
+
+    <div class="snap-indicator" id="snapIndicator"></div>
+
     <script>
         let windowCounter = 0;
         let activeWindows = new Map();
-        let openWindows = new Map(); // Changed to Map to store window IDs
+        let openWindows = new Set();
         let draggedWindow = null;
         let dragOffset = { x: 0, y: 0 };
         let resizingWindow = null;
         let resizeData = {};
+        let windowSnapEnabled = true;
+        let splitScreenMode = false;
+        let splitScreenSource = null;
         let dockHidden = false;
+
+        const WEATHER_API_KEY = '7NZUY6FCX5CTDC6Y9MXED4ZQ7';
 
         function startDesktop() {
             const bootScreen = document.getElementById('bootScreen');
@@ -644,10 +964,40 @@
 
         async function loadWeather() {
             try {
-                document.getElementById('weatherInfo').textContent = '🌤️ 77°F';
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(async (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?key=${WEATHER_API_KEY}&include=current`);
+                        const data = await response.json();
+                        
+                        const temp = Math.round(data.currentConditions.temp);
+                        const condition = data.currentConditions.conditions;
+                        
+                        document.getElementById('weatherInfo').textContent = `${getWeatherIcon(condition)} ${temp}°F`;
+                    }, () => {
+                        document.getElementById('weatherInfo').textContent = '🌤️ 77°F';
+                    });
+                } else {
+                    document.getElementById('weatherInfo').textContent = '🌤️ 77°F';
+                }
             } catch (error) {
                 document.getElementById('weatherInfo').textContent = '🌤️ 77°F';
             }
+        }
+
+        function getWeatherIcon(condition) {
+            const icons = {
+                'Clear': '☀️',
+                'Partly cloudy': '⛅',
+                'Cloudy': '☁️',
+                'Overcast': '☁️',
+                'Rain': '🌧️',
+                'Snow': '❄️',
+                'Thunderstorm': '⛈️'
+            };
+            return icons[condition] || '🌤️';
         }
 
         function updateTime() {
@@ -686,7 +1036,7 @@
             let displayTitle = 'Browser';
             
             if (query.startsWith('http://') || query.startsWith('https://')) {
-                url = query;
+                url = `/active/embed.html?url=${encodeURIComponent(query)}`;
                 try {
                     const urlObj = new URL(query);
                     displayTitle = urlObj.hostname.replace('www.', '').split('.')[0];
@@ -695,16 +1045,61 @@
                     displayTitle = 'Browser';
                 }
             } else if (query.includes('.') && !query.includes(' ')) {
-                url = 'https://' + query;
+                const fullUrl = 'https://' + query;
+                url = `/active/embed.html?url=${encodeURIComponent(fullUrl)}`;
                 displayTitle = query.replace('www.', '').split('.')[0];
                 displayTitle = displayTitle.charAt(0).toUpperCase() + displayTitle.slice(1);
             } else {
-                url = 'https://search.brave.com/search?q=' + encodeURIComponent(query);
+                url = `/active/embed.html?url=${encodeURIComponent('https://www.google.com/search?q=' + query)}`;
                 displayTitle = 'Google Search';
             }
 
-            openApp('browser', url, displayTitle);
+            // Create browser app with custom title
+            const windowId = `window-${++windowCounter}`;
+            const app = {
+                title: displayTitle,
+                icon: 'bi-globe',
+                url: url
+            };
+            
+            createWindow(windowId, app, 'browser');
+            activeWindows.set(windowId, app);
+            openWindows.add('browser');
+            updateDockActiveApps();
+            
             document.getElementById('searchInput').value = '';
+        }
+
+        // Helper function to extract clean site name from URL
+        function extractSiteName(url) {
+            try {
+                const urlObj = new URL(url);
+                let hostname = urlObj.hostname.replace('www.', '');
+                
+                // Handle special cases
+                const specialSites = {
+                    'google.com': 'Google',
+                    'youtube.com': 'YouTube',
+                    'github.com': 'GitHub',
+                    'stackoverflow.com': 'Stack Overflow',
+                    'reddit.com': 'Reddit',
+                    'twitter.com': 'Twitter',
+                    'facebook.com': 'Facebook',
+                    'instagram.com': 'Instagram',
+                    'linkedin.com': 'LinkedIn',
+                    'wikipedia.org': 'Wikipedia'
+                };
+                
+                if (specialSites[hostname]) {
+                    return specialSites[hostname];
+                }
+                
+                // Default: capitalize first part of domain
+                const siteName = hostname.split('.')[0];
+                return siteName.charAt(0).toUpperCase() + siteName.slice(1);
+            } catch (e) {
+                return 'Browser';
+            }
         }
 
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -713,16 +1108,11 @@
             }
         });
 
-        function openApp(appName, customUrl = null, customTitle = null) {
-            // Check if this app type is already open
-            if (openWindows.has(appName)) {
-                const existingWindowId = openWindows.get(appName);
-                const existingWindow = document.getElementById(existingWindowId);
-                
+        function openApp(appName, customUrl = null) {
+            if (openWindows.has(appName) && appName !== 'browser') {
+                const existingWindow = document.querySelector(`[data-app="${appName}"]`);
                 if (existingWindow) {
-                    // Focus the existing window
-                    focusWindow(existingWindowId);
-                    showNotification('Window Already Open', `${appName} is already running. Focusing existing window.`);
+                    focusWindow(existingWindow.id);
                     return;
                 }
             }
@@ -731,9 +1121,9 @@
             
             const apps = {
                 browser: {
-                    title: customTitle || 'Browser',
+                    title: 'Browser',
                     icon: 'bi-globe',
-                    url: customUrl || 'https://www.google.com'
+                    url: customUrl || '/styles/opera.html'
                 },
                 terminal: {
                     title: 'Terminal',
@@ -743,7 +1133,12 @@
                 files: {
                     title: 'Files',
                     icon: 'bi-folder',
-                    url: 'https://example.com'
+                    url: '/files'
+                },
+                settings: {
+                    title: 'Settings',
+                    icon: 'bi-gear',
+                    isSettings: true
                 },
                 about: {
                     title: 'About',
@@ -758,27 +1153,32 @@
                 media: {
                     title: 'Media Viewer',
                     icon: 'bi-play-circle',
-                    url: 'https://example.com'
+                    url: '/media'
                 },
                 taskmanager: {
                     title: 'Task Manager',
                     icon: 'bi-cpu',
                     isTaskManager: true
                 },
+                appstore: {
+                    title: 'App Store',
+                    icon: 'bi-bag',
+                    url: '/store'
+                },
                 chat: {
                     title: 'Chat',
                     icon: 'bi-chat-dots',
-                    url: 'https://example.com'
+                    url: '/chat.html'
                 },
                 music: {
                     title: 'Music Player',
                     icon: 'bi-music-note-beamed',
-                    url: 'https://open.spotify.com'
+                    url: '/audio/'
                 },
                 games: {
                     title: 'Games',
                     icon: 'bi-controller',
-                    url: 'https://example.com'
+                    url: '/gamepagev1.html'
                 },
                 calculator: {
                     title: 'Calculator',
@@ -793,7 +1193,7 @@
                 weather: {
                     title: 'Weather',
                     icon: 'bi-cloud-sun',
-                    isWeather: true
+                    url: '/styles/weather.html'
                 }
             };
 
@@ -802,7 +1202,7 @@
 
             createWindow(windowId, app, appName);
             activeWindows.set(windowId, app);
-            openWindows.set(appName, windowId); // Store the window ID for this app type
+            openWindows.add(appName);
             updateDockActiveApps();
         }
 
@@ -812,7 +1212,7 @@
                 item.classList.remove('active');
             });
             
-            openWindows.forEach((windowId, appName) => {
+            openWindows.forEach(appName => {
                 const dockItem = document.querySelector(`.dock-item[onclick*="${appName}"]`);
                 if (dockItem) {
                     dockItem.classList.add('active');
@@ -918,23 +1318,32 @@
                         </div>
                     </div>
                 `;
+                loadDetailedWeather(windowId);
+            } else if (app.isSettings) {
+                content.innerHTML = `
+                    <div style="padding: 20px; height: 100%; overflow-y: auto;">
+                        <h2>System Settings</h2>
+                        <p>Use the settings panel on the right for configuration options.</p>
+                    </div>
+                `;
             } else if (app.isAbout) {
                 content.innerHTML = `
                     <div style="padding: 20px; text-align: center;">
                         <h2>VplazaOS Modern</h2>
                         <p>Version 2.0</p>
                         <br>
-                        <p>A modern operating system interface with single-instance window management.</p>
+                        <p>A modern operating system interface built with HTML, CSS, and JavaScript.</p>
                         <br>
                         <p>Features:</p>
                         <ul style="text-align: left; max-width: 300px; margin: 0 auto;">
-                            <li>Single instance window management</li>
                             <li>Modern UI with blur effects</li>
-                            <li>Window dragging and resizing</li>
+                            <li>Window management and snapping</li>
                             <li>Integrated search and browser</li>
                             <li>Terminal with custom commands</li>
-                            <li>Built-in calculator and notes</li>
-                            <li>Weather information</li>
+                            <li>Customizable settings</li>
+                            <li>Real weather integration</li>
+                            <li>Multiple app instances</li>
+                            <li>Split screen functionality</li>
                             <li>Linux-style window controls</li>
                         </ul>
                     </div>
@@ -943,10 +1352,10 @@
                 content.innerHTML = `
                     <div style="height: 100%; display: flex; flex-direction: column;">
                         <div style="padding: 10px; background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);">
-                            <button onclick="saveFile('${windowId}')" style="background: #007AFF; border: none; padding: 5px 10px; border-radius: 4px; color: white; margin-right: 10px;">Save</button>
-                            <button onclick="openFile('${windowId}')" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 4px; color: white;">Open</button>
+                            <button onclick="saveFile()" style="background: #007AFF; border: none; padding: 5px 10px; border-radius: 4px; color: white; margin-right: 10px;">Save</button>
+                            <button onclick="openFile()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 4px; color: white;">Open</button>
                         </div>
-                        <textarea id="editor-content-${windowId}" style="flex: 1; background: rgba(0,0,0,0.3); border: none; color: white; padding: 20px; font-family: monospace; resize: none; outline: none;" placeholder="Start typing..."></textarea>
+                        <textarea style="flex: 1; background: rgba(0,0,0,0.3); border: none; color: white; padding: 20px; font-family: monospace; resize: none; outline: none;" placeholder="Start typing..."></textarea>
                     </div>
                 `;
             } else if (app.isTaskManager) {
@@ -964,6 +1373,60 @@
                 updateTaskManager(windowId);
             } else if (app.url) {
                 content.innerHTML = `<iframe src="${app.url}" style="width: 100%; height: 100%; border: none;"></iframe>`;
+                // Add dynamic title updating for browser windows
+                if (appName === 'browser') {
+                    const iframe = content.querySelector('iframe');
+                    const titleElement = header.querySelector('.window-title span');
+                    
+                    // Function to update title based on URL
+                    function updateTitleFromUrl(url) {
+                        try {
+                            const urlObj = new URL(url);
+                            let siteName = urlObj.hostname.replace('www.', '');
+                            
+                            // Capitalize first letter and remove common TLDs for cleaner display
+                            siteName = siteName.split('.')[0];
+                            siteName = siteName.charAt(0).toUpperCase() + siteName.slice(1);
+                            
+                            titleElement.textContent = siteName;
+                        } catch (e) {
+                            titleElement.textContent = 'Browser';
+                        }
+                    }
+                    
+                    // Function to try getting the actual page title
+                    function updateTitleFromIframe() {
+                        try {
+                            // Try to access iframe content (will fail for cross-origin)
+                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                            if (iframeDoc && iframeDoc.title) {
+                                titleElement.textContent = iframeDoc.title;
+                            } else {
+                                updateTitleFromUrl(iframe.src);
+                            }
+                        } catch (e) {
+                            // Fallback to URL-based title for cross-origin iframes
+                            updateTitleFromUrl(iframe.src);
+                        }
+                    }
+                    
+                    // Set initial title from URL
+                    updateTitleFromUrl(iframe.src);
+                    
+                    // Listen for iframe load events
+                    iframe.addEventListener('load', () => {
+                        setTimeout(updateTitleFromIframe, 500); // Small delay to ensure content is loaded
+                    });
+                    
+                    // Also try to update title periodically for SPAs that change title dynamically
+                    const titleUpdateInterval = setInterval(() => {
+                        if (document.getElementById(windowId)) {
+                            updateTitleFromIframe();
+                        } else {
+                            clearInterval(titleUpdateInterval);
+                        }
+                    }, 2000);
+                }
             }
 
             const resizeHandles = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
@@ -991,15 +1454,20 @@
                 window.classList.add('show');
             }, 10);
 
+            // Remove double-click fullscreen from header
             header.addEventListener('mousedown', (e) => {
+                // Only start drag if not clicking on window controls
                 if (!e.target.closest('.window-control')) {
                     startDrag(e, windowId);
                 }
             });
         }
 
+        // New function for custom fullscreen that doesn't fill entire screen
         function toggleCustomFullscreen(windowId) {
             const window = document.getElementById(windowId);
+            
+            window.classList.remove('snap-left', 'snap-right');
             
             if (window.classList.contains('custom-fullscreen')) {
                 window.classList.remove('custom-fullscreen');
@@ -1009,6 +1477,7 @@
                 window.style.height = '600px';
             } else {
                 window.classList.add('custom-fullscreen');
+                // Force recalculation of iframe size
                 const iframe = window.querySelector('iframe');
                 if (iframe) {
                     iframe.style.width = '100%';
@@ -1080,33 +1549,40 @@
             input.click();
         }
 
-        function saveFile(windowId) {
-            const content = document.getElementById(`editor-content-${windowId}`).value;
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'document.txt';
-            a.click();
-            showNotification('File Saved', 'Your document has been saved successfully.');
-        }
-
-        function openFile(windowId) {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.txt';
-            input.onchange = (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        document.getElementById(`editor-content-${windowId}`).value = e.target.result;
-                        showNotification('File Loaded', `File "${file.name}" loaded successfully.`);
-                    };
-                    reader.readAsText(file);
+        async function loadDetailedWeather(windowId) {
+            try {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(async (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        const response = await fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?key=${WEATHER_API_KEY}&include=current`);
+                        const data = await response.json();
+                        
+                        const current = data.currentConditions;
+                        const temp = Math.round(current.temp);
+                        const condition = current.conditions;
+                        const humidity = current.humidity;
+                        const windspeed = current.windspeed;
+                        const pressure = current.pressure;
+                        const uvindex = current.uvindex;
+                        
+                        document.getElementById(`weather-details-${windowId}`).innerHTML = `
+                            <div style="font-size: 4rem; margin: 20px 0;">${getWeatherIcon(condition)}</div>
+                            <div style="font-size: 2rem; margin: 10px 0;">${temp}°F</div>
+                            <div style="font-size: 1.2rem; opacity: 0.8;">${condition}</div>
+                            <div style="margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left;">
+                                <div>Humidity: ${humidity}%</div>
+                                <div>Wind: ${windspeed} mph</div>
+                                <div>Pressure: ${pressure} mb</div>
+                                <div>UV Index: ${uvindex}</div>
+                            </div>
+                        `;
+                    });
                 }
-            };
-            input.click();
+            } catch (error) {
+                console.log('Weather data unavailable');
+            }
         }
 
         function closeWindow(windowId, appName) {
@@ -1115,7 +1591,9 @@
             setTimeout(() => {
                 window.remove();
                 activeWindows.delete(windowId);
-                openWindows.delete(appName); // Remove from openWindows so it can be opened again
+                if (appName !== 'browser') {
+                    openWindows.delete(appName);
+                }
                 updateDockActiveApps();
             }, 200);
         }
@@ -1137,7 +1615,9 @@
             dragOffset.y = e.clientY - rect.top;
             
             window.style.zIndex = 1000 + windowCounter++;
-            window.classList.remove('custom-fullscreen');
+            window.classList.add('dragging');
+            
+            window.classList.remove('snap-left', 'snap-right', 'custom-fullscreen');
             
             e.preventDefault();
         }
@@ -1158,6 +1638,32 @@
                 
                 draggedWindow.style.left = boundedX + 'px';
                 draggedWindow.style.top = boundedY + 'px';
+
+                if (windowSnapEnabled) {
+                    const snapIndicator = document.getElementById('snapIndicator');
+                    
+                    if (e.clientX < 50) {
+                        snapIndicator.style.left = '0px';
+                        snapIndicator.style.top = '0px';
+                        snapIndicator.style.width = '50vw';
+                        snapIndicator.style.height = '100vh';
+                        snapIndicator.classList.add('show');
+                    } else if (e.clientX > window.innerWidth - 50) {
+                        snapIndicator.style.left = '50vw';
+                        snapIndicator.style.top = '0px';
+                        snapIndicator.style.width = '50vw';
+                        snapIndicator.style.height = '100vh';
+                        snapIndicator.classList.add('show');
+                    } else if (e.clientY < 50) {
+                        snapIndicator.style.left = '40px';
+                        snapIndicator.style.top = '40px';
+                        snapIndicator.style.width = 'calc(100vw - 80px)';
+                        snapIndicator.style.height = 'calc(100vh - 80px)';
+                        snapIndicator.classList.add('show');
+                    } else {
+                        snapIndicator.classList.remove('show');
+                    }
+                }
             }
 
             if (resizingWindow) {
@@ -1167,11 +1673,101 @@
 
         document.addEventListener('mouseup', (e) => {
             if (draggedWindow) {
+                const snapIndicator = document.getElementById('snapIndicator');
+                snapIndicator.classList.remove('show');
+                
+                if (windowSnapEnabled) {
+                    if (e.clientX < 50) {
+                        initiateSplitScreen(draggedWindow.id, 'left');
+                    } else if (e.clientX > window.innerWidth - 50) {
+                        initiateSplitScreen(draggedWindow.id, 'right');
+                    } else if (e.clientY < 50) {
+                        draggedWindow.classList.add('custom-fullscreen');
+                    }
+                }
+                
+                draggedWindow.classList.remove('dragging');
                 draggedWindow = null;
             }
             
             resizingWindow = null;
         });
+
+        function initiateSplitScreen(sourceWindowId, direction) {
+            const visibleWindows = Array.from(activeWindows.keys()).filter(id => {
+                const win = document.getElementById(id);
+                return win && win.style.display !== 'none' && !win.classList.contains('minimized') && id !== sourceWindowId;
+            });
+
+            if (visibleWindows.length < 2) {
+                showNotification('Split Screen Error', 'Need at least two open windows for split screen.');
+                return;
+            }
+            
+            splitScreenSource = sourceWindowId;
+            const overlay = document.getElementById('splitScreenOverlay');
+            const grid = document.getElementById('splitScreenGrid');
+            
+            grid.innerHTML = '';
+            
+            visibleWindows.forEach(windowId => {
+                if (windowId !== sourceWindowId) {
+                    const app = activeWindows.get(windowId);
+                    const option = document.createElement('div');
+                    option.className = 'split-screen-option';
+                    option.innerHTML = `
+                        <i class="${app.icon}"></i>
+                        <div class="option-label">${app.title}</div>
+                    `;
+                    option.addEventListener('click', () => {
+                        completeSplitScreen(sourceWindowId, windowId, direction);
+                        overlay.classList.remove('show');
+                    });
+                    grid.appendChild(option);
+                }
+            });
+            
+            const cancelOption = document.createElement('div');
+            cancelOption.className = 'split-screen-option';
+            cancelOption.innerHTML = `
+                <i class="bi bi-x-circle"></i>
+                <div class="option-label">Cancel</div>
+            `;
+            cancelOption.addEventListener('click', () => {
+                overlay.classList.remove('show');
+            });
+            grid.appendChild(cancelOption);
+            
+            overlay.classList.add('show');
+        }
+
+        function completeSplitScreen(sourceWindowId, targetWindowId, direction) {
+            const sourceWindow = document.getElementById(sourceWindowId);
+            const targetWindow = document.getElementById(targetWindowId);
+            
+            if (!sourceWindow || !targetWindow) return;
+            
+            sourceWindow.classList.remove('snap-left', 'snap-right', 'custom-fullscreen');
+            targetWindow.classList.remove('snap-left', 'snap-right', 'custom-fullscreen');
+            
+            if (direction === 'right') {
+                sourceWindow.classList.add('snap-right');
+                targetWindow.classList.add('snap-left');
+            } else if (direction === 'left') {
+                sourceWindow.classList.add('snap-left');
+                targetWindow.classList.add('snap-right');
+            }
+            
+            sourceWindow.style.display = 'flex';
+            sourceWindow.classList.remove('minimized');
+            targetWindow.style.display = 'flex';
+            targetWindow.classList.remove('minimized');
+            
+            sourceWindow.style.zIndex = 150;
+            targetWindow.style.zIndex = 150;
+            
+            showNotification('Split Screen Activated', 'Windows are now in split screen mode.');
+        }
 
         function startResize(e, windowId, direction) {
             const window = document.getElementById(windowId);
@@ -1229,6 +1825,109 @@
             resizingWindow.style.top = newTop + 'px';
         }
 
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('open');
+        }
+
+        function toggleDarkMode(toggle) {
+            toggle.classList.toggle('active');
+            const isActive = toggle.classList.contains('active');
+            
+            if (!isActive) {
+                document.body.style.backgroundColor = '#f0f0f0';
+                document.body.style.color = '#333';
+            } else {
+                document.body.style.backgroundColor = '';
+                document.body.style.color = '';
+            }
+        }
+
+        function toggleTransparency(toggle) {
+            toggle.classList.toggle('active');
+            const isActive = toggle.classList.contains('active');
+            
+            const elements = document.querySelectorAll('.dock, .window, .settings-panel, .context-menu, .status-bar');
+            elements.forEach(el => {
+                if (!isActive) {
+                    el.style.backdropFilter = 'none';
+                    el.style.backgroundColor = 'rgba(20, 20, 20, 0.95)';
+                } else {
+                    el.style.backdropFilter = '';
+                    el.style.backgroundColor = '';
+                }
+            });
+        }
+
+        function toggleAnimations(toggle) {
+            toggle.classList.toggle('active');
+            const isActive = toggle.classList.contains('active');
+            
+            if (!isActive) {
+                document.body.style.setProperty('--animation-duration', '0s');
+                document.body.classList.add('no-animations');
+            } else {
+                document.body.style.removeProperty('--animation-duration');
+                document.body.classList.remove('no-animations');
+            }
+        }
+
+        function toggleDockHide(toggle) {
+            toggle.classList.toggle('active');
+            const isActive = toggle.classList.contains('active');
+            
+            const dock = document.querySelector('.dock');
+            if (isActive) {
+                dock.style.transform = 'translateX(-50%) translateY(100px)';
+                dock.style.opacity = '0';
+                dock.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                
+                document.addEventListener('mousemove', showDockOnHover);
+            } else {
+                dock.style.transform = 'translateX(-50%)';
+                dock.style.opacity = '1';
+                
+                document.removeEventListener('mousemove', showDockOnHover);
+            }
+        }
+
+        function showDockOnHover(e) {
+            const dock = document.querySelector('.dock');
+            const bottomArea = window.innerHeight - 50;
+            
+            if (e.clientY > bottomArea) {
+                dock.style.transform = 'translateX(-50%)';
+                dock.style.opacity = '1';
+            } else {
+                dock.style.transform = 'translateX(-50%) translateY(100px)';
+                dock.style.opacity = '0';
+            }
+        }
+
+        function toggleWindowSnap(toggle) {
+            toggle.classList.toggle('active');
+            windowSnapEnabled = toggle.classList.contains('active');
+        }
+
+        function uploadBackground(input) {
+            const file = input.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.body.style.backgroundImage = `url(${e.target.result})`;
+                    localStorage.setItem('vplaza-bg', e.target.result);
+                    showNotification('Background Changed', 'Your desktop background has been updated.');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function resetBackground() {
+            document.body.style.backgroundImage = "url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-eEJhDAJaG5uYaMuVXDO1jJ3G3I4wRR.png')";
+            localStorage.removeItem('vplaza-bg');
+            showNotification('Background Reset', 'Your desktop background has been reset to default.');
+        }
+
         function initTerminal(windowId) {
             const input = document.getElementById(`terminal-input-${windowId}`);
             const output = document.getElementById(`terminal-output-${windowId}`);
@@ -1254,7 +1953,7 @@
 
             switch (cmd) {
                 case 'help':
-                    output.innerHTML += 'Available commands:<br>help, clear, echo, date, about, ls, open, close<br><br>';
+                    output.innerHTML += 'Available commands:<br>help, clear, echo, date, about, ls, open, close, bg, weather, split, fullscreen, unsplit<br><br>';
                     break;
                 case 'clear':
                     output.innerHTML = 'VplazaOS Terminal v2.0<br>Type \'help\' for commands.<br><br>';
@@ -1266,10 +1965,10 @@
                     output.innerHTML += new Date().toString() + '<br><br>';
                     break;
                 case 'about':
-                    output.innerHTML += 'VplazaOS Modern v2.0<br>Single-instance window management system<br><br>';
+                    output.innerHTML += 'VplazaOS Modern v2.0<br>Modern operating system interface with Linux-style controls<br><br>';
                     break;
                 case 'ls':
-                    output.innerHTML += 'Applications: browser, terminal, files, about, music, games, calculator, notes, weather<br><br>';
+                    output.innerHTML += 'Applications: browser, terminal, files, settings, about, music, games, calculator, notes, weather<br><br>';
                     break;
                 case 'open':
                     if (args[1]) {
@@ -1280,11 +1979,54 @@
                     }
                     break;
                 case 'close':
-                    const appName = document.getElementById(windowId).getAttribute('data-app');
-                    closeWindow(windowId, appName);
+                    closeWindow(windowId);
+                    break;
+                case 'bg':
+                    if (args[1]) {
+                        document.body.style.backgroundImage = `url(${args[1]})`;
+                        output.innerHTML += 'Background changed.<br><br>';
+                    } else {
+                        output.innerHTML += 'Usage: bg [image_url]<br><br>';
+                    }
+                    break;
+                case 'weather':
+                    openApp('weather');
+                    output.innerHTML += 'Opening weather app...<br><br>';
+                    break;
+                case 'split':
+                    const visibleWindows = Array.from(activeWindows.keys()).filter(id => {
+                        const win = document.getElementById(id);
+                        return win && win.style.display !== 'none' && !win.classList.contains('minimized');
+                    });
+                    if (visibleWindows.length > 1) {
+                        initiateSplitScreen(windowId, 'right');
+                        output.innerHTML += 'Initiating split screen mode...<br><br>';
+                    } else {
+                        output.innerHTML += 'Error: Need at least two visible windows open for split screen.<br><br>';
+                    }
+                    break;
+                case 'fullscreen':
+                    toggleCustomFullscreen(windowId);
+                    output.innerHTML += 'Toggling custom fullscreen mode...<br><br>';
+                    break;
+                case 'unsplit':
+                    unsplitWindow(windowId);
+                    output.innerHTML += 'Removing split screen mode...<br><br>';
                     break;
                 default:
                     output.innerHTML += `Command not found: ${cmd}<br><br>`;
+            }
+        }
+
+        function unsplitWindow(windowId) {
+            const window = document.getElementById(windowId);
+            if (window) {
+                window.classList.remove('snap-left', 'snap-right', 'custom-fullscreen');
+                window.style.left = '100px';
+                window.style.top = '50px';
+                window.style.width = '800px';
+                window.style.height = '600px';
+                showNotification('Window Unsplit', 'Window has been restored to normal size.');
             }
         }
 
@@ -1297,7 +2039,8 @@
                     <span>${app.title}</span>
                     <div>
                         <button onclick="focusWindow('${id}')" style="background: #007AFF; border: none; padding: 2px 8px; border-radius: 4px; color: white; cursor: pointer; margin-right: 5px;">Focus</button>
-                        <button onclick="closeWindow('${id}', '${document.getElementById(id).getAttribute('data-app')}')" style="background: #ff4444; border: none; padding: 2px 8px; border-radius: 4px; color: white; cursor: pointer;">End</button>
+                        <button onclick="unsplitWindow('${id}')" style="background: #28CA42; border: none; padding: 2px 8px; border-radius: 4px; color: white; cursor: pointer; margin-right: 5px;">Unsplit</button>
+                        <button onclick="closeWindow('${id}')" style="background: #ff4444; border: none; padding: 2px 8px; border-radius: 4px; color: white; cursor: pointer;">End</button>
                     </div>
                 </div>`;
             });
@@ -1305,23 +2048,83 @@
             taskList.innerHTML = html;
         }
 
+        document.addEventListener('contextmenu', (e) => {
+            if (!e.target.closest('.window') && !e.target.closest('.dock')) {
+                e.preventDefault();
+                const menu = document.getElementById('contextMenu');
+                menu.style.left = e.clientX + 'px';
+                menu.style.top = e.clientY + 'px';
+                menu.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('click', () => {
+            document.getElementById('contextMenu').style.display = 'none';
+        });
+
+        const savedBg = localStorage.getItem('vplaza-bg');
+        if (savedBg) {
+            document.body.style.backgroundImage = `url(${savedBg})`;
+        }
+
+        function saveFile() {
+            const content = document.querySelector('textarea').value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'document.txt';
+            a.click();
+            showNotification('File Saved', 'Your document has been saved successfully.');
+        }
+
+        function openFile() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.querySelector('textarea').value = e.target.result;
+                        showNotification('File Loaded', `File "${file.name}" loaded successfully.`);
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
         function showPowerOptions() {
             const menu = document.createElement('div');
-            menu.className = 'notification';
+            menu.className = 'context-menu';
             menu.style.top = '40px';
             menu.style.right = '20px';
+            menu.style.left = 'auto';
             menu.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 10px;">Power Options</div>
-                <button onclick="restartSystem()" style="background: #007AFF; border: none; padding: 8px 16px; border-radius: 4px; color: white; cursor: pointer; margin-right: 10px;">Restart</button>
-                <button onclick="shutdownSystem()" style="background: #ff4444; border: none; padding: 8px 16px; border-radius: 4px; color: white; cursor: pointer;">Shutdown</button>
+                <div class="context-menu-item" onclick="restartSystem()">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    <span>Restart</span>
+                </div>
+                <div class="context-menu-item" onclick="shutdownSystem()">
+                    <i class="bi bi-power"></i>
+                    <span>Shut Down</span>
+                </div>
             `;
             document.body.appendChild(menu);
-            menu.classList.add('show');
+            menu.style.display = 'block';
+            
+            const closeMenu = (e) => {
+                if (!menu.contains(e.target)) {
+                    menu.remove();
+                    document.removeEventListener('click', closeMenu);
+                }
+            };
             
             setTimeout(() => {
-                menu.classList.remove('show');
-                setTimeout(() => menu.remove(), 300);
-            }, 5000);
+                document.addEventListener('click', closeMenu);
+            }, 100);
         }
 
         function restartSystem() {
@@ -1353,6 +2156,62 @@
                 bootScreen.style.opacity = '0';
             }, 2000);
         }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.altKey && e.key === 'Tab') {
+                e.preventDefault();
+                cycleThroughWindows();
+            }
+            
+            if (e.ctrlKey && e.altKey && e.key === 'Delete') {
+                e.preventDefault();
+                openApp('taskmanager');
+            }
+            
+            if (e.key === 'F11') {
+                e.preventDefault();
+                const activeWindow = document.querySelector('.window[style*="z-index"]');
+                if (activeWindow) {
+                    toggleCustomFullscreen(activeWindow.id);
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('splitScreenOverlay');
+                if (overlay.classList.contains('show')) {
+                    overlay.classList.remove('show');
+                }
+            }
+        });
+
+        function cycleThroughWindows() {
+            if (activeWindows.size === 0) return;
+            
+            const windowIds = Array.from(activeWindows.keys());
+            let highestZ = -1;
+            let highestWindow = null;
+            
+            windowIds.forEach(id => {
+                const window = document.getElementById(id);
+                const zIndex = parseInt(window.style.zIndex || 0);
+                if (zIndex > highestZ) {
+                    highestZ = zIndex;
+                    highestWindow = window;
+                }
+            });
+            
+            const currentIndex = windowIds.indexOf(highestWindow.id);
+            const nextIndex = (currentIndex + 1) % windowIds.length;
+            const nextWindowId = windowIds[nextIndex];
+            
+            focusWindow(nextWindowId);
+        }
+
+        document.getElementById('splitScreenOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'splitScreenOverlay') {
+                e.target.classList.remove('show');
+            }
+        });
     </script>
 </body>
 </html>
