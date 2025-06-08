@@ -16,7 +16,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 50%, #1a1a1a 100%);
-            background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-eEJhDAJaG5uYaMuVXDO1jJ3G3I4wRR.png');
+            background-image: url('/images/7.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -1050,11 +1050,10 @@
                 displayTitle = query.replace('www.', '').split('.')[0];
                 displayTitle = displayTitle.charAt(0).toUpperCase() + displayTitle.slice(1);
             } else {
-                url = `/active/embed.html?url=${encodeURIComponent('https://www.google.com/search?q=' + query)}`;
+                url = `/active/embed.html?url=${encodeURIComponent('https://search.brave.com/search?q=' + query)}`;
                 displayTitle = 'Google Search';
             }
 
-            // Create browser app with custom title
             const windowId = `window-${++windowCounter}`;
             const app = {
                 title: displayTitle,
@@ -1070,7 +1069,6 @@
             document.getElementById('searchInput').value = '';
         }
 
-        // Helper function to extract clean site name from URL
         function extractSiteName(url) {
             try {
                 const urlObj = new URL(url);
@@ -1923,7 +1921,7 @@
         }
 
         function resetBackground() {
-            document.body.style.backgroundImage = "url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-eEJhDAJaG5uYaMuVXDO1jJ3G3I4wRR.png')";
+            document.body.style.backgroundImage = "url('/images/7.png')";
             localStorage.removeItem('vplaza-bg');
             showNotification('Background Reset', 'Your desktop background has been reset to default.');
         }
