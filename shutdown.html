@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Off</title>
+    <style>
+        @font-face {
+            font-family: 'Milker';
+            src: url('Milker.otf') format('opentype');
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color: white;
+            font-family: 'Milker', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .power-message {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .power-message i {
+            font-size: 50px;
+            color: #8a2be2;
+        }
+
+        .power-message p {
+            margin: 10px 0 0;
+            font-size: 24px;
+        }
+
+        .power-on {
+            position: absolute;
+            bottom: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #8a2be2;
+        }
+
+        .power-on i {
+            font-size: 30px;
+        }
+
+        .power-on:hover {
+            text-decoration: underline;
+        }
+
+        .computer {
+            position: absolute;
+            bottom: 100px;
+            left: 50px;
+        }
+
+        .computer img {
+            max-width: 150px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/lucide.min.js"></script>
+</head>
+<body>
+    <div class="power-message">
+        <i data-lucide="power"></i>
+        <p>You have shut off your power</p>
+    </div>
+
+    <div class="power-on" onclick="powerOn()">
+        <i data-lucide="power"></i>
+        <span>Power on</span>
+    </div>
+
+    <div class="computer">
+        <img src="computer.png" alt="Computer">
+    </div>
+
+    <script>
+        function powerOn() {
+            window.location.href = '/OS/vplazaos/20/future/eclipse/os/index.html';
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
