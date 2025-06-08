@@ -1,10 +1,10 @@
-<link rel="icon" href="/images/logoos.png">
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VplazaOS 2.0</title>
+    <link rel="icon" href="/images/logoos.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         * {
@@ -284,7 +284,7 @@
             position: absolute;
             background: rgba(20,20,20,0.95);
             backdrop-filter: blur(20px);
-            border-radius: 5px;
+            border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.1);
             min-width: 400px;
             min-height: 300px;
@@ -306,21 +306,22 @@
             opacity: 0;
         }
 
-        .window.fullscreen {
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            border-radius: 0 !important;
+        /* Custom fullscreen that doesn't actually fill the entire screen */
+        .window.custom-fullscreen {
+            top: 40px !important;
+            left: 40px !important;
+            width: calc(100vw - 80px) !important;
+            height: calc(100vh - 80px) !important;
+            border-radius: 8px !important;
             z-index: 200;
         }
 
-        .window.fullscreen .window-content {
-            height: calc(100vh - 60px) !important;
+        .window.custom-fullscreen .window-content {
+            height: calc(100vh - 140px) !important;
             overflow: hidden !important;
         }
 
-        .window.fullscreen .window-content iframe {
+        .window.custom-fullscreen .window-content iframe {
             width: 100% !important;
             height: 100% !important;
             border: none !important;
@@ -369,13 +370,14 @@
         }
 
         .window-header {
-            background: rgba(255,255,255,0.05);
-            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(60,60,60,0.9) 0%, rgba(40,40,40,0.9) 100%);
+            padding: 8px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: move;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px 8px 0 0;
         }
 
         .window-title {
@@ -383,36 +385,67 @@
             align-items: center;
             gap: 10px;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            color: #e0e0e0;
         }
 
+        /* Linux-style window controls */
         .window-controls {
             display: flex;
-            gap: 8px;
+            gap: 6px;
+            order: -1; /* Move controls to the left side like Linux */
         }
 
         .window-control {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.3);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .window-control.close {
-            background: #FF5F57;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
         }
 
         .window-control.minimize {
-            background: #FFBD2E;
+            background: linear-gradient(135deg, #ffd93d, #ffcd02);
         }
 
         .window-control.maximize {
-            background: #28CA42;
+            background: linear-gradient(135deg, #6bcf7f, #57c267);
         }
 
         .window-control:hover {
-            transform: scale(1.2);
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        /* Add symbols to controls on hover */
+        .window-control.close:hover::after {
+            content: '×';
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .window-control.minimize:hover::after {
+            content: '−';
+            color: #333;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .window-control.maximize:hover::after {
+            content: '□';
+            color: #fff;
+            font-size: 8px;
+            font-weight: bold;
         }
 
         .window-content {
@@ -872,6 +905,13 @@
     </div>
 
     <div class="split-screen-overlay" id="splitScreenOverlay">
+        <div class="context-menu-item" onclick="toggleSettings()">
+            <i class="bi bi-gear"></i>
+            <span>Settings</span>
+        </div>
+    </div>
+
+    <div class="split-screen-overlay" id="splitScreenOverlay">
         <div class="split-screen-options">
             <div class="split-screen-title">Choose a window to split with</div>
             <div class="split-screen-grid" id="splitScreenGrid">
@@ -996,16 +1036,73 @@
             if (!query) return;
 
             let url;
+            let displayTitle = 'Browser';
+            
             if (query.startsWith('http://') || query.startsWith('https://')) {
                 url = `/active/embed.html?url=${encodeURIComponent(query)}`;
+                try {
+                    const urlObj = new URL(query);
+                    displayTitle = urlObj.hostname.replace('www.', '').split('.')[0];
+                    displayTitle = displayTitle.charAt(0).toUpperCase() + displayTitle.slice(1);
+                } catch (e) {
+                    displayTitle = 'Browser';
+                }
             } else if (query.includes('.') && !query.includes(' ')) {
-                url = `/active/embed.html?url=${encodeURIComponent('https://' + query)}`;
+                const fullUrl = 'https://' + query;
+                url = `/active/embed.html?url=${encodeURIComponent(fullUrl)}`;
+                displayTitle = query.replace('www.', '').split('.')[0];
+                displayTitle = displayTitle.charAt(0).toUpperCase() + displayTitle.slice(1);
             } else {
                 url = `/active/embed.html?url=${encodeURIComponent('https://www.google.com/search?q=' + query)}`;
+                displayTitle = 'Google Search';
             }
 
-            openApp('browser', url);
+            // Create browser app with custom title
+            const windowId = `window-${++windowCounter}`;
+            const app = {
+                title: displayTitle,
+                icon: 'bi-globe',
+                url: url
+            };
+            
+            createWindow(windowId, app, 'browser');
+            activeWindows.set(windowId, app);
+            openWindows.add('browser');
+            updateDockActiveApps();
+            
             document.getElementById('searchInput').value = '';
+        }
+
+        // Helper function to extract clean site name from URL
+        function extractSiteName(url) {
+            try {
+                const urlObj = new URL(url);
+                let hostname = urlObj.hostname.replace('www.', '');
+                
+                // Handle special cases
+                const specialSites = {
+                    'google.com': 'Google',
+                    'youtube.com': 'YouTube',
+                    'github.com': 'GitHub',
+                    'stackoverflow.com': 'Stack Overflow',
+                    'reddit.com': 'Reddit',
+                    'twitter.com': 'Twitter',
+                    'facebook.com': 'Facebook',
+                    'instagram.com': 'Instagram',
+                    'linkedin.com': 'LinkedIn',
+                    'wikipedia.org': 'Wikipedia'
+                };
+                
+                if (specialSites[hostname]) {
+                    return specialSites[hostname];
+                }
+                
+                // Default: capitalize first part of domain
+                const siteName = hostname.split('.')[0];
+                return siteName.charAt(0).toUpperCase() + siteName.slice(1);
+            } catch (e) {
+                return 'Browser';
+            }
         }
 
         document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -1146,14 +1243,14 @@
             const header = document.createElement('div');
             header.className = 'window-header';
             header.innerHTML = `
-                <div class="window-title">
-                    <i class="${app.icon}"></i>
-                    <span>${app.title}</span>
-                </div>
                 <div class="window-controls">
                     <div class="window-control close" onclick="closeWindow('${windowId}', '${appName}')"></div>
                     <div class="window-control minimize" onclick="minimizeWindow('${windowId}')"></div>
-                    <div class="window-control maximize" onclick="toggleMaximize('${windowId}')"></div>
+                    <div class="window-control maximize" onclick="toggleCustomFullscreen('${windowId}')"></div>
+                </div>
+                <div class="window-title">
+                    <i class="${app.icon}"></i>
+                    <span>${app.title}</span>
                 </div>
             `;
 
@@ -1250,6 +1347,7 @@
                             <li>Real weather integration</li>
                             <li>Multiple app instances</li>
                             <li>Split screen functionality</li>
+                            <li>Linux-style window controls</li>
                         </ul>
                     </div>
                 `;
@@ -1278,6 +1376,60 @@
                 updateTaskManager(windowId);
             } else if (app.url) {
                 content.innerHTML = `<iframe src="${app.url}" style="width: 100%; height: 100%; border: none;"></iframe>`;
+                // Add dynamic title updating for browser windows
+                if (appName === 'browser') {
+                    const iframe = content.querySelector('iframe');
+                    const titleElement = header.querySelector('.window-title span');
+                    
+                    // Function to update title based on URL
+                    function updateTitleFromUrl(url) {
+                        try {
+                            const urlObj = new URL(url);
+                            let siteName = urlObj.hostname.replace('www.', '');
+                            
+                            // Capitalize first letter and remove common TLDs for cleaner display
+                            siteName = siteName.split('.')[0];
+                            siteName = siteName.charAt(0).toUpperCase() + siteName.slice(1);
+                            
+                            titleElement.textContent = siteName;
+                        } catch (e) {
+                            titleElement.textContent = 'Browser';
+                        }
+                    }
+                    
+                    // Function to try getting the actual page title
+                    function updateTitleFromIframe() {
+                        try {
+                            // Try to access iframe content (will fail for cross-origin)
+                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                            if (iframeDoc && iframeDoc.title) {
+                                titleElement.textContent = iframeDoc.title;
+                            } else {
+                                updateTitleFromUrl(iframe.src);
+                            }
+                        } catch (e) {
+                            // Fallback to URL-based title for cross-origin iframes
+                            updateTitleFromUrl(iframe.src);
+                        }
+                    }
+                    
+                    // Set initial title from URL
+                    updateTitleFromUrl(iframe.src);
+                    
+                    // Listen for iframe load events
+                    iframe.addEventListener('load', () => {
+                        setTimeout(updateTitleFromIframe, 500); // Small delay to ensure content is loaded
+                    });
+                    
+                    // Also try to update title periodically for SPAs that change title dynamically
+                    const titleUpdateInterval = setInterval(() => {
+                        if (document.getElementById(windowId)) {
+                            updateTitleFromIframe();
+                        } else {
+                            clearInterval(titleUpdateInterval);
+                        }
+                    }, 2000);
+                }
             }
 
             const resizeHandles = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
@@ -1305,9 +1457,36 @@
                 window.classList.add('show');
             }, 10);
 
-            header.addEventListener('mousedown', (e) => startDrag(e, windowId));
+            // Remove double-click fullscreen from header
+            header.addEventListener('mousedown', (e) => {
+                // Only start drag if not clicking on window controls
+                if (!e.target.closest('.window-control')) {
+                    startDrag(e, windowId);
+                }
+            });
+        }
+
+        // New function for custom fullscreen that doesn't fill entire screen
+        function toggleCustomFullscreen(windowId) {
+            const window = document.getElementById(windowId);
             
-            header.addEventListener('dblclick', () => toggleMaximize(windowId));
+            window.classList.remove('snap-left', 'snap-right');
+            
+            if (window.classList.contains('custom-fullscreen')) {
+                window.classList.remove('custom-fullscreen');
+                window.style.left = '100px';
+                window.style.top = '50px';
+                window.style.width = '800px';
+                window.style.height = '600px';
+            } else {
+                window.classList.add('custom-fullscreen');
+                // Force recalculation of iframe size
+                const iframe = window.querySelector('iframe');
+                if (iframe) {
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100%';
+                }
+            }
         }
 
         function calcInput(windowId, value) {
@@ -1430,28 +1609,6 @@
             }, 300);
         }
 
-        function toggleMaximize(windowId) {
-            const window = document.getElementById(windowId);
-            
-            window.classList.remove('snap-left', 'snap-right');
-            
-            if (window.classList.contains('fullscreen')) {
-                window.classList.remove('fullscreen');
-                window.style.left = '100px';
-                window.style.top = '50px';
-                window.style.width = '800px';
-                window.style.height = '600px';
-            } else {
-                window.classList.add('fullscreen');
-                // Force recalculation of iframe size
-                const iframe = window.querySelector('iframe');
-                if (iframe) {
-                    iframe.style.width = '100%';
-                    iframe.style.height = '100%';
-                }
-            }
-        }
-
         function startDrag(e, windowId) {
             const window = document.getElementById(windowId);
             draggedWindow = window;
@@ -1463,7 +1620,7 @@
             window.style.zIndex = 1000 + windowCounter++;
             window.classList.add('dragging');
             
-            window.classList.remove('snap-left', 'snap-right', 'fullscreen');
+            window.classList.remove('snap-left', 'snap-right', 'custom-fullscreen');
             
             e.preventDefault();
         }
@@ -1501,10 +1658,10 @@
                         snapIndicator.style.height = '100vh';
                         snapIndicator.classList.add('show');
                     } else if (e.clientY < 50) {
-                        snapIndicator.style.left = '0px';
-                        snapIndicator.style.top = '0px';
-                        snapIndicator.style.width = '100vw';
-                        snapIndicator.style.height = '100vh';
+                        snapIndicator.style.left = '40px';
+                        snapIndicator.style.top = '40px';
+                        snapIndicator.style.width = 'calc(100vw - 80px)';
+                        snapIndicator.style.height = 'calc(100vh - 80px)';
                         snapIndicator.classList.add('show');
                     } else {
                         snapIndicator.classList.remove('show');
@@ -1528,7 +1685,7 @@
                     } else if (e.clientX > window.innerWidth - 50) {
                         initiateSplitScreen(draggedWindow.id, 'right');
                     } else if (e.clientY < 50) {
-                        draggedWindow.classList.add('fullscreen');
+                        draggedWindow.classList.add('custom-fullscreen');
                     }
                 }
                 
@@ -1593,8 +1750,8 @@
             
             if (!sourceWindow || !targetWindow) return;
             
-            sourceWindow.classList.remove('snap-left', 'snap-right', 'fullscreen');
-            targetWindow.classList.remove('snap-left', 'snap-right', 'fullscreen');
+            sourceWindow.classList.remove('snap-left', 'snap-right', 'custom-fullscreen');
+            targetWindow.classList.remove('snap-left', 'snap-right', 'custom-fullscreen');
             
             if (direction === 'right') {
                 sourceWindow.classList.add('snap-right');
@@ -1811,7 +1968,7 @@
                     output.innerHTML += new Date().toString() + '<br><br>';
                     break;
                 case 'about':
-                    output.innerHTML += 'VplazaOS Modern v2.0<br>Modern operating system interface with split screen support<br><br>';
+                    output.innerHTML += 'VplazaOS Modern v2.0<br>Modern operating system interface with Linux-style controls<br><br>';
                     break;
                 case 'ls':
                     output.innerHTML += 'Applications: browser, terminal, files, settings, about, music, games, calculator, notes, weather<br><br>';
@@ -1852,8 +2009,8 @@
                     }
                     break;
                 case 'fullscreen':
-                    toggleMaximize(windowId);
-                    output.innerHTML += 'Toggling fullscreen mode...<br><br>';
+                    toggleCustomFullscreen(windowId);
+                    output.innerHTML += 'Toggling custom fullscreen mode...<br><br>';
                     break;
                 case 'unsplit':
                     unsplitWindow(windowId);
@@ -1867,7 +2024,7 @@
         function unsplitWindow(windowId) {
             const window = document.getElementById(windowId);
             if (window) {
-                window.classList.remove('snap-left', 'snap-right', 'fullscreen');
+                window.classList.remove('snap-left', 'snap-right', 'custom-fullscreen');
                 window.style.left = '100px';
                 window.style.top = '50px';
                 window.style.width = '800px';
@@ -2018,7 +2175,7 @@
                 e.preventDefault();
                 const activeWindow = document.querySelector('.window[style*="z-index"]');
                 if (activeWindow) {
-                    toggleMaximize(activeWindow.id);
+                    toggleCustomFullscreen(activeWindow.id);
                 }
             }
             
