@@ -146,33 +146,32 @@
         }
 
         .dock-toggle {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 40px;
-            height: 20px;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(20px);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-            z-index: 1001;
-            transition: all 0.3s ease;
-        }
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 20px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 1001;
+    transition: all 0.3s ease;
+}
 
-        .dock-toggle.hidden {
-            bottom: 20px;
-            right: 20px;
-            left: auto;
-            transform: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
-        }
+.dock-toggle.hidden {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 20px;
+    border-radius: 10px;
+}
 
         .dock-toggle i {
             font-size: 0.8rem;
@@ -904,12 +903,7 @@
         </div>
     </div>
 
-    <div class="split-screen-overlay" id="splitScreenOverlay">
-        <div class="context-menu-item" onclick="toggleSettings()">
-            <i class="bi bi-gear"></i>
-            <span>Settings</span>
-        </div>
-    </div>
+    
 
     <div class="split-screen-overlay" id="splitScreenOverlay">
         <div class="split-screen-options">
@@ -953,15 +947,18 @@
         function toggleDock() {
             const dock = document.getElementById('dock');
             const toggle = document.getElementById('dockToggle');
+            const toggleIcon = toggle.querySelector('i');
             
             dockHidden = !dockHidden;
             
             if (dockHidden) {
                 dock.classList.add('hidden');
                 toggle.classList.add('hidden');
+                toggleIcon.className = 'bi bi-chevron-up';
             } else {
                 dock.classList.remove('hidden');
                 toggle.classList.remove('hidden');
+                toggleIcon.className = 'bi bi-chevron-down';
             }
         }
 
@@ -1699,7 +1696,7 @@
         function initiateSplitScreen(sourceWindowId, direction) {
             const visibleWindows = Array.from(activeWindows.keys()).filter(id => {
                 const win = document.getElementById(id);
-                return win && win.style.display !== 'none' && !win.classList.contains('minimized');
+                return win && win.style.display !== 'none' && !win.classList.contains('minimized') && id !== sourceWindowId;
             });
 
             if (visibleWindows.length < 2) {
