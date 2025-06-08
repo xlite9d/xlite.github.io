@@ -16,7 +16,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 50%, #1a1a1a 100%);
-            background-image: url('/images/flower.png');
+            background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-eEJhDAJaG5uYaMuVXDO1jJ3G3I4wRR.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -92,7 +92,6 @@
             width: 100%;
             height: 100vh;
             position: relative;
-            display: flex;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -101,65 +100,9 @@
             opacity: 1;
         }
 
-        .sidebar {
-            width: 80px;
-            height: 100vh;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 0;
-            gap: 10px;
-            transition: width 0.3s ease;
-            z-index: 50;
-        }
-
-        .sidebar:hover {
-            width: 200px;
-        }
-
-        .sidebar-item {
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .sidebar-item:hover {
-            background: rgba(255,255,255,0.2);
-            transform: scale(1.1);
-        }
-
-        .sidebar-item i {
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-item .label {
-            position: absolute;
-            left: 70px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .sidebar:hover .sidebar-item .label {
-            opacity: 1;
-        }
-
         .main-area {
-            flex: 1;
+            width: 100%;
+            height: 100vh;
             position: relative;
             padding: 20px;
             display: grid;
@@ -202,6 +145,45 @@
             font-weight: 500;
         }
 
+        .dock-toggle {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 20px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .dock-toggle.hidden {
+            bottom: 20px;
+            right: 20px;
+            left: auto;
+            transform: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+        }
+
+        .dock-toggle i {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .dock-toggle.hidden i {
+            transform: rotate(180deg);
+        }
+
         .dock {
             position: fixed;
             bottom: 20px;
@@ -216,6 +198,13 @@
             gap: 15px;
             border: 1px solid rgba(255,255,255,0.1);
             z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .dock.hidden {
+            transform: translateX(-50%) translateY(100px);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .search-container {
@@ -322,8 +311,22 @@
             left: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            border-radius: 0;
+            border-radius: 0 !important;
             z-index: 200;
+        }
+
+        .window.fullscreen .window-content {
+            height: calc(100vh - 60px) !important;
+            overflow: hidden !important;
+        }
+
+        .window.fullscreen .window-content iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            overflow: hidden !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
         }
 
         .window.snap-left {
@@ -335,6 +338,11 @@
             z-index: 150;
         }
 
+        .window.snap-left .window-content iframe {
+            max-width: 100% !important;
+            max-height: calc(100vh - 60px) !important;
+        }
+
         .window.snap-right {
             top: 0 !important;
             left: 50vw !important;
@@ -342,6 +350,11 @@
             height: 100vh !important;
             border-radius: 0;
             z-index: 150;
+        }
+
+        .window.snap-right .window-content iframe {
+            max-width: 100% !important;
+            max-height: calc(100vh - 60px) !important;
         }
 
         @keyframes windowOpen {
@@ -414,6 +427,10 @@
             height: 100%;
             border: none;
             background: white;
+            overflow: hidden;
+            max-width: 100%;
+            max-height: 100%;
+            box-sizing: border-box;
         }
 
         .status-bar {
@@ -717,41 +734,6 @@
     </div>
 
     <div class="desktop" id="desktop">
-        <div class="sidebar">
-            <div class="sidebar-item" onclick="openApp('about')">
-                <i class="bi bi-info-circle"></i>
-                <span class="label">About</span>
-            </div>
-            <div class="sidebar-item" onclick="openApp('feedback')">
-                <i class="bi bi-chat-dots"></i>
-                <span class="label">Feedback</span>
-            </div>
-            <div class="sidebar-item" onclick="openApp('files')">
-                <i class="bi bi-folder"></i>
-                <span class="label">Files</span>
-            </div>
-            <div class="sidebar-item" onclick="openApp('media')">
-                <i class="bi bi-play-circle"></i>
-                <span class="label">Media Viewer</span>
-            </div>
-            <div class="sidebar-item" onclick="toggleSettings()">
-                <i class="bi bi-gear"></i>
-                <span class="label">Settings</span>
-            </div>
-            <div class="sidebar-item" onclick="openApp('taskmanager')">
-                <i class="bi bi-cpu"></i>
-                <span class="label">Task Manager</span>
-            </div>
-            <div class="sidebar-item" onclick="openApp('terminal')">
-                <i class="bi bi-terminal"></i>
-                <span class="label">Terminal</span>
-            </div>
-            <div class="sidebar-item" onclick="openApp('texteditor')">
-                <i class="bi bi-file-text"></i>
-                <span class="label">Text Editor</span>
-            </div>
-        </div>
-
         <div class="main-area" id="mainArea">
             <div class="desktop-icon" onclick="openApp('browser')">
                 <i class="bi bi-globe"></i>
@@ -779,7 +761,11 @@
             </div>
         </div>
 
-        <div class="dock">
+        <div class="dock-toggle" id="dockToggle" onclick="toggleDock()">
+            <i class="bi bi-chevron-down"></i>
+        </div>
+
+        <div class="dock" id="dock">
             <div class="search-container">
                 <input type="text" class="search-input" placeholder="Search or enter URL..." id="searchInput">
                 <button class="search-btn" onclick="handleSearch()">
@@ -792,11 +778,26 @@
             <div class="dock-item" onclick="openApp('files')">
                 <i class="bi bi-folder"></i>
             </div>
-            <div class="dock-item" onclick="toggleSettings()">
-                <i class="bi bi-gear"></i>
+            <div class="dock-item" onclick="openApp('media')">
+                <i class="bi bi-play-circle"></i>
+            </div>
+            <div class="dock-item" onclick="openApp('taskmanager')">
+                <i class="bi bi-cpu"></i>
             </div>
             <div class="dock-item" onclick="openApp('terminal')">
                 <i class="bi bi-terminal"></i>
+            </div>
+            <div class="dock-item" onclick="openApp('about')">
+                <i class="bi bi-info-circle"></i>
+            </div>
+            <div class="dock-item" onclick="openApp('feedback')">
+                <i class="bi bi-chat-dots"></i>
+            </div>
+            <div class="dock-item" onclick="openApp('texteditor')">
+                <i class="bi bi-file-text"></i>
+            </div>
+            <div class="dock-item" onclick="toggleSettings()">
+                <i class="bi bi-gear"></i>
             </div>
         </div>
     </div>
@@ -891,6 +892,7 @@
         let windowSnapEnabled = true;
         let splitScreenMode = false;
         let splitScreenSource = null;
+        let dockHidden = false;
 
         const WEATHER_API_KEY = '7NZUY6FCX5CTDC6Y9MXED4ZQ7';
 
@@ -907,6 +909,21 @@
         }
 
         setTimeout(startDesktop, 2500);
+
+        function toggleDock() {
+            const dock = document.getElementById('dock');
+            const toggle = document.getElementById('dockToggle');
+            
+            dockHidden = !dockHidden;
+            
+            if (dockHidden) {
+                dock.classList.add('hidden');
+                toggle.classList.add('hidden');
+            } else {
+                dock.classList.remove('hidden');
+                toggle.classList.remove('hidden');
+            }
+        }
 
         async function loadWeather() {
             try {
@@ -1279,7 +1296,7 @@
             const maxLeft = window.innerWidth - 880;
             const maxTop = window.innerHeight - 640;
             
-            window.style.left = Math.min(180 + offset, maxLeft) + 'px';
+            window.style.left = Math.min(100 + offset, maxLeft) + 'px';
             window.style.top = Math.min(50 + offset, maxTop) + 'px';
             window.style.width = '800px';
             window.style.height = '600px';
@@ -1420,12 +1437,18 @@
             
             if (window.classList.contains('fullscreen')) {
                 window.classList.remove('fullscreen');
-                window.style.left = '180px';
+                window.style.left = '100px';
                 window.style.top = '50px';
                 window.style.width = '800px';
                 window.style.height = '600px';
             } else {
                 window.classList.add('fullscreen');
+                // Force recalculation of iframe size
+                const iframe = window.querySelector('iframe');
+                if (iframe) {
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100%';
+                }
             }
         }
 
@@ -1670,7 +1693,7 @@
             toggle.classList.toggle('active');
             const isActive = toggle.classList.contains('active');
             
-            const elements = document.querySelectorAll('.sidebar, .dock, .window, .settings-panel, .context-menu, .status-bar');
+            const elements = document.querySelectorAll('.dock, .window, .settings-panel, .context-menu, .status-bar');
             elements.forEach(el => {
                 if (!isActive) {
                     el.style.backdropFilter = 'none';
@@ -1746,7 +1769,7 @@
         }
 
         function resetBackground() {
-            document.body.style.backgroundImage = "url('/images/flower.png')";
+            document.body.style.backgroundImage = "url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-eEJhDAJaG5uYaMuVXDO1jJ3G3I4wRR.png')";
             localStorage.removeItem('vplaza-bg');
             showNotification('Background Reset', 'Your desktop background has been reset to default.');
         }
@@ -1845,7 +1868,7 @@
             const window = document.getElementById(windowId);
             if (window) {
                 window.classList.remove('snap-left', 'snap-right', 'fullscreen');
-                window.style.left = '180px';
+                window.style.left = '100px';
                 window.style.top = '50px';
                 window.style.width = '800px';
                 window.style.height = '600px';
@@ -1872,7 +1895,7 @@
         }
 
         document.addEventListener('contextmenu', (e) => {
-            if (!e.target.closest('.window') && !e.target.closest('.sidebar') && !e.target.closest('.dock')) {
+            if (!e.target.closest('.window') && !e.target.closest('.dock')) {
                 e.preventDefault();
                 const menu = document.getElementById('contextMenu');
                 menu.style.left = e.clientX + 'px';
