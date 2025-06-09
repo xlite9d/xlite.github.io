@@ -2141,13 +2141,18 @@
         }
 
         function shutdownSystem() {
-            const bootScreen = document.getElementById('bootScreen');
-            bootScreen.style.display = 'flex';
-            bootScreen.style.opacity = '1';
-            bootScreen.innerHTML = `
-                <div class="boot-logo">VplazaOS</div>
-                <div class="boot-text">Shutting down...</div>
-            `;
+    const bootScreen = document.getElementById('bootScreen');
+    if (bootScreen) {
+        bootScreen.style.display = 'flex';
+        bootScreen.style.opacity = '1';
+        bootScreen.innerHTML = `
+            <div class="boot-logo">VplazaOS</div>
+            <div class="boot-text">Shutting down...</div>
+        `;
+        setTimeout(() => {
+            window.location.href = 'shutdown.html';
+        }, 2000);
+    }
             
             setTimeout(() => {
                 document.body.style.backgroundColor = '#000';
