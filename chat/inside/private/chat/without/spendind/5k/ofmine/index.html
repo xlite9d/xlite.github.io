@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">Add commentMore actions
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -37,13 +37,13 @@
     background-color: rgba(0,0,0,0.5);
   }
   ::-webkit-scrollbar-thumb {
-    background-color: #ff0000;
+    background-color: #c800ff;
     border-radius: 10px;
-    box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    box-shadow: 0 0 10px #c800ff, 0 0 20px #c800ff;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background-color: #ff3333;
-    box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
+    background-color: #c800ff;
+    box-shadow: 0 0 15px #c800ff, 0 0 30px #c800ff;
   }
 
   .container {
@@ -61,12 +61,12 @@
     border-radius: 10px;
     padding: 20px;
     margin: 20px 0;
-    box-shadow: 0 4px 15px rgba(255,0,0,0.6);
+    box-shadow: 0 4px 15px #c800ff;
   }
   .header h1 {
     font-size: 28px;
     color: #fff;
-    text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    text-shadow: 0 0 10px #c800ff, 0 0 20px #c800ff;
   }
   .header p {
     font-size: 14px;
@@ -79,12 +79,12 @@
     padding: 20px;
     background: rgba(40,40,40,0.9);
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(255,0,0,0.6);
+    box-shadow: 0 0 15px #c800ff;
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-bottom: 20px;
-    border: 2px solid #ff0000;
+    border: 2px solid #c800ff;
   }
 
   .message {
@@ -94,14 +94,15 @@
     max-width: 90%;
     display: flex;
     align-items: flex-start;
-    box-shadow: 0 0 20px rgba(255,0,0,0.5);
+    box-shadow: 0 0 20px #c800ff;
     animation: fadeIn 0.3s;
     position: relative;
+    cursor: pointer;
   }
   .message.self {
-    background: #ff0000;
+    background: #c800ff;
     margin-left: auto;
-    box-shadow: 0 0 20px rgba(255,0,0,0.9);
+    box-shadow: 0 0 20px #c800ff;
   }
   .message-avatar {
     width: 40px;
@@ -140,7 +141,7 @@
   }
   .message-sender {
     font-weight: bold;
-    color: #ff9999;
+    color: #df6bff;
     font-size: 14px;
     margin-right: 8px;
   }
@@ -171,7 +172,7 @@
   #messageInput {
     flex: 1;
     padding: 15px;
-    background: rgba(75,0,0,0.5);
+    background: #000000;
     color: #fff;
     border: none;
     border-radius: 20px;
@@ -180,9 +181,9 @@
     margin-right: 10px;
   }
   #messageInput:focus {
-    background: rgba(75,0,0,0.8);
+    background: #c800ff;
     outline: none;
-    box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    box-shadow: 0 0 10px #c800ff, 0 0 20px #c800ff;
   }
 
   #micButton {
@@ -200,18 +201,18 @@
 
   input[type="submit"] {
     padding: 15px 20px;
-    background: #ff0000;
+    background: #c800ff;
     color: #fff;
     border: none;
     border-radius: 20px;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
-    box-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    box-shadow: 0 0 10px #c800ff, 0 0 20px #c800ff;
   }
   input[type="submit"]:hover {
-    background: #ff3333;
+    background: #c800ff;
     transform: scale(1.05);
-    box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000;
+    box-shadow: 0 0 15px #c800ff, 0 0 30px #c800ff;
   }
 
   .error-screen {
@@ -234,11 +235,135 @@
   }
   .error-screen button {
     padding: 10px 20px;
-    background: #ff0000;
+    background: #c800ff;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+  }
+
+  .custom-context-menu {
+    position: fixed;
+    background: rgba(30,30,30,0.95);
+    border: 2px solid #c800ff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #c800ff;
+    padding: 10px 0;
+    z-index: 1000;
+    display: none;
+    min-width: 150px;
+  }
+
+  .context-menu-item {
+    padding: 12px 20px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .context-menu-item:hover {
+    background: #c800ff;
+    color: #fff;
+  }
+
+  .context-menu-item i {
+    margin-right: 10px;
+    font-size: 16px;
+  }
+
+  .dm-invitation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(30,30,30,0.95);
+    border: 2px solid #c800ff;
+    border-radius: 15px;
+    box-shadow: 0 0 30px #c800ff;
+    padding: 25px;
+    z-index: 2000;
+    color: #fff;
+    text-align: center;
+    min-width: 300px;
+    animation: slideIn 0.3s ease;
+  }
+
+  .dm-invitation h3 {
+    color: #c800ff;
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+
+  .dm-invitation p {
+    margin-bottom: 20px;
+    color: #bbb;
+  }
+
+  .dm-invitation-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .dm-invitation button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .dm-accept {
+    background: #c800ff;
+    color: #fff;
+  }
+
+  .dm-decline {
+    background: #666;
+    color: #fff;
+  }
+
+  .dm-accept:hover {
+    background: #a000d0;
+    transform: scale(1.05);
+  }
+
+  .dm-decline:hover {
+    background: #888;
+    transform: scale(1.05);
+  }
+
+  /* Room indicator */
+  .room-indicator {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: rgba(200, 0, 255, 0.2);
+    border: 1px solid #c800ff;
+    border-radius: 15px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: #c800ff;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @media(max-width: 600px) {
@@ -256,11 +381,11 @@
 
 <div id="particles-js"></div>
 
-<div class="modal" id="roomModal" style="display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); align-items:center; justify-content:center; z-index:50;">
-  <div style="background:#23272a; padding:30px; border-radius:10px; max-width:400px; width:90%; box-shadow:0 4px 20px rgba(255,0,0,0.8); text-align:center;">
+<div class="modal" id="roomModal" style="display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0, 0, 0, 0.8); align-items:center; justify-content:center; z-index:50;">
+  <div style="background:#000000; padding:30px; border-radius:20px; max-width:400px; width:90%; box-shadow:0 4px 20px rgba(128, 0, 255, 0.8); text-align:center; color: #fff;">
     <h2>Enter Your Name</h2>
     <input type="text" id="usernameInput" placeholder="Your Name" required style="width:100%; padding:15px; border:none; border-radius:5px; background:#2f3136; color:#fff; font-size:16px; margin-top:10px;">
-    <button onclick="joinRoom()" style="margin-top:15px; padding:15px; width:100%; background:#ff0000; border:none; border-radius:5px; color:#fff; font-size:16px; cursor:pointer;">Join</button>
+    <button onclick="joinRoom()" style="margin-top:15px; padding:15px; width:100%; background:#7b00ff; border:2px solid black; border-radius:20px; color:#fff; font-size:16px; cursor:pointer;">Join</button>
   </div>
 </div>
 
@@ -268,6 +393,7 @@
   <div class="header">
     <h1 id="roomName">Vplaza</h1>
     <p id="userInfo">Logged in as: <span id="userNameDisplay"></span></p>
+    <div class="room-indicator" id="roomIndicator">Public Room</div>
   </div>
   <div class="messages" id="messages"></div>
   <form class="input-area" onsubmit="return false;">
@@ -285,15 +411,53 @@
   <button onclick="resizeScreen()">I understand, continue anyway</button>
 </div>
 
+<div class="custom-context-menu" id="customContextMenu">
+  <div class="context-menu-item" id="dmUserOption">
+    <i class="fas fa-envelope"></i>
+    <span>DM USER</span>
+  </div>
+</div>
+
 <script src="https://cdn.scaledrone.com/scaledrone.min.js"></script>
 <script>
   const CLIENT_ID = 'aSEKMcR4GsEZONob';
   const drone = new ScaleDrone(CLIENT_ID);
   let room;
   let userName = '';
+  let currentRoom = 'Vplaza';
+  let isInDM = false;
+  let dmPartner = '';
   const userProfiles = {};
   let isRecording = false;
   let recognition;
+  let contextMenuTarget = null;
+
+  particlesJS('particles-js', {
+    particles: {
+      number: { value: 80, density: { enable: true, value_area: 800 } },
+      color: { value: '#c800ff' },
+      shape: { type: 'circle' },
+      opacity: { value: 0.5, random: false },
+      size: { value: 3, random: true },
+      line_linked: { enable: true, distance: 150, color: '#c800ff', opacity: 0.4, width: 1 },
+      move: { enable: true, speed: 6, direction: 'none', random: false, straight: false, out_mode: 'out' }
+    },
+    interactivity: {
+      detect_on: 'canvas',
+      events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
+      modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 } }
+    },
+    retina_detect: true
+  });
+
+  function generateRandomRoomCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+    let result = '';
+    for (let i = 0; i < 12; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
 
   function checkScreenSize() {
     if (window.innerWidth < 500) {
@@ -302,15 +466,145 @@
       document.getElementById('errorScreen').style.display = 'none';
     }
   }
+  
   function resizeScreen() {
     document.getElementById('errorScreen').style.display = 'none';
   }
+
+  document.addEventListener('contextmenu', function(e) {
+    const message = e.target.closest('.message');
+    if (message && !message.classList.contains('self')) {
+      e.preventDefault();
+      contextMenuTarget = message;
+      const contextMenu = document.getElementById('customContextMenu');
+      const targetUserName = message.querySelector('.message-sender').textContent;
+      
+      document.getElementById('dmUserOption').innerHTML = `
+        <i class="fas fa-envelope"></i>
+        <span>DM ${targetUserName.toUpperCase()}</span>
+      `;
+      
+      contextMenu.style.display = 'block';
+      contextMenu.style.left = e.pageX + 'px';
+      contextMenu.style.top = e.pageY + 'px';
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    const contextMenu = document.getElementById('customContextMenu');
+    if (!contextMenu.contains(e.target)) {
+      contextMenu.style.display = 'none';
+    }
+  });
+
+  document.getElementById('dmUserOption').addEventListener('click', function() {
+    if (contextMenuTarget) {
+      const targetUserName = contextMenuTarget.querySelector('.message-sender').textContent;
+      sendDMInvitation(targetUserName);
+      document.getElementById('customContextMenu').style.display = 'none';
+    }
+  });
+
+  function sendDMInvitation(targetUser) {
+    const dmRoomCode = generateRandomRoomCode();
+    
+    drone.publish({
+      room: `observable-${currentRoom}`,
+      message: {
+        type: 'dm_invitation',
+        from: userName,
+        to: targetUser,
+        roomCode: dmRoomCode,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    });
+    
+    dmPartner = targetUser;
+    isInDM = true;
+    currentRoom = dmRoomCode;
+    
+    document.getElementById('roomName').textContent = `DM with ${targetUser}`;
+    document.getElementById('roomIndicator').textContent = 'Private Room';
+    document.getElementById('roomIndicator').style.background = 'rgba(255, 100, 100, 0.2)';
+    document.getElementById('roomIndicator').style.borderColor = '#ff6464';
+    document.getElementById('roomIndicator').style.color = '#ff6464';
+    
+    connectToRoom(dmRoomCode);
+  }
+
+  function showDMInvitation(fromUser, roomCode) {
+    const invitation = document.createElement('div');
+    invitation.className = 'dm-invitation';
+    invitation.innerHTML = `
+      <h3>Private Message Invitation</h3>
+      <p><strong>${fromUser}</strong> wants to start a private conversation with you.</p>
+      <p>Room: <code style="color: #c800ff; font-family: monospace;">${roomCode}</code></p>
+      <div class="dm-invitation-buttons">
+        <button class="dm-accept" onclick="acceptDMInvitation('${fromUser}', '${roomCode}')">Accept</button>
+        <button class="dm-decline" onclick="declineDMInvitation('${fromUser}', '${roomCode}')">Decline</button>
+      </div>
+    `;
+    document.body.appendChild(invitation);
+
+    setTimeout(() => {
+      if (document.body.contains(invitation)) {
+        document.body.removeChild(invitation);
+      }
+    }, 15000);
+  }
+
+  function acceptDMInvitation(partner, roomCode) {
+    dmPartner = partner;
+    isInDM = true;
+    currentRoom = roomCode;
+    
+    const invitation = document.querySelector('.dm-invitation');
+    if (invitation) {
+      invitation.remove();
+    }
+    
+    document.getElementById('roomName').textContent = `DM with ${partner}`;
+    document.getElementById('roomIndicator').textContent = 'Private Room';
+    document.getElementById('roomIndicator').style.background = 'rgba(255, 100, 100, 0.2)';
+    document.getElementById('roomIndicator').style.borderColor = '#ff6464';
+    document.getElementById('roomIndicator').style.color = '#ff6464';
+    
+    connectToRoom(roomCode);
+    
+    setTimeout(() => {
+      drone.publish({
+        room: `observable-${roomCode}`,
+        message: {
+          type: 'dm_accepted',
+          from: userName,
+          to: partner,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      });
+    }, 1000);
+  }
+
+  function declineDMInvitation(partner, roomCode) {
+    const invitation = document.querySelector('.dm-invitation');
+    if (invitation) {
+      invitation.remove();
+    }
+    
+    drone.publish({
+      room: `observable-${currentRoom}`,
+      message: {
+        type: 'dm_declined',
+        from: userName,
+        to: partner,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    });
+  }
+
   window.onload = () => {
     checkScreenSize();
-
     document.getElementById('usernameInput').addEventListener('input', (e) => {
       const firstLetter = e.target.value.trim().charAt(0).toUpperCase() || '?';
-
     });
   };
   window.onresize = checkScreenSize;
@@ -341,15 +635,17 @@
       } catch(e) {}
     }
 
+    currentRoom = roomCode;
     userProfiles[userName] = '';
-
     room = drone.subscribe(`observable-${roomCode}`);
 
     room.on('error', error => {
       console.error(error);
       alert('Error connecting to chat room.');
-      document.getElementById('roomModal').style.display = 'flex';
-      document.getElementById('chatContainer').style.display = 'none';
+      if (!isInDM) {
+        document.getElementById('roomModal').style.display = 'flex';
+        document.getElementById('chatContainer').style.display = 'none';
+      }
     });
 
     room.on('open', error => {
@@ -369,8 +665,23 @@
 
     room.on('data', (data, member) => {
       if (!data) return;
+      
       if (data.type === 'join') {
-        showJoinNotification(data.name);
+        if (!isInDM && data.name !== userName) {
+          showJoinNotification(data.name);
+        }
+      } else if (data.type === 'dm_invitation') {
+        if (data.to === userName) {
+          showDMInvitation(data.from, data.roomCode);
+        }
+      } else if (data.type === 'dm_accepted') {
+        if (data.to === userName) {
+          showNotification(`${data.from} accepted your DM invitation`);
+        }
+      } else if (data.type === 'dm_declined') {
+        if (data.to === userName) {
+          showNotification(`${data.from} declined your DM invitation`);
+        }
       } else if (data.text) {
         addMessageToList(data.text, data.name, member.id === drone.clientId, data.timestamp);
       }
@@ -387,7 +698,7 @@
     msgInput.value = '';
 
     drone.publish({
-      room: 'observable-Vplaza',
+      room: `observable-${currentRoom}`,
       message: { text, name: userName, timestamp }
     });
   }
@@ -406,7 +717,6 @@
     msgDiv.className = 'message' + (isSelf ? ' self' : '');
 
     const time = timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const avatarHtml = `<div>${getInitials(name)}</div>`;
 
     msgDiv.innerHTML = `
       <div class="message-avatar">
@@ -424,8 +734,40 @@
     container.scrollTop = container.scrollHeight;
   }
 
+  function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(200, 0, 255, 0.1);
+      border: 1px solid #c800ff;
+      color: #c800ff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      animation: slideIn 0.3s ease;
+      max-width: 300px;
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
+        }, 300);
+      }
+    }, 4000);
+  }
+
   function showJoinNotification(name) {
-    alert(`${name} has joined the chat.`);
+    if (name !== userName) {
+      showNotification(`${name} joined the chat`);
+    }
   }
 
   document.getElementById('micButton').onclick = () => {
@@ -483,27 +825,8 @@
       sendMessage();
     }
   });
-</script>
 
-<script>
-particlesJS("particles-js", {
-  "particles": {
-    "number": { "value": 300, "density": { "enable": true, "value_area": 800 } },
-    "color": { "value": "#ff0000" },
-    "shape": { "type": "circle" },
-    "opacity": { "value": 0.5 },
-    "size": { "value": 4, "random": true },
-    "line_linked": { "enable": true, "distance": 150, "color": "#ff0000", "opacity": 0.4, "width": 1 },
-    "move": { "enable": true, "speed": 5, "out_mode": "out" }
-  },
-  "interactivity": {
-    "detect_on": "window",
-    "events": {
-      "onhover": { "enable": true, "mode": "repulse" }
-    }
-  },
-  "retina_detect": true
-});
+  document.querySelector('input[type="submit"]').addEventListener('click', sendMessage);
 </script>
 
 </body>
