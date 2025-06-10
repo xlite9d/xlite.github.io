@@ -339,7 +339,7 @@
         const episodeItem = document.createElement('li');
         episodeItem.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
         episodeItem.addEventListener('click', () => {
-          let embedUrl = `https://vidsrc.su/embed/tv/${currentTVId}/${episode.season_number}/${episode.episode_number}`;
+          let embedUrl = `https://vidsrc.xyz/embed/tv/${currentTVId}/${episode.season_number}/${episode.episode_number}`;
           if (proxySwitch.checked) {
               embedUrl = `/active/embed?url=${encodeURIComponent(embedUrl)}`;
           }
