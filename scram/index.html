@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scramjet URL Viewer</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+  }
+  input[type="text"] {
+    width: 70%;
+    padding: 8px;
+    font-size: 1em;
+  }
+  button {
+    padding: 8px 12px;
+    font-size: 1em;
+    margin-left: 10px;
+  }
+  #iframeContainer {
+    margin-top: 20px;
+    width: 100%;
+    height: 600px;
+    border: 1px solid #ccc;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  #errorMsg {
+    color: red;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h2>View /scramjet/ URL in iframe</h2>
+<input type="text" id="urlInput" placeholder="Enter URL e.g., https://example.com" />
+<button onclick="loadIframe()">Load in iframe</button>
+<div id="errorMsg"></div>
+<div id="iframeContainer"></div>
+
+<script>
+function loadIframe() {
+  const input = document.getElementById('urlInput').value.trim();
+  const errorDiv = document.getElementById('errorMsg');
+  errorDiv.textContent = '';
+  document.getElementById('iframeContainer').innerHTML = '';
+
+  if (!input) {
+    alert('Please enter a URL.');
+    return;
+  }
+
+  // Ensure URL starts with http/https
+  let url = input;
+  if (!/^https?:\/\//i.test(url)) {
+    url = 'https://' + url;
+  }
+
+  const encodedUrl = encodeURIComponent(url);
+  const scramjetUrl = `/scramjet/${encodedUrl}`;
+
+  // Create iframe
+  const iframe = document.createElement('iframe');
+  iframe.src = scramjetUrl;
+
+  // Optional: Check if the URL is embeddable
+  iframe.onload = () => {
+    // Could add additional checks here if needed
+  };
+
+  // Handle errors
+  iframe.onerror = () => {
+    errorDiv.textContent = 'Failed to load the URL. It might not be embeddable.';
+  };
+
+  document.getElementById('iframeContainer').appendChild(iframe);
+}
+</script>
+
+</body>
+</html>
