@@ -1,0 +1,926 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vplaza OS 3.0</title>
+    <link rel="icon" href="/images/logoos.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        :root {
+            --brave-dark-bg: #1a1b26;
+            --brave-darker-bg: #16161e;
+            --brave-tab-active: #24283b;
+            --brave-tab-inactive: transparent;
+            --brave-tab-hover: #292e42;
+            --brave-text: #a9b1d6;
+            --brave-text-dim: #565f89;
+            --brave-border: #1a1b26;
+            --brave-accent: #7aa2f7;
+            --brave-hover: #292e42;
+            --brave-preview-bg: rgba(36, 40, 59, 0.95);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background-color: var(--brave-dark-bg);
+            color: var(--brave-text);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--brave-darker-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--brave-border);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--brave-hover);
+        }
+
+        .tab {
+            background-color: var(--brave-tab-inactive);
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            border-bottom: none;
+            transition: all 0.2s ease;
+            max-width: 220px;
+            min-width: 160px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .tab.active {
+            background-color: var(--brave-tab-active);
+        }
+
+        .tab:hover:not(.active) {
+            background-color: var(--brave-tab-hover);
+        }
+
+        .url-bar {
+            background-color: var(--brave-darker-bg);
+            border: 1px solid var(--brave-border);
+            border-radius: 20px;
+            color: var(--brave-text);
+            font-size: 13px;
+            height: 32px;
+        }
+
+        .url-bar:focus {
+            outline: none;
+            border-color: var(--brave-accent);
+            box-shadow: 0 0 0 1px var(--brave-accent);
+        }
+
+        .nav-btn {
+            color: var(--brave-text-dim);
+            transition: color 0.2s ease;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .nav-btn:hover {
+            color: var(--brave-text);
+            background-color: var(--brave-hover);
+        }
+
+        .nav-btn:disabled {
+            color: var(--brave-border);
+            cursor: not-allowed;
+            background-color: transparent;
+        }
+
+        .bookmark {
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            border-radius: 4px;
+            height: 24px;
+        }
+
+        .bookmark:hover {
+            background-color: var(--brave-hover);
+        }
+
+        .content-area {
+            background-color: var(--brave-tab-active);
+            height: calc(100vh - 96px);
+        }
+
+        .new-tab-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--brave-text-dim);
+            transition: all 0.2s ease;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .new-tab-btn:hover {
+            color: var(--brave-text);
+            background-color: var(--brave-hover);
+        }
+
+        .favicon-placeholder {
+            width: 16px;
+            height: 16px;
+            background-color: var(--brave-text-dim);
+            border-radius: 50%;
+        }
+
+        .close-tab {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .tab:hover .close-tab {
+            opacity: 1;
+            cursor: auto;
+        }
+
+        .close-tab:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .bookmark-star.active {
+            color: var(--brave-accent);
+        }
+
+        .context-menu {
+            position: fixed;
+            background-color: var(--brave-darker-bg);
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            min-width: 220px;
+            z-index: 1000;
+            opacity: 0;
+            transform: scale(0.95);
+            transform-origin: top left;
+            pointer-events: none;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+
+        .context-menu.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .context-menu-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: var(--brave-text);
+            transition: background-color 0.15s ease;
+        }
+
+        .context-menu-item:hover {
+            background-color: var(--brave-hover);
+        }
+
+        .context-menu-item i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .context-menu-separator {
+            height: 1px;
+            background-color: var(--brave-border);
+            margin: 4px 0;
+        }
+
+        #tabs-container {
+            scrollbar-width: thin;
+            -ms-overflow-style: none;
+            overflow-x: auto;
+            display: flex;
+            flex-grow: 1;
+        }
+
+        #tabs-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .audio-indicator {
+            color: var(--brave-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-container flex flex-col h-screen">
+        <div class="tab-bar flex items-center bg-[#16161e] px-2 pt-2">
+            <div id="tabs-container" class="flex overflow-x-auto flex-grow">
+            </div>
+            <button id="new-tab-btn" class="new-tab-btn ml-1">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+            </button>
+        </div>
+
+        <div class="nav-bar flex items-center p-2 bg-[#24283b] border-b border-[#1a1b26]">
+            <div class="flex items-center space-x-1 mr-3">
+                <button id="back-btn" class="nav-btn" disabled>
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </button>
+                <button id="forward-btn" class="nav-btn" disabled>
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+                <button id="refresh-btn" class="nav-btn">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div class="flex-grow relative">
+                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#565f89]">
+                    <i id="url-icon" data-lucide="search" class="w-4 h-4"></i>
+                </div>
+                <input id="url-input" type="text" class="url-bar w-full py-1.5 pl-9 pr-9" placeholder="Search or enter web address">
+                <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <button id="bookmark-btn" class="bookmark-star p-1 text-[#565f89]">
+                        <i data-lucide="star" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="bookmark-bar" class="bookmark-bar flex items-center p-1 bg-[#24283b] border-b border-[#1a1b26] overflow-x-auto">
+        </div>
+
+        <div class="content-area flex-grow">
+            <div id="frames-container" class="h-full">
+            </div>
+        </div>
+    </div>
+
+    <div id="context-menu" class="context-menu">
+        <div class="context-menu-item" id="ctx-back">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Back</span>
+        </div>
+        <div class="context-menu-item" id="ctx-forward">
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            <span>Forward</span>
+        </div>
+        <div class="context-menu-item" id="ctx-reload">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>Reload</span>
+        </div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" id="ctx-bookmark">
+            <i data-lucide="star" class="w-4 h-4"></i>
+            <span>Bookmark this page</span>
+        </div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" id="ctx-newtab">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>New tab</span>
+        </div>
+        <div class="context-menu-item" id="ctx-closetab">
+            <i data-lucide="x" class="w-4 h-4"></i>
+            <span>Close tab</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
+        const state = {
+            tabs: [],
+            activeTabId: null,
+            bookmarks: [],
+            nextTabId: 1,
+            nextBookmarkId: 1,
+            contextMenuTarget: null
+        };
+
+        function loadSavedBookmarks() {
+            const savedBookmarks = localStorage.getItem('brave_clone_bookmarks');
+
+            if (savedBookmarks) {
+                state.bookmarks = JSON.parse(savedBookmarks);
+                state.nextBookmarkId = Math.max(...state.bookmarks.map(bookmark => bookmark.id), 0) + 1;
+            }
+
+            createNewTab();
+            renderBookmarks();
+        }
+
+        function saveBookmarks() {
+            localStorage.setItem('brave_clone_bookmarks', JSON.stringify(state.bookmarks));
+        }
+
+        function createNewTab() {
+            const newTab = {
+                id: state.nextTabId++,
+                title: 'New Tab',
+                url: '/OS/vplazaos/20/future/eclipse/os/',
+                favicon: 'images/logoos.png',
+                isActive: true,
+                isPlayingAudio: false
+            };
+
+            state.tabs.forEach(tab => tab.isActive = false);
+
+            state.tabs.push(newTab);
+            state.activeTabId = newTab.id;
+
+            renderTabs();
+            createIframe(newTab);
+            updateUrlBar(newTab.url);
+            updateBookmarkStar();
+        }
+
+        function closeTab(tabId) {
+            const tabIndex = state.tabs.findIndex(tab => tab.id === tabId);
+            if (tabIndex === -1) return;
+
+            state.tabs.splice(tabIndex, 1);
+
+            const iframe = document.querySelector(`iframe[data-tab-id="${tabId}"]`);
+            if (iframe) iframe.remove();
+
+            if (tabId === state.activeTabId) {
+                if (state.tabs.length > 0) {
+                    const newActiveTab = state.tabs[Math.max(0, tabIndex - 1)];
+                    updateActiveTab(newActiveTab.id);
+                } else {
+                    createNewTab();
+                    return;
+                }
+            }
+
+            renderTabs();
+        }
+
+        function switchTab(tabId) {
+            if (tabId === state.activeTabId) return;
+
+            updateActiveTab(tabId);
+            renderTabs();
+        }
+
+        function updateActiveTab(tabId) {
+            state.activeTabId = tabId;
+            state.tabs.forEach(tab => {
+                tab.isActive = tab.id === tabId;
+            });
+
+            document.querySelectorAll('#frames-container iframe').forEach(iframe => {
+                if (parseInt(iframe.dataset.tabId) === tabId) {
+                    iframe.style.display = 'block';
+                } else {
+                    iframe.style.display = 'none';
+                }
+            });
+
+            const activeTab = state.tabs.find(tab => tab.id === tabId);
+            if (activeTab) {
+                updateUrlBar(activeTab.url);
+                updateBookmarkStar();
+            }
+        }
+
+        function checkAudioInIframe(tab, iframe) {
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                const audioElements = iframeDoc.querySelectorAll('audio, video');
+                let isPlayingAudio = false;
+
+                audioElements.forEach(element => {
+                    if (!element.paused && !element.muted && element.readyState > 2) {
+                        isPlayingAudio = true;
+                    }
+                });
+
+                if (tab.isPlayingAudio !== isPlayingAudio) {
+                    tab.isPlayingAudio = isPlayingAudio;
+                    renderTabs();
+                }
+
+                // Also listen for audio context if available
+                if (iframe.contentWindow.AudioContext || iframe.contentWindow.webkitAudioContext) {
+                    const audioContext = new (iframe.contentWindow.AudioContext || iframe.contentWindow.webkitAudioContext)();
+                    if (audioContext.state === 'running') {
+                        if (!tab.isPlayingAudio) {
+                            tab.isPlayingAudio = true;
+                            renderTabs();
+                        }
+                    }
+                }
+            } catch (e) {
+                // Can't access iframe content due to cross-origin restrictions
+                // For external sites, we'll rely on the Web Audio API detection
+                try {
+                    if (iframe.contentWindow.AudioContext || iframe.contentWindow.webkitAudioContext) {
+                        const audioContext = new (iframe.contentWindow.AudioContext || iframe.contentWindow.webkitAudioContext)();
+                        const wasPlaying = tab.isPlayingAudio;
+                        tab.isPlayingAudio = audioContext.state === 'running';
+                        if (wasPlaying !== tab.isPlayingAudio) {
+                            renderTabs();
+                        }
+                    }
+                } catch (e2) {
+                    // Still can't access, ignore
+                }
+            }
+        }
+
+        function createIframe(tab) {
+            const existingIframe = document.querySelector(`iframe[data-tab-id="${tab.id}"]`);
+            if (existingIframe) existingIframe.remove();
+
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('data-tab-id', tab.id);
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.display = tab.isActive ? 'block' : 'none';
+
+            iframe.src = formatUrl(tab.url);
+
+            iframe.addEventListener('load', () => {
+                try {
+                    setTimeout(() => {
+                        try {
+                            const iframeTitle = iframe.contentDocument?.title;
+                            if (iframeTitle) {
+                                updateTabTitle(tab.id, iframeTitle);
+                            }
+
+                            const faviconLink = iframe.contentDocument?.querySelector('link[rel="icon"]') || 
+                                iframe.contentDocument?.querySelector('link[rel="shortcut icon"]');
+                            if (faviconLink) {
+                                const faviconUrl = new URL(faviconLink.href, iframe.src).href;
+                                updateTabFavicon(tab.id, faviconUrl);
+                            } else {
+                                try {
+                                    const urlObj = new URL(extractUrl(iframe.src));
+                                    const domain = urlObj.hostname;
+                                    if (domain) {
+                                        const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+                                        updateTabFavicon(tab.id, faviconUrl);
+                                    }
+                                } catch (e) {
+                                    console.log("Could not determine favicon");
+                                }
+                            }
+                        } catch (e) {
+                            try {
+                                const urlObj = new URL(extractUrl(iframe.src));
+                                const domain = urlObj.hostname;
+                                if (domain) {
+                                    const faviconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+                                    updateTabFavicon(tab.id, faviconUrl);
+                                }
+                            } catch (e2) {
+                                console.log("Could not determine favicon");
+                            }
+                        }
+
+                        // Start monitoring audio
+                        const audioCheckInterval = setInterval(() => {
+                            checkAudioInIframe(tab, iframe);
+                        }, 1000);
+
+                        // Clear interval when iframe is removed
+                        const observer = new MutationObserver((mutations) => {
+                            mutations.forEach((mutation) => {
+                                mutation.removedNodes.forEach((node) => {
+                                    if (node === iframe) {
+                                        clearInterval(audioCheckInterval);
+                                        observer.disconnect();
+                                    }
+                                });
+                            });
+                        });
+                        observer.observe(document.getElementById('frames-container'), { childList: true });
+
+                    }, 1000);
+                } catch (e) {
+                    console.log("Could not access iframe content due to same-origin policy");
+                }
+            });
+
+            document.getElementById('frames-container').appendChild(iframe);
+        }
+
+        function formatUrl(url) {
+            // Check if it's an OS route - load directly without proxy
+            if (url.startsWith('/OS/') || url === 'brave.html') {
+                return url;
+            }
+
+            // Check if it's already a proxied URL
+            if (url.startsWith('/active/embed.html?url=')) {
+                return url;
+            }
+
+            // For searches (no dots or protocol) - use proxy with search
+            if (!url.includes('.') && !url.includes('://')) {
+                return `/active/embed.html?url=https://duckduckgo.com/?q=${encodeURIComponent(url)}`;
+            }
+
+            // For external domains - use proxy
+            if (url.startsWith('http://') || url.startsWith('https://')) {
+                return `/active/embed.html?url=${encodeURIComponent(url)}`;
+            }
+
+            // For domain-like strings without protocol - use proxy with https
+            return `/active/embed.html?url=https://${encodeURIComponent(url)}`;
+        }
+
+        function extractUrl(formattedUrl) {
+            // If it's an OS route or brave.html, return as-is
+            if (formattedUrl.startsWith('/OS/') || formattedUrl === 'brave.html') {
+                return formattedUrl;
+            }
+
+            try {
+                if (formattedUrl.startsWith('/active/embed.html?url=')) {
+                    const urlParam = new URLSearchParams(formattedUrl.split('?')[1]).get('url');
+                    return decodeURIComponent(urlParam || formattedUrl);
+                }
+                return formattedUrl;
+            } catch (e) {
+                return formattedUrl;
+            }
+        }
+
+        function updateTabTitle(tabId, title) {
+            const tab = state.tabs.find(tab => tab.id === tabId);
+            if (tab) {
+                tab.title = title || 'New Tab';
+                renderTabs();
+            }
+        }
+
+        function updateTabFavicon(tabId, favicon) {
+            const tab = state.tabs.find(tab => tab.id === tabId);
+            if (tab) {
+                tab.favicon = favicon;
+                renderTabs();
+            }
+        }
+
+        function updateTabUrl(tabId, url) {
+            const tab = state.tabs.find(tab => tab.id === tabId);
+            if (tab) {
+                tab.url = url;
+            }
+        }
+
+        function navigateToUrl(url) {
+            if (!url) return;
+
+            const activeTab = state.tabs.find(tab => tab.id === state.activeTabId);
+            if (!activeTab) return;
+
+            activeTab.url = url;
+
+            const iframe = document.querySelector(`iframe[data-tab-id="${activeTab.id}"]`);
+            if (iframe) {
+                iframe.src = formatUrl(url);
+            }
+
+            updateUrlBar(url);
+            updateBookmarkStar();
+        }
+
+        function updateUrlBar(url) {
+            const urlInput = document.getElementById('url-input');
+            urlInput.value = extractUrl(url);
+
+            const urlIcon = document.getElementById('url-icon');
+            const extractedUrl = extractUrl(url);
+
+            if (extractedUrl.startsWith('https://')) {
+                urlIcon.setAttribute('data-lucide', 'lock');
+            } else if (extractedUrl.startsWith('/OS/') || extractedUrl === 'brave.html') {
+                urlIcon.setAttribute('data-lucide', 'home');
+            } else {
+                urlIcon.setAttribute('data-lucide', 'globe');
+            }
+            lucide.createIcons();
+        }
+
+        function toggleBookmark() {
+            const activeTab = state.tabs.find(tab => tab.id === state.activeTabId);
+            if (!activeTab) return;
+
+            const url = extractUrl(activeTab.url);
+            const existingBookmark = state.bookmarks.find(bookmark => bookmark.url === url);
+
+            if (existingBookmark) {
+                state.bookmarks = state.bookmarks.filter(bookmark => bookmark.url !== url);
+            } else {
+                state.bookmarks.push({
+                    id: state.nextBookmarkId++,
+                    title: activeTab.title,
+                    url: url,
+                    favicon: activeTab.favicon
+                });
+            }
+
+            renderBookmarks();
+            updateBookmarkStar();
+            saveBookmarks();
+        }
+
+        function updateBookmarkStar() {
+            const activeTab = state.tabs.find(tab => tab.id === state.activeTabId);
+            if (!activeTab) return;
+
+            const bookmarkBtn = document.getElementById('bookmark-btn');
+            const url = extractUrl(activeTab.url);
+            const isBookmarked = state.bookmarks.some(bookmark => bookmark.url === url);
+
+            if (isBookmarked) {
+                bookmarkBtn.innerHTML = '<i data-lucide="star" class="w-4 h-4 fill-current"></i>';
+                bookmarkBtn.classList.add('active');
+                bookmarkBtn.style.color = 'var(--brave-accent)';
+            } else {
+                bookmarkBtn.innerHTML = '<i data-lucide="star" class="w-4 h-4"></i>';
+                bookmarkBtn.classList.remove('active');
+                bookmarkBtn.style.color = 'var(--brave-text-dim)';
+            }
+            lucide.createIcons();
+        }
+
+        function renderTabs() {
+            const tabsContainer = document.getElementById('tabs-container');
+            tabsContainer.innerHTML = '';
+
+            state.tabs.forEach(tab => {
+                const tabElement = document.createElement('div');
+                tabElement.className = `tab flex items-center px-3 py-1 mr-1 ${tab.isActive ? 'active' : ''}`;
+                tabElement.setAttribute('data-tab-id', tab.id);
+
+                const favicon = document.createElement('div');
+                favicon.className = 'mr-2 flex-shrink-0';
+                
+                if (tab.isPlayingAudio) {
+                    favicon.innerHTML = '<i data-lucide="volume-2" class="w-4 h-4 audio-indicator"></i>';
+                } else if (tab.favicon) {
+                    favicon.innerHTML = `<img src="${tab.favicon}" alt="" width="16" height="16">`;
+                } else {
+                    favicon.innerHTML = `<div class="favicon-placeholder"></div>`;
+                }
+
+                const title = document.createElement('div');
+                title.className = 'flex-grow truncate text-xs';
+                title.textContent = tab.title;
+
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'close-tab ml-2 flex-shrink-0 text-[#565f89] hover:text-[#a9b1d6]';
+                closeBtn.innerHTML = '<i data-lucide="x" class="w-3 h-3"></i>';
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    closeTab(tab.id);
+                });
+
+                tabElement.appendChild(favicon);
+                tabElement.appendChild(title);
+                tabElement.appendChild(closeBtn);
+
+                tabElement.addEventListener('click', () => {
+                    switchTab(tab.id);
+                });
+
+                tabElement.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    showContextMenu(e.clientX, e.clientY, 'tab', tab.id);
+                });
+
+                let clickCount = 0;
+                let clickTimer = null;
+
+                tabElement.addEventListener('click', () => {
+                    clickCount++;
+
+                    if (clickCount === 1) {
+                        clickTimer = setTimeout(() => {
+                            clickCount = 0;
+                        }, 400);
+                    }
+
+                    if (clickCount === 3) {
+                        clearTimeout(clickTimer);
+                        clickCount = 0;
+                        closeTab(tab.id);
+                    }
+                });
+
+                tabsContainer.appendChild(tabElement);
+            });
+
+            lucide.createIcons();
+        }
+
+        function renderBookmarks() {
+            const bookmarkBar = document.getElementById('bookmark-bar');
+            bookmarkBar.innerHTML = '';
+
+            state.bookmarks.forEach(bookmark => {
+                const bookmarkElement = document.createElement('div');
+                bookmarkElement.className = 'bookmark flex items-center px-2 py-0.5 mx-0.5 rounded cursor-pointer';
+                bookmarkElement.setAttribute('data-bookmark-id', bookmark.id);
+
+                const favicon = document.createElement('div');
+                favicon.className = 'mr-1.5 flex-shrink-0';
+                if (bookmark.favicon) {
+                    favicon.innerHTML = `<img src="${bookmark.favicon}" alt="" width="16" height="16">`;
+                } else {
+                    favicon.innerHTML = `<div class="favicon-placeholder w-3 h-3"></div>`;
+                }
+
+                const title = document.createElement('div');
+                title.className = 'truncate max-w-[120px]';
+                title.textContent = bookmark.title;
+
+                bookmarkElement.appendChild(favicon);
+                bookmarkElement.appendChild(title);
+
+                bookmarkElement.addEventListener('click', () => {
+                    navigateToUrl(bookmark.url);
+                });
+
+                bookmarkElement.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    showContextMenu(e.clientX, e.clientY, 'bookmark', bookmark.id);
+                });
+
+                bookmarkBar.appendChild(bookmarkElement);
+            });
+        }
+
+        function showContextMenu(x, y, type, id) {
+            const contextMenu = document.getElementById('context-menu');
+
+            contextMenu.style.left = `${x}px`;
+            contextMenu.style.top = `${y}px`;
+
+            state.contextMenuTarget = { type, id };
+
+            if (type === 'tab') {
+                document.getElementById('ctx-closetab').style.display = 'flex';
+                document.getElementById('ctx-bookmark').style.display = 'flex';
+            } else if (type === 'bookmark') {
+                document.getElementById('ctx-closetab').style.display = 'none';
+                document.getElementById('ctx-bookmark').style.display = 'none';
+            } else {
+                document.getElementById('ctx-closetab').style.display = 'none';
+                document.getElementById('ctx-bookmark').style.display = 'flex';
+            }
+
+            contextMenu.classList.add('active');
+
+            const activeTab = state.tabs.find(tab => tab.id === state.activeTabId);
+            if (activeTab) {
+                const url = extractUrl(activeTab.url);
+                const isBookmarked = state.bookmarks.some(bookmark => bookmark.url === url);
+
+                const bookmarkItem = document.getElementById('ctx-bookmark');
+                if (isBookmarked) {
+                    bookmarkItem.querySelector('span').textContent = 'Remove bookmark';
+                } else {
+                    bookmarkItem.querySelector('span').textContent = 'Bookmark this page';
+                }
+            }
+        }
+
+        function hideContextMenu() {
+            const contextMenu = document.getElementById('context-menu');
+            contextMenu.classList.remove('active');
+            state.contextMenuTarget = null;
+        }
+
+        function handleContextMenuAction(action) {
+            const target = state.contextMenuTarget;
+
+            if (!target) return;
+
+            switch (action) {
+                case 'back':
+                    const backIframe = document.querySelector(`iframe[data-tab-id="${state.activeTabId}"]`);
+                    if (backIframe && backIframe.contentWindow) {
+                        try {
+                            backIframe.contentWindow.history.back();
+                        } catch (e) {
+                            console.log('Cannot navigate back due to cross-origin restrictions');
+                        }
+                    }
+                    break;
+                case 'forward':
+                    const forwardIframe = document.querySelector(`iframe[data-tab-id="${state.activeTabId}"]`);
+                    if (forwardIframe && forwardIframe.contentWindow) {
+                        try {
+                            forwardIframe.contentWindow.history.forward();
+                        } catch (e) {
+                            console.log('Cannot navigate forward due to cross-origin restrictions');
+                        }
+                    }
+                    break;
+                case 'reload':
+                    const iframe = document.querySelector(`iframe[data-tab-id="${state.activeTabId}"]`);
+                    if (iframe) {
+                        const currentSrc = iframe.src;
+                        iframe.src = '';
+                        setTimeout(() => {
+                            iframe.src = currentSrc;
+                        }, 10);
+                    }
+                    break;
+                case 'bookmark':
+                    toggleBookmark();
+                    break;
+                case 'newtab':
+                    createNewTab();
+                    break;
+                case 'closetab':
+                    if (target.type === 'tab') {
+                        closeTab(target.id);
+                    } else {
+                        // If right-clicked on page, close current tab
+                        closeTab(state.activeTabId);
+                    }
+                    break;
+            }
+
+            hideContextMenu();
+        }
+
+        function initBrowser() {
+            document.getElementById('new-tab-btn').addEventListener('click', createNewTab);
+
+            document.getElementById('refresh-btn').addEventListener('click', () => {
+                const iframe = document.querySelector(`iframe[data-tab-id="${state.activeTabId}"]`);
+                if (iframe) iframe.contentWindow.location.reload();
+            });
+
+            document.getElementById('bookmark-btn').addEventListener('click', toggleBookmark);
+
+            const urlInput = document.getElementById('url-input');
+            urlInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    navigateToUrl(urlInput.value);
+                }
+            });
+
+            document.getElementById('ctx-back').addEventListener('click', () => handleContextMenuAction('back'));
+            document.getElementById('ctx-forward').addEventListener('click', () => handleContextMenuAction('forward'));
+            document.getElementById('ctx-reload').addEventListener('click', () => handleContextMenuAction('reload'));
+            document.getElementById('ctx-bookmark').addEventListener('click', () => handleContextMenuAction('bookmark'));
+            document.getElementById('ctx-newtab').addEventListener('click', () => handleContextMenuAction('newtab'));
+            document.getElementById('ctx-closetab').addEventListener('click', () => handleContextMenuAction('closetab'));
+
+            document.addEventListener('click', () => {
+                hideContextMenu();
+            });
+
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                showContextMenu(e.clientX, e.clientY, 'page');
+            });
+
+            loadSavedBookmarks();
+        }
+
+        document.addEventListener('DOMContentLoaded', initBrowser);
+    </script>
+</body>
+</html>
