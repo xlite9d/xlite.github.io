@@ -29,7 +29,6 @@ body {
     position: relative;
 }
 
-/* Shake animation for selected wallpapers */
 @keyframes shake {
     0% { transform: translateX(0); }
     25% { transform: translateX(-5px); }
@@ -42,7 +41,6 @@ body {
     animation: shake 0.5s ease-in-out infinite;
 }
 
-/* Delete confirmation bar */
 .delete-confirmation {
     position: fixed;
     bottom: -60px;
@@ -85,12 +83,10 @@ body {
     filter: drop-shadow(0 0 5px rgba(255, 51, 51, 0.7));
 }
 
-/* Selected wallpaper style */
 .bg-option.selected-for-deletion {
     border: 2px solid #ff3333;
 }
 
-/* Add styles for animated wallpapers */
 body[data-wallpaper-type="animated"] {
     background-size: cover;
     background-position: center;
@@ -197,7 +193,6 @@ body[data-wallpaper-type="animated"] {
     background-color: #4b69a9;
 }
 
-/* Settings Icon */
 .settings-icon {
     position: fixed;
     bottom: 20px;
@@ -225,7 +220,6 @@ body[data-wallpaper-type="animated"] {
     fill: #ffffff;
 }
 
-/* Settings Panel */
 .settings-panel {
     position: fixed;
     right: -350px;
@@ -277,7 +271,6 @@ body[data-wallpaper-type="animated"] {
     margin-bottom: 25px;
 }
 
-/* Add more margin to custom wallpaper section */
 #customWallpapersSection {
     margin-top: 40px;
 }
@@ -305,7 +298,6 @@ body[data-wallpaper-type="animated"] {
     position: relative;
 }
 
-/* Add indicator for animated wallpapers */
 .bg-option.animated::after {
     content: "GIF";
     position: absolute;
@@ -333,7 +325,6 @@ body[data-wallpaper-type="animated"] {
     object-fit: cover;
 }
 
-/* Add Upload Button Styles */
 .bg-upload {
     display: flex;
     align-items: center;
@@ -354,7 +345,6 @@ body[data-wallpaper-type="animated"] {
     opacity: 0.7;
 }
 
-/* Upload Modal Styles */
 .upload-modal {
     position: fixed;
     top: 50%;
@@ -486,9 +476,125 @@ body[data-wallpaper-type="animated"] {
 .overlay.open {
     display: block;
 }
+
+    .slide-zone {
+      width: 100vw;
+      margin-top: 20px;
+    }
+
+    .slide-track {
+      display: flex;
+      gap: 20px;
+      width: fit-content;
+      animation: slide 15s linear infinite;
+      transition: animation-play-state 0.3s ease;
+    }
+
+    .slide-track.paused {
+      animation-play-state: paused;
+    }
+
+    .banger {
+      flex: 0 0 320px;
+      background: #000;
+      border-radius: 20px;
+      padding: 20px;
+      color: #fff;
+      border: 2px solid transparent;
+      transition: border 0.3s, box-shadow 0.3s, opacity 0.3s, filter 0.3s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      will-change: box-shadow, filter, opacity;
+    }
+
+    .banger.hovered {
+      opacity: 1;
+      filter: none;
+      border-color: white;
+      box-shadow:
+        0 0 30px rgba(255,255,255,0.3),
+        0 0 60px rgba(255,255,255,0.2),
+        0 0 100px rgba(255,255,255,0.1);
+      z-index: 2;
+    }
+
+    .banger.dimmed {
+      opacity: 0.2;
+      filter: blur(1px);
+    }
+
+    .m8 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #333;
+    }
+
+    .handle {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .say {
+      font-size: 0.95rem;
+      color: #ccc;
+      line-height: 1.4;
+    }
+
+    @keyframes slide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
 </style>
 </head>
 <body>
+
+<div class="slide-zone">
+  <div class="slide-track">
+    <div class="banger">
+      <div class="m8"><img class="avatar" src="https://cdn-icons-png.flaticon.com/512/1998/1998610.png" /><div class="handle">@gamer01</div></div>
+      <div class="say">VPlaza is the GOAT. 100+ unblocked games and the proxy is lightning fast.</div>
+    </div>
+    <div class="banger">
+      <div class="m8"><img class="avatar" src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" /><div class="handle">@studentlife</div></div>
+      <div class="say">Used VPlaza at school, no cap it's the smoothest and fastest site out there.</div>
+    </div>
+    <div class="banger">
+      <div class="m8"><img class="avatar" src="https://cdn-icons-png.flaticon.com/512/3256/3256013.png" /><div class="handle">@vpchamp</div></div>
+      <div class="say">Insane selection of games, and no lag thanks to the built-in proxy. 10/10.</div>
+    </div>
+    <div class="banger">
+      <div class="m8"><img class="avatar" src="https://i.pravatar.cc/40?u=devv" /><div class="handle">@devv</div></div>
+      <div class="say">I play on VPlaza every day. No downloads, no blocks, just vibes.</div>
+    </div>
+    <div class="banger">
+      <div class="m8"><img class="avatar" src="https://cdn-icons-png.flaticon.com/512/1998/1998610.png" /><div class="handle">@gamer01</div></div>
+      <div class="say">VPlaza is the GOAT. 100+ unblocked games and the proxy is lightning fast.</div>
+    </div>
+    <div class="banger">
+      <div class="m8"><img class="avatar" src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png" /><div class="handle">@studentlife</div></div>
+      <div class="say">Used VPlaza at school, no cap it's the smoothest and fastest site out there.</div>
+    </div>
+    <div class="banger">
+      <div class="m8"><img class="avatar" src="https://cdn-icons-png.flaticon.com/512/3256/3256013.png" /><div class="handle">@vpchamp</div></div>
+      <div class="say">Insane selection of games, and no lag thanks to the built-in proxy. 10/10.</div>
+    </div>
+    <div class="banger">
+      <div class="m8"><img class="avatar" src="https://i.pravatar.cc/40?u=devv" /><div class="handle">@devv</div></div>
+      <div class="say">I play on VPlaza every day. No downloads, no blocks, just vibes.</div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
     <div class="search-container">
         <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -579,17 +685,14 @@ body[data-wallpaper-type="animated"] {
             <div class="bg-option" data-bg="images/creep.png" onclick="selectBackground(this)">
                 <img src="images/creep.png" alt="Background Option">
             </div>
-            <!-- Add Upload Wallpaper Button -->
             <div class="bg-option bg-upload" onclick="openUploadModal()">
                 <span class="plus-icon">+</span>
             </div>
         </div>
 
-        <!-- Custom Wallpapers Section -->
         <div class="settings-section" id="customWallpapersSection" style="display: none;">
             <h3>YOUR WALLPAPERS</h3>
             <div class="custom-wallpapers" id="customWallpapers">
-                <!-- Custom wallpapers will be loaded here -->
             </div>
         </div>
     </div>
@@ -597,7 +700,6 @@ body[data-wallpaper-type="animated"] {
 
 <div class="overlay" id="overlay" onclick="closeSettingsPanel()"></div>
 
-<!-- Delete confirmation bar -->
 <div class="delete-confirmation" id="deleteConfirmation">
     <button class="delete-button" id="deleteButton" onclick="deleteSelectedWallpapers()">
         <ion-icon name="trash" role="img" class="md hydrated"></ion-icon>
@@ -605,7 +707,6 @@ body[data-wallpaper-type="animated"] {
     </button>
 </div>
 
-<!-- Upload Modal -->
 <div class="upload-modal" id="uploadModal">
     <div class="upload-header">
         <h3>Add Wallpaper</h3>
@@ -622,7 +723,6 @@ body[data-wallpaper-type="animated"] {
             <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.gif,.svg,image/jpeg,image/png,image/gif,image/svg+xml" style="display: none;" onchange="handleFileSelect(event)">
         </div>
         <div id="selectedImagesContainer" class="images-grid">
-            <!-- Selected images will appear here -->
         </div>
     </div>
 </div>
@@ -661,7 +761,6 @@ window.addEventListener('DOMContentLoaded', function() {
     if (savedBg) {
         document.body.style.backgroundImage = `url('${savedBg}')`;
 
-        // Set animated attribute if needed
         if (isAnimated) {
             document.body.setAttribute('data-wallpaper-type', 'animated');
         } else {
@@ -678,12 +777,10 @@ window.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // If not a preset background, check if it's a custom one
         if (!foundPreset) {
             const customWallpapers = getCustomWallpapers();
             customWallpapers.forEach(wallpaper => {
                 if (wallpaper.dataUrl === savedBg) {
-                    // It's a custom background
                     displayCustomWallpapers();
                 }
             });
@@ -696,7 +793,6 @@ window.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Load custom wallpapers
     displayCustomWallpapers();
 });
 
@@ -726,14 +822,12 @@ function selectBackground(element) {
 
     document.body.style.backgroundImage = `url('${bgUrl}')`;
 
-    // Remove animated wallpaper attribute since preset wallpapers are not animated
     document.body.removeAttribute('data-wallpaper-type');
 
     localStorage.setItem('backgroundImage', bgUrl);
     localStorage.setItem('isAnimatedWallpaper', false);
 }
 
-// Functions for wallpaper upload and custom wallpapers
 function openUploadModal() {
     const uploadModal = document.getElementById('uploadModal');
     uploadModal.classList.add('open');
@@ -742,8 +836,6 @@ function openUploadModal() {
 function closeUploadModal() {
     const uploadModal = document.getElementById('uploadModal');
     uploadModal.classList.remove('open');
-
-    // Clear selected images
     document.getElementById('selectedImagesContainer').innerHTML = '';
     document.getElementById('fileInput').value = '';
 }
@@ -753,17 +845,15 @@ function handleFileSelect(event) {
 
     if (files && files.length > 0) {
         const selectedImagesContainer = document.getElementById('selectedImagesContainer');
-        selectedImagesContainer.innerHTML = ''; // Clear previous selections
+        selectedImagesContainer.innerHTML = '';
 
         Array.from(files).forEach(file => {
-            // Accept all image types including SVG, PNG, JPG, JPEG, and GIF
             if (file.type.startsWith('image/')) {
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
                     const imageDataUrl = e.target.result;
 
-                    // Create image preview element
                     const imageDiv = document.createElement('div');
                     imageDiv.className = 'image-item';
                     imageDiv.onclick = function() {
@@ -785,13 +875,10 @@ function handleFileSelect(event) {
 }
 
 function saveCustomWallpaper(dataUrl, filename) {
-    // Get existing custom wallpapers
     const customWallpapers = getCustomWallpapers();
 
-    // Check if it's a GIF
     const isGif = filename.toLowerCase().endsWith('.gif') || dataUrl.includes('data:image/gif');
 
-    // Add new wallpaper
     const newWallpaper = {
         id: Date.now().toString(),
         dataUrl: dataUrl,
@@ -801,13 +888,10 @@ function saveCustomWallpaper(dataUrl, filename) {
 
     customWallpapers.push(newWallpaper);
 
-    // Save to localStorage
     localStorage.setItem('customWallpapers', JSON.stringify(customWallpapers));
 
-    // Set as current wallpaper
     document.body.style.backgroundImage = `url('${dataUrl}')`;
 
-    // Add data attribute for animated wallpapers
     if (isGif) {
         document.body.setAttribute('data-wallpaper-type', 'animated');
     } else {
@@ -817,13 +901,10 @@ function saveCustomWallpaper(dataUrl, filename) {
     localStorage.setItem('backgroundImage', dataUrl);
     localStorage.setItem('isAnimatedWallpaper', isGif);
 
-    // Update UI
     displayCustomWallpapers();
 
-    // Close the upload modal
     closeUploadModal();
 
-    // Remove selection from preset wallpapers
     const bgOptions = document.querySelectorAll('.bg-option');
     bgOptions.forEach(option => option.classList.remove('selected'));
 }
@@ -838,19 +919,15 @@ function displayCustomWallpapers() {
     const customWallpapersContainer = document.getElementById('customWallpapers');
     const customWallpapersSection = document.getElementById('customWallpapersSection');
 
-    // Clear current wallpapers
     customWallpapersContainer.innerHTML = '';
 
     if (customWallpapers.length > 0) {
-        // Show the section
         customWallpapersSection.style.display = 'block';
 
-        // Add each wallpaper
         customWallpapers.forEach(wallpaper => {
             const wallpaperDiv = document.createElement('div');
             wallpaperDiv.className = 'bg-option';
 
-            // Add animated class for GIFs
             if (wallpaper.isAnimated) {
                 wallpaperDiv.classList.add('animated');
             }
@@ -858,7 +935,6 @@ function displayCustomWallpapers() {
             wallpaperDiv.dataset.bg = wallpaper.dataUrl;
             wallpaperDiv.dataset.id = wallpaper.id;
 
-            // Setup long press handling
             let pressTimer;
             let isLongPress = false;
 
@@ -866,17 +942,15 @@ function displayCustomWallpapers() {
                 pressTimer = setTimeout(() => {
                     isLongPress = true;
                     handleLongPress(this);
-                }, 2000); // 2 seconds for long press
+                }, 2000);
             });
 
             wallpaperDiv.addEventListener('mouseup', function(e) {
                 clearTimeout(pressTimer);
                 if (!isLongPress) {
                     if (document.querySelector('.shake-animation')) {
-                        // If deletion mode is active, clicking selects for deletion
                         toggleDeleteSelection(this);
                     } else {
-                        // Regular click selects background
                         selectCustomBackground(this);
                     }
                 }
@@ -892,17 +966,15 @@ function displayCustomWallpapers() {
                 pressTimer = setTimeout(() => {
                     isLongPress = true;
                     handleLongPress(this);
-                }, 2000); // 2 seconds for long press
+                }, 2000); 
             });
 
             wallpaperDiv.addEventListener('touchend', function(e) {
                 clearTimeout(pressTimer);
                 if (!isLongPress) {
                     if (document.querySelector('.shake-animation')) {
-                        // If deletion mode is active, tapping selects for deletion
                         toggleDeleteSelection(this);
                     } else {
-                        // Regular tap selects background
                         selectCustomBackground(this);
                     }
                 }
@@ -921,24 +993,19 @@ function displayCustomWallpapers() {
             wallpaperDiv.appendChild(img);
             customWallpapersContainer.appendChild(wallpaperDiv);
 
-            // Check if this is the currently selected wallpaper
             const currentBg = localStorage.getItem('backgroundImage');
             if (currentBg === wallpaper.dataUrl) {
                 wallpaperDiv.classList.add('selected');
             }
         });
     } else {
-        // Hide the section if no custom wallpapers
         customWallpapersSection.style.display = 'none';
     }
 }
 
 function handleLongPress(element) {
-    // Start deletion mode
     element.classList.add('shake-animation');
     element.classList.add('selected-for-deletion');
-
-    // Show delete confirmation bar
     document.getElementById('deleteConfirmation').classList.add('active');
 }
 
@@ -947,7 +1014,6 @@ function toggleDeleteSelection(element) {
         element.classList.remove('selected-for-deletion');
         element.classList.remove('shake-animation');
 
-        // If no items are selected, hide the delete bar
         if (!document.querySelector('.selected-for-deletion')) {
             exitDeletionMode();
         }
@@ -958,14 +1024,12 @@ function toggleDeleteSelection(element) {
 }
 
 function exitDeletionMode() {
-    // Remove shake effect and selection from all items
     const items = document.querySelectorAll('.bg-option');
     items.forEach(item => {
         item.classList.remove('shake-animation');
         item.classList.remove('selected-for-deletion');
     });
 
-    // Hide delete confirmation bar
     document.getElementById('deleteConfirmation').classList.remove('active');
 }
 
@@ -973,37 +1037,29 @@ function deleteSelectedWallpapers() {
     const selectedItems = document.querySelectorAll('.selected-for-deletion');
     if (selectedItems.length === 0) return;
 
-    // Get current list of wallpapers
     let customWallpapers = getCustomWallpapers();
     const currentBg = localStorage.getItem('backgroundImage');
     let backgroundWasDeleted = false;
 
-    // Remove the selected wallpapers
     selectedItems.forEach(item => {
         const id = item.dataset.id;
         const bgUrl = item.dataset.bg;
 
-        // Check if we're deleting the current background
         if (currentBg === bgUrl) {
             backgroundWasDeleted = true;
         }
 
-        // Remove from the array
         customWallpapers = customWallpapers.filter(wp => wp.id !== id);
     });
 
-    // Save the updated list
     localStorage.setItem('customWallpapers', JSON.stringify(customWallpapers));
 
-    // If we deleted all custom wallpapers or the current background was deleted
     if (customWallpapers.length === 0 || backgroundWasDeleted) {
-        // Set default background
         document.body.style.backgroundImage = "url('images/microsoft.png')";
         localStorage.setItem('backgroundImage', 'images/microsoft.png');
         localStorage.setItem('isAnimatedWallpaper', false);
         document.body.removeAttribute('data-wallpaper-type');
 
-        // Update selected state in the UI
         const defaultOption = document.querySelector('.bg-option[data-bg="images/microsoft.png"]');
         if (defaultOption) {
             const allOptions = document.querySelectorAll('.bg-option');
@@ -1012,32 +1068,25 @@ function deleteSelectedWallpapers() {
         }
     }
 
-    // Exit deletion mode
     exitDeletionMode();
 
-    // Refresh the custom wallpapers display
     displayCustomWallpapers();
 }
 
 function selectCustomBackground(element) {
-    // Exit deletion mode if active
     if (document.querySelector('.shake-animation')) {
         exitDeletionMode();
         return;
     }
 
-    // Remove selected class from all bg options
     const allOptions = document.querySelectorAll('.bg-option');
     allOptions.forEach(option => option.classList.remove('selected'));
 
-    // Add selected class to clicked element
     element.classList.add('selected');
 
-    // Set background
     const bgUrl = element.dataset.bg;
     document.body.style.backgroundImage = `url('${bgUrl}')`;
 
-    // Check if this is an animated wallpaper
     const customWallpapers = getCustomWallpapers();
     const selectedWallpaper = customWallpapers.find(wp => wp.dataUrl === bgUrl);
 
@@ -1049,9 +1098,36 @@ function selectCustomBackground(element) {
         localStorage.setItem('isAnimatedWallpaper', false);
     }
 
-    // Save to localStorage
     localStorage.setItem('backgroundImage', bgUrl);
 }
+</script>
+
+<script>
+  const bangers = document.querySelectorAll('.banger');
+  const track = document.querySelector('.slide-track');
+
+  bangers.forEach(banger => {
+    banger.addEventListener('mouseenter', () => {
+      track.classList.add('paused');
+      bangers.forEach(el => {
+        if (el === banger) {
+          el.classList.add('hovered');
+          el.classList.remove('dimmed');
+        } else {
+          el.classList.add('dimmed');
+          el.classList.remove('hovered');
+        }
+      });
+    });
+
+    banger.addEventListener('mouseleave', () => {
+      track.classList.remove('paused');
+      bangers.forEach(el => {
+        el.classList.remove('hovered');
+        el.classList.remove('dimmed');
+      });
+    });
+  });
 </script>
 </body>
 </html>
