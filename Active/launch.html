@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loading - Embed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Preconnect and load font fast -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap" rel="stylesheet" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #141414;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    #loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #c8c8c8;
+      font-size: 1rem;
+    }
+
+    #site-iframe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+      background: #fff;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">Handling your request...</div>
+  <iframe id="site-iframe" allow="fullscreen; autoplay; encrypted-media; picture-in-picture; microphone; camera; geolocation; clipboard-write; payment; midi; vr; document-domain; pointer-lock"></iframe>
+
+  <script>
+    const iframe = document.getElementById("site-iframe");
+    const loader = document.getElementById("loader");
+    const url = localStorage.getItem("url");
+
+    if (url) {
+      iframe.src = url;
+      iframe.onload = () => {
+        iframe.style.display = "block";
+        loader.remove(); // fully remove from DOM
+        document.title = "Embeddr v1";
+      };
+    } else {
+      loader.textContent = "Missing embed URL.";
+    }
+  </script>
+</body>
+</html>
