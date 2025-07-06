@@ -83,18 +83,28 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 30px;
+    padding: 14px 36px;
     z-index: 9999999;
 
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 50px;
-    backdrop-filter: blur(18px) saturate(160%) contrast(130%) brightness(120%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%) contrast(130%) brightness(120%);
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.01)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 40px;
+    backdrop-filter: blur(24px) saturate(180%) contrast(140%) brightness(130%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%) contrast(140%) brightness(130%);
 
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    transition: all 0.3s ease;
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.25),
+        inset 0 0 0.5px rgba(255, 255, 255, 0.4),
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
+
+    transition: all 0.35s ease;
+    overflow: hidden;
 }
+
 
 .head-left {
     display: flex;
