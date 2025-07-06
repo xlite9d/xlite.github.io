@@ -189,53 +189,101 @@ header {
     background: linear-gradient(
         145deg,
         rgba(255, 255, 255, 0.05),
-        rgba(255, 255, 255, 0.01)
+        rgba(255, 255, 255, 0.015)
     );
-    border-radius: 32px;
+    border-radius: 36px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(18px) saturate(180%) contrast(140%) brightness(125%);
-    -webkit-backdrop-filter: blur(18px) saturate(180%) contrast(140%) brightness(125%);
+    backdrop-filter: blur(22px) saturate(180%) contrast(135%) brightness(120%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%) contrast(135%) brightness(120%);
 
     box-shadow:
-        0 4px 20px rgba(0, 0, 0, 0.25),
-        inset 0 0 0.5px rgba(255, 255, 255, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.03);
-
-    transition: 
-        transform 0.4s ease, 
-        box-shadow 0.3s ease, 
-        background-color 0.5s ease, 
-        border 0.3s ease;
+        0 8px 24px rgba(0, 0, 0, 0.3),
+        inset 0 0 0.75px rgba(255, 255, 255, 0.25),
+        inset 0 0 24px rgba(255, 255, 255, 0.02);
 
     cursor: pointer;
     position: relative;
-    z-index: auto;
+    z-index: 1;
+
+    will-change: transform;
+    transform-style: preserve-3d;
+
+    animation: idle-breathe 16s ease-in-out infinite;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.4s ease,
+        background-color 0.5s ease;
+}
+
+.game-card:hover {
+    transform: scale(1.02);
+    box-shadow:
+        0 10px 36px rgba(0, 0, 0, 0.4),
+        inset 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 0 36px rgba(255, 255, 255, 0.03);
+    background-color: rgba(255, 255, 255, 0.035);
+
+    animation-play-state: paused;
 }
 
 .game-card::before {
     content: "";
     position: absolute;
-    top: 0;
+    top: -50%;
     left: -50%;
     width: 200%;
-    height: 100%;
+    height: 200%;
     background: radial-gradient(
-        ellipse at 60% 40%,
-        rgba(255, 255, 255, 0.12),
-        transparent 60%
+        circle at 50% 50%,
+        rgba(255, 255, 255, 0.06),
+        transparent 70%
     );
-    mix-blend-mode: soft-light;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
+    opacity: 0.7;
+    filter: blur(24px);
+    animation: float-glow 5.5s ease-in-out infinite alternate;
 }
 
-.game-card:hover {
-    transform: scale(1.03);
-    box-shadow:
-        0 8px 30px rgba(0, 0, 0, 0.35),
-        inset 0 0 1px rgba(255, 255, 255, 0.35),
-        inset 0 0 40px rgba(255, 255, 255, 0.04);
+.game-card::after {
+    content: "";
+    position: absolute;
+    inset: -20px;
+    border-radius: 40px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.02), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(12px);
+    animation: aura-move 12s ease-in-out infinite;
+}
+
+@keyframes idle-breathe {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.008);
+    }
+}
+
+@keyframes float-glow {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(4px, -3px) scale(1.01);
+    }
+}
+
+@keyframes aura-move {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(-8px, 5px) scale(1.01);
+    }
 }
 
 
