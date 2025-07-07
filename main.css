@@ -139,15 +139,34 @@ header {
 }
 
 .search-bar {
-    padding: 10px 15px;
-    border: 1px solid rgba(149, 221, 255, 0.2);
+    padding: 10px 20px;
     border-radius: 400px;
-    background-color: rgba(174, 0, 0, 0.288);
-    color: rgb(255, 255, 255);
     font-family: 'Inter', sans-serif;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    color: #fff;
+
+    background: rgba(174, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 8px 32px rgba(31, 38, 135, 0.37),
+        inset 0 0 12px rgba(255, 255, 255, 0.15),
+        0 0 30px rgba(174, 0, 0, 0.3);
+
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    
+    transition: all 0.35s ease;
 }
+
+.search-bar:focus {
+    outline: none;
+    background: rgba(174, 0, 0, 0.12);
+    box-shadow:
+        0 8px 40px rgba(174, 0, 0, 0.6),
+        inset 0 0 16px rgba(255, 255, 255, 0.2),
+        0 0 60px rgba(255, 255, 255, 0.2);
+}
+
 
 .search-bar::placeholder {
     color: rgba(255, 255, 255, 0.7);
