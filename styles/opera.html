@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -713,23 +715,32 @@
     rgba(255, 255, 255, 0.015)
   );
   border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 17px;
 
   backdrop-filter: blur(25px) saturate(200%) brightness(130%) contrast(140%);
   -webkit-backdrop-filter: blur(25px) saturate(200%) brightness(130%) contrast(140%);
-
-  border-radius: 17px;
-  color: #fff;
-  font-family: 'Poppins', sans-serif;
 
   box-shadow:
     0 8px 24px rgba(0, 0, 0, 0.3),
     inset 0 0 0.5px rgba(255, 255, 255, 0.25),
     inset 0 0 20px rgba(255, 255, 255, 0.05);
 
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.history-panel.active {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: auto;
 }
+
 
 
         .history-panel.visible {
