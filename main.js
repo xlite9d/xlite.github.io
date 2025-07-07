@@ -2,6 +2,51 @@ const searchInput = document.querySelector('.search-bar');
 const gameCards = document.querySelectorAll('.game-card');
 const noResultsMessage = document.getElementById('noResultsMessage');
 
+function filterGames(query) {
+  let resultsFound = false;
+  const lowerQuery = query.toLowerCase();
+
+  gameCards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    if (text.includes(lowerQuery)) {
+      card.style.display = '';
+      resultsFound = true;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  noResultsMessage.style.display = resultsFound ? 'none' : 'flex';
+}
+
+function updateHash(query) {
+  if (query) {
+    history.replaceState(null, '', `#search=${encodeURIComponent(query)}`);
+  } else {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+}
+
+searchInput.addEventListener('input', function() {
+  const query = this.value.trim();
+  filterGames(query);
+  updateHash(query);
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const searchTerm = params.get('search');
+
+  if (searchTerm) {
+    const decoded = decodeURIComponent(searchTerm);
+    searchInput.value = decoded;
+    filterGames(decoded);
+  } else {
+    filterGames('');
+  }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
   const cursorFollow = document.createElement('div');
   cursorFollow.classList.add('cursor-follow');
