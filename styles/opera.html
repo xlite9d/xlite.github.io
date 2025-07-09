@@ -1672,16 +1672,16 @@ iframe {
             <div class="sidebar-divider"></div>
 
             <div class="sidebar-section">
-                <div class="sidebar-icon" data-url="/active/embed.html?url=https://www.twitch.tv">
+                <div class="sidebar-icon" data-url="/Active/embed.html?url=https://www.twitch.tv">
                     <ion-icon name="logo-twitch"></ion-icon>
                 </div>
                 <div class="sidebar-icon" data-url="/gamepagev1">
                     <ion-icon name="game-controller"></ion-icon>
                 </div>
-                <div class="sidebar-icon" data-url="/active/embed.html?url=https://play.geforcenow.com">
+                <div class="sidebar-icon" data-url="/Active/embed.html?url=https://play.geforcenow.com">
                     <ion-icon name="happy-outline"></ion-icon>
                 </div>
-                <div class="sidebar-icon" data-url="/active/embed.html?url=https://vplaza.org/tutorials">
+                <div class="sidebar-icon" data-url="/Active/embed.html?url=https://vplaza.org/tutorials">
                     <ion-icon name="eye-outline"></ion-icon>
                 </div>
                 <div class="sidebar-icon" id="clouds-btn">
@@ -1720,7 +1720,7 @@ iframe {
                     <ion-icon name="alarm"></ion-icon>
                 </div>
 
-                <div class="sidebar-icon" data-url="/active/embed.html?url=https://discord.com/widget?id=1378160304344535060&theme=dark">
+                <div class="sidebar-icon" data-url="/Active/embed.html?url=https://discord.com/widget?id=1378160304344535060&theme=dark">
                     <ion-icon name="logo-dropbox"></ion-icon>
                 </div>
             </div>
@@ -2160,7 +2160,7 @@ iframe {
                         </div>
                         <div class="tab-preview-title">${title}</div>
                     </div>
-                    <div class="tab-preview-url">${url.startsWith('/active/embed.html?url=') ? decodeURIComponent(url.split('/active/embed.html?url=')[1]) : url}</div>
+                    <div class="tab-preview-url">${url.startsWith('/Active/embed.html?url=') ? decodeURIComponent(url.split('/Active/embed.html?url=')[1]) : url}</div>
                     <div class="tab-preview-content">
                         <div class="tab-preview-thumbnail" id="preview-thumbnail-${tabId}">
                             <span>Loading preview...</span>
@@ -2248,8 +2248,8 @@ iframe {
             if (url.startsWith('/landin')) return '';
             try {
 
-                if (url.includes('/active/embed.html?url=')) {
-                    const embedUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+                if (url.includes('/Active/embed.html?url=')) {
+                    const embedUrl = decodeURIComponent(url.split('/Active/embed.html?url=')[1]);
                     if (embedUrl.includes('://')) {
                         return new URL(embedUrl).hostname;
                     } else if (embedUrl.includes('.')) {
@@ -2318,8 +2318,8 @@ iframe {
         function updateUrlBar(url) {
             if (url.toLowerCase().includes('vplaza') || url.toLowerCase().includes('file://')) {
                 urlBar.value = '(hidden)';
-            } else if (url.includes('/active/embed.html?url=')) {
-                const actualUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+            } else if (url.includes('/Active/embed.html?url=')) {
+                const actualUrl = decodeURIComponent(url.split('/Active/embed.html?url=')[1]);
                 urlBar.value = actualUrl;
             } else {
                 urlBar.value = url;
@@ -2470,9 +2470,9 @@ iframe {
                 if (internalPaths.some(path => url === path || url.startsWith(path + '/'))) {
                     processedUrl = url;
                 } else if (!url.includes('://') && !url.startsWith('/')) {
-                    processedUrl = `/active/embed.html?url=https://${url}`;
+                    processedUrl = `/Active/embed.html?url=https://${url}`;
                 } else if (!url.startsWith('/')) {
-                    processedUrl = `/active/embed.html?url=${encodeURIComponent(url)}`;
+                    processedUrl = `/Active/embed.html?url=${encodeURIComponent(url)}`;
                 }
 
                 if (currentIp === "japan") {
@@ -2560,8 +2560,8 @@ iframe {
                     const previewUrl = topTab.querySelector('.tab-preview-url');
                     if (previewUrl) {
                         let displayUrl = frameUrl;
-                        if (frameUrl.includes('/active/embed.html?url=')) {
-                            displayUrl = decodeURIComponent(frameUrl.split('/active/embed.html?url=')[1]);
+                        if (frameUrl.includes('/Active/embed.html?url=')) {
+                            displayUrl = decodeURIComponent(frameUrl.split('/Active/embed.html?url=')[1]);
                         }
                         previewUrl.textContent = displayUrl;
                     }
@@ -2595,8 +2595,8 @@ iframe {
             const timeString = `${hours}:${minutes}`;
 
             let displayUrl = url;
-            if (url.includes('/active/embed.html?url=')) {
-                displayUrl = decodeURIComponent(url.split('/active/embed.html?url=')[1]);
+            if (url.includes('/Active/embed.html?url=')) {
+                displayUrl = decodeURIComponent(url.split('/Active/embed.html?url=')[1]);
             }
 
             browserHistory.unshift({
@@ -2622,7 +2622,7 @@ iframe {
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type) {
                 if (event.data.type === 'search') {
-                    const searchUrl = `/active/embed.html?url=https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
+                    const searchUrl = `/Active/embed.html?url=https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`;
                     const activeFrame = document.getElementById(`frame-${activeTabId}`);
                     if (activeFrame) {
                         loadingBarContainer.style.display = 'block';
@@ -2640,7 +2640,7 @@ iframe {
                         storeHistoryItem(`https://www.google.com/search?q=${encodeURIComponent(event.data.query)}`);
                     }
                 } else if (event.data.type === 'navigate') {
-                    const url = `/active/embed.html?url=${encodeURIComponent(event.data.url)}`;
+                    const url = `/Active/embed.html?url=${encodeURIComponent(event.data.url)}`;
 
                     const activeFrame = document.getElementById(`frame-${activeTabId}`);
                     if (activeFrame) {
@@ -2859,8 +2859,8 @@ iframe {
                 let pageTitle = 'Loading...';
                 let pageUrl = frame.src || '';
 
-                if (pageUrl.includes('/active/embed.html?url=')) {
-                    pageUrl = decodeURIComponent(pageUrl.split('/active/embed.html?url=')[1]);
+                if (pageUrl.includes('/Active/embed.html?url=')) {
+                    pageUrl = decodeURIComponent(pageUrl.split('/Active/embed.html?url=')[1]);
                 }
 
                 let faviconUrl = '';
