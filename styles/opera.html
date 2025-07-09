@@ -2049,28 +2049,6 @@ iframe {
         const historyPanel = document.getElementById('history-panel');
         const historyItemsContainer = document.getElementById('history-items-container');
 
-               if (localStorage.getItem('browserHistory')) {
-            try {
-                browserHistory = JSON.parse(localStorage.getItem('browserHistory'));
-            } catch (e) {
-                console.error('Error loading history:', e);
-                browserHistory = [];
-            }
-        }
-
-        const sidebar = document.getElementById('sidebar');
-        const sidebarTabsSection = document.getElementById('sidebar-tabs-section');
-        const topTabsBar = document.getElementById('tabs-top-bar');
-        const contentArea = document.getElementById('content-area');
-        const urlBar = document.getElementById('url-bar');
-        const newTabBtnTop = document.getElementById('new-tab-btn-top');
-        const backBtn = document.getElementById('back-btn');
-        const forwardBtn = document.getElementById('forward-btn');
-        const reloadBtn = document.getElementById('reload-btn');
-        const loadingBarContainer = document.getElementById('loading-bar-container');
-        const historyPanel = document.getElementById('history-panel');
-        const historyItemsContainer = document.getElementById('history-items-container');
-
         const historyBtn = document.getElementById('history-btn');
         historyBtn.addEventListener('click', function(e) {
             e.preventDefault();
@@ -2117,6 +2095,7 @@ iframe {
                 historyItemsContainer.appendChild(historyItem);
             });
         }
+
         const initialTabs = [
             { id: 0, title: 'New Tab', url: '/landin', icon: 'fa-home' }
         ];
