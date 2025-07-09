@@ -2452,11 +2452,9 @@ iframe {
 
         function reloadPage() {
             const activeFrame = document.getElementById(`frame-${activeTabId}`);
-            if (activeFrame) {
-                loadingBarContainer.style.display = 'block';
-                activeFrame.dataset.isLoading = 'true';
-                activeFrame.src = activeFrame.src;
-            }
+            loadingBarContainer.style.display = 'block';
+            activeFrame.dataset.isLoading = 'true';
+            activeFrame.contentWindow.location.reload();
         }
 
         function navigateToUrl(url) {
