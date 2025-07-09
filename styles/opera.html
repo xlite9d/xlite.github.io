@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2025,128 +2026,76 @@ iframe {
             }
         });
 
-let browserHistory = [];
+        let browserHistory = [];
 
-try {
-    const storedHistory = localStorage.getItem('browserHistory');
-    if (storedHistory) {
-        browserHistory = JSON.parse(storedHistory);
-        if (!Array.isArray(browserHistory)) browserHistory = [];
-    }
-} catch (e) {
-    console.error('Error loading browser history:', e);
-    browserHistory = [];
-}
+        if (localStorage.getItem('browserHistory')) {
+            try {
+                browserHistory = JSON.parse(localStorage.getItem('browserHistory'));
+            } catch (e) {
+                console.error('Error loading history:', e);
+                browserHistory = [];
+            }
+        }
 
-// DOM references
-const DOM = {
-    sidebar: document.getElementById('sidebar'),
-    sidebarTabsSection: document.getElementById('sidebar-tabs-section'),
-    topTabsBar: document.getElementById('tabs-top-bar'),
-    contentArea: document.getElementById('content-area'),
-    urlBar: document.getElementById('url-bar'),
-    newTabBtnTop: document.getElementById('new-tab-btn-top'),
-    backBtn: document.getElementById('back-btn'),
-    forwardBtn: document.getElementById('forward-btn'),
-    reloadBtn: document.getElementById('reload-btn'),
-    loadingBarContainer: document.getElementById('loading-bar-container'),
-    historyPanel: document.getElementById('history-panel'),
-    historyItemsContainer: document.getElementById('history-items-container'),
-    historyBtn: document.getElementById('history-btn')
-};
+        const sidebar = document.getElementById('sidebar');
+        const sidebarTabsSection = document.getElementById('sidebar-tabs-section');
+        const topTabsBar = document.getElementById('tabs-top-bar');
+        const contentArea = document.getElementById('content-area');
+        const urlBar = document.getElementById('url-bar');
+        const newTabBtnTop = document.getElementById('new-tab-btn-top');
+        const backBtn = document.getElementById('back-btn');
+        const forwardBtn = document.getElementById('forward-btn');
+        const reloadBtn = document.getElementById('reload-btn');
+        const loadingBarContainer = document.getElementById('loading-bar-container');
+        const historyPanel = document.getElementById('history-panel');
+        const historyItemsContainer = document.getElementById('history-items-container');
 
-const allIframes = document.querySelectorAll('iframe');
+        const historyBtn = document.getElementById('history-btn');
+        historyBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
 
-// Apply layering styles dynamically
-Object.assign(DOM.historyPanel.style, {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    width: '100vw',
-    height: '100vh',
-    background: 'rgba(20, 20, 20, 0.75)',
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
-    zIndex: '999999',
-    display: 'none',
-    opacity: '0',
-    transition: 'opacity 0.2s ease',
-    overflowY: 'auto',
-    pointerEvents: 'auto',
-    padding: '20px',
-    boxSizing: 'border-box'
-});
+            if (historyPanel.style.display === 'block') {
+                historyPanel.classList.remove('visible');
+                setTimeout(() => {
+                    historyPanel.style.display = 'none';
+                }, 200);
+            } else {
+                historyPanel.style.display = 'block';
 
-// Show/hide history panel
-DOM.historyBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const panel = DOM.historyPanel;
-    const isVisible = panel.classList.contains('visible');
-
-    if (isVisible) {
-        panel.classList.remove('visible');
-        panel.style.opacity = '0';
-        setTimeout(() => {
-            panel.style.display = 'none';
-            allIframes.forEach(iframe => iframe.style.pointerEvents = 'auto');
-        }, 200);
-    } else {
-        panel.style.display = 'block';
-        void panel.offsetWidth;
-        panel.classList.add('visible');
-        panel.style.opacity = '1';
-        allIframes.forEach(iframe => iframe.style.pointerEvents = 'none');
-        populateHistoryPanel();
-    }
-});
-
-function populateHistoryPanel() {
-    const container = DOM.historyItemsContainer;
-    container.innerHTML = '';
-
-    if (browserHistory.length === 0) {
-        const emptyMessage = document.createElement('div');
-        emptyMessage.className = 'history-item empty';
-        emptyMessage.textContent = 'No browsing history yet.';
-        emptyMessage.style.color = '#ccc';
-        emptyMessage.style.fontSize = '1rem';
-        container.appendChild(emptyMessage);
-        return;
-    }
-
-    browserHistory.forEach(item => {
-        const historyItem = document.createElement('div');
-        historyItem.className = 'history-item';
-        historyItem.style.display = 'flex';
-        historyItem.style.alignItems = 'center';
-        historyItem.style.gap = '10px';
-        historyItem.style.padding = '10px 15px';
-        historyItem.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
-        historyItem.style.cursor = 'pointer';
-        historyItem.style.color = 'white';
-
-        historyItem.innerHTML = `
-            <div style="color:#999;"><i class="fa-solid fa-link"></i></div>
-            <div style="flex:0 0 100px; font-size: 0.9rem; color: #aaa;">${item.time}</div>
-            <div style="flex:1; font-weight: 500;">${item.displayUrl}</div>
-        `;
-
-        historyItem.addEventListener('click', () => {
-            navigateToUrl(item.url);
-
-            DOM.historyPanel.classList.remove('visible');
-            DOM.historyPanel.style.opacity = '0';
-            setTimeout(() => {
-                DOM.historyPanel.style.display = 'none';
-                allIframes.forEach(iframe => iframe.style.pointerEvents = 'auto');
-            }, 200);
+                historyPanel.offsetWidth;
+                historyPanel.classList.add('visible');
+            }
         });
 
-        container.appendChild(historyItem);
-    });
-}
+        function populateHistoryPanel() {
+            historyItemsContainer.innerHTML = '';
+
+            browserHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+
+                historyItem.innerHTML = `
+                    <div class="history-item-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <div class="history-item-time">${item.time}</div>
+                    <div class="history-item-url">${item.displayUrl}</div>
+                `;
+
+                historyItem.addEventListener('click', function() {
+                    const clickedUrl = item.url;
+                    navigateToUrl(clickedUrl);
+
+                    historyPanel.classList.remove('visible');
+                    setTimeout(() => {
+                        historyPanel.style.display = 'none';
+                    }, 200);
+                });
+
+                historyItemsContainer.appendChild(historyItem);
+            });
+        }
 
         const initialTabs = [
             { id: 0, title: 'New Tab', url: '/landin', icon: 'fa-home' }
