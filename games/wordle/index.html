@@ -1,115 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-    <meta name="description" content="Guess the word in 6 tries. Play daily, hourly and infinite modes." />
-    <meta name="theme-color" content="#6aaa64" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="img/logo_32x32.png" type="image/x-icon" />
-    <link rel="shortcut icon" href="img/logo_32x32.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="img/logo_192x192.png" />
-    <link rel="stylesheet" href="global.css" />
-    <link rel="stylesheet" href="build/bundle.css" />
-    <script type="text/javascript" src="https://yalogames.github.io/cloak.js"></script>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+  <meta name="description" content="Guess the word in 6 tries. Play daily, hourly and infinite modes." />
+  <meta name="theme-color" content="#6aaa64" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="img/logo_32x32.png" type="image/x-icon" />
+  <link rel="shortcut icon" href="img/logo_32x32.png" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="img/logo_192x192.png" />
+  <link rel="stylesheet" href="global.css" />
+  <link rel="stylesheet" href="build/bundle.css" />
+  <script type="text/javascript" src="https://yalogames.github.io/cloak.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+  </script>
+  <script defer src="build/bundle.js"></script>
+  <title>Wordle | Vplaza :p</title>
 
-    <script>
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("sw.js");
-      }
-    </script>
-    <script defer src="build/bundle.js"></script>
-    <title>Wordle | Vplaza :p</title>
+  <style>
+    #helperBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #6aaa64;
+      box-shadow: 0 0 20px #6aaa6499;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 10000;
+      transition: 0.3s ease;
+    }
 
-    <style>
-      #helperBtn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: #32cd32;
-        box-shadow: 0 0 20px #32cd32aa;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        z-index: 10000;
-        transition: 0.3s ease;
-      }
+    #helperBtn:hover {
+      transform: scale(1.1);
+    }
 
-      #helperBtn:hover {
-        transform: scale(1.1);
-      }
+    #helperBtn svg {
+      width: 28px;
+      height: 28px;
+      fill: white;
+    }
 
-      #helperBtn svg {
-        width: 28px;
-        height: 28px;
-        fill: white;
-      }
+    #counter {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 22px;
+      height: 22px;
+      background: red;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+    }
 
-      #counter {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        width: 22px;
-        height: 22px;
-        background: red;
-        color: white;
-        font-size: 14px;
-        font-weight: bold;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10001;
-      }
+    #helperBox {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 90vw;
+      max-width: 600px;
+      height: 400px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      z-index: 9999;
+      display: none;
+    }
 
-      #helperBox {
-        position: fixed;
-        bottom: 90px;
-        right: 20px;
-        width: 90vw;
-        max-width: 600px;
-        height: 400px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-        overflow: hidden;
-        z-index: 9999;
-        display: none;
-      }
+    #helperBox iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
 
-      #helperBox iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-      }
-    </style>
-  </head>
+<body>
+  <div id="helperBtn">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+      <path d="M96 464a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-16H96v16zM192 0C86 0 0 86 0 192c0 70.7 36.7 131.8 96 166.4V384a32 32 0 0 0 32 32h128a32 32 0 0 0 32-32v-25.6c59.3-34.6 96-95.7 96-166.4C384 86 298 0 192 0z"/>
+    </svg>
+    <div id="counter">3</div>
+  </div>
 
-  <body>
-    <div id="helperBtn">
-      <!-- Lightbulb SVG icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
-        <path d="M96 464a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-16H96v16zM192 0C86 0 0 86 0 192c0 70.7 36.7 131.8 96 166.4V384a32 32 0 0 0 32 32h128a32 32 0 0 0 32-32v-25.6c59.3-34.6 96-95.7 96-166.4C384 86 298 0 192 0z" />
-      </svg>
-      <div id="counter">3</div>
-    </div>
+  <div id="helperBox">
+    <iframe src="/active/embed.html?url=https://vineethtrv.github.io/wordle-helper/"></iframe>
+  </div>
 
-    <div id="helperBox">
-      <iframe src="/active/embed.html?url=https://vineethtrv.github.io/wordle-helper/"></iframe>
-    </div>
-
-    <script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
       const btn = document.getElementById("helperBtn");
       const counterEl = document.getElementById("counter");
       const box = document.getElementById("helperBox");
 
       let uses = parseInt(localStorage.getItem("wordleHelperUses"));
       if (isNaN(uses)) uses = 3;
-      counterEl.textContent = uses;
 
       function updateUI() {
         counterEl.textContent = uses;
@@ -121,20 +119,21 @@
         }
       }
 
+      updateUI();
+
       btn.addEventListener("click", () => {
-        if (uses > 0) {
-          const isOpen = box.style.display === "block";
-          if (!isOpen) {
-            box.style.display = "block";
-            uses--;
-            updateUI();
-          } else {
-            box.style.display = "none";
-          }
+        if (uses <= 0) return;
+
+        const isOpen = box.style.display === "block";
+        if (isOpen) {
+          box.style.display = "none";
+        } else {
+          box.style.display = "block";
+          uses--;
+          updateUI();
         }
       });
-
-      updateUI();
-    </script>
-  </body>
+    });
+  </script>
+</body>
 </html>
