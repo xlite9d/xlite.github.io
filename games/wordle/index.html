@@ -14,13 +14,13 @@
     <script type="text/javascript" src="https://yalogames.github.io/cloak.js"></script>
 
     <script>
-      // PWA Service worker
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("sw.js");
       }
     </script>
     <script defer src="build/bundle.js"></script>
     <title>Wordle | Vplaza :p</title>
+
     <style>
       #helperBtn {
         position: fixed;
@@ -29,37 +29,55 @@
         width: 60px;
         height: 60px;
         border-radius: 50%;
-        background: limegreen;
-        box-shadow: 0 0 20px limegreen;
+        background: #32cd32;
+        box-shadow: 0 0 20px #32cd32aa;
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        z-index: 999999;
-        transition: transform 0.2s;
+        z-index: 10000;
+        transition: 0.3s ease;
       }
 
       #helperBtn:hover {
         transform: scale(1.1);
       }
 
-      #helperBtn i {
+      #helperBtn svg {
+        width: 28px;
+        height: 28px;
+        fill: white;
+      }
+
+      #counter {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        width: 22px;
+        height: 22px;
+        background: red;
         color: white;
-        font-size: 24px;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10001;
       }
 
       #helperBox {
         position: fixed;
-        bottom: 100px;
+        bottom: 90px;
         right: 20px;
-        width: 80vw;
+        width: 90vw;
         max-width: 600px;
         height: 400px;
         background: white;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-        border-radius: 10px;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
         overflow: hidden;
-        z-index: 999998;
+        z-index: 9999;
         display: none;
       }
 
@@ -68,63 +86,55 @@
         height: 100%;
         border: none;
       }
-
-      #counter {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 24px;
-        height: 24px;
-        background: red;
-        color: white;
-        font-weight: bold;
-        font-size: 14px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 999999;
-      }
     </style>
   </head>
 
   <body>
     <div id="helperBtn">
-      <i class="fas fa-lightbulb"></i>
+      <!-- Lightbulb SVG icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+        <path d="M96 464a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-16H96v16zM192 0C86 0 0 86 0 192c0 70.7 36.7 131.8 96 166.4V384a32 32 0 0 0 32 32h128a32 32 0 0 0 32-32v-25.6c59.3-34.6 96-95.7 96-166.4C384 86 298 0 192 0z" />
+      </svg>
       <div id="counter">3</div>
     </div>
+
     <div id="helperBox">
-      <iframe src="/active/embed.html?url=https://www.thewordfinder.com/wordle-solver/#"></iframe>
+      <iframe src="/active/embed.html?url=https://vineethtrv.github.io/wordle-helper/"></iframe>
     </div>
 
-    <script src="https://kit.fontawesome.com/a2e0fc2f5a.js" crossorigin="anonymous"></script>
     <script>
       const btn = document.getElementById("helperBtn");
-      const box = document.getElementById("helperBox");
       const counterEl = document.getElementById("counter");
+      const box = document.getElementById("helperBox");
 
-      let clicksLeft = parseInt(localStorage.getItem("wordleHelperClicks")) || 3;
-      counterEl.textContent = clicksLeft;
+      let uses = parseInt(localStorage.getItem("wordleHelperUses"));
+      if (isNaN(uses)) uses = 3;
+      counterEl.textContent = uses;
+
+      function updateUI() {
+        counterEl.textContent = uses;
+        localStorage.setItem("wordleHelperUses", uses);
+        if (uses <= 0) {
+          box.style.display = "none";
+          btn.style.opacity = 0.5;
+          btn.style.pointerEvents = "none";
+        }
+      }
 
       btn.addEventListener("click", () => {
-        if (clicksLeft > 0) {
-          box.style.display = box.style.display === "none" ? "block" : "none";
-          if (box.style.display === "block") {
-            clicksLeft--;
-            localStorage.setItem("wordleHelperClicks", clicksLeft);
-            counterEl.textContent = clicksLeft;
+        if (uses > 0) {
+          const isOpen = box.style.display === "block";
+          if (!isOpen) {
+            box.style.display = "block";
+            uses--;
+            updateUI();
+          } else {
+            box.style.display = "none";
           }
-        }
-        if (clicksLeft <= 0) {
-          btn.style.pointerEvents = "none";
-          btn.style.opacity = "0.5";
         }
       });
 
-      if (clicksLeft <= 0) {
-        btn.style.pointerEvents = "none";
-        btn.style.opacity = "0.5";
-      }
+      updateUI();
     </script>
   </body>
 </html>
