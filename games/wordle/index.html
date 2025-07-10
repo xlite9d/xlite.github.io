@@ -3,28 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
-  <meta name="description" content="Guess the word in 6 tries. Play daily, hourly and infinite modes." />
   <meta name="theme-color" content="#6aaa64" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="img/logo_32x32.png" type="image/x-icon" />
-  <link rel="shortcut icon" href="img/logo_32x32.png" type="image/x-icon" />
-  <link rel="apple-touch-icon" href="img/logo_192x192.png" />
+  <title>Wordle | Vplaza :p</title>
   <link rel="stylesheet" href="global.css" />
   <link rel="stylesheet" href="build/bundle.css" />
   <script type="text/javascript" src="https://yalogames.github.io/cloak.js"></script>
-  <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("sw.js");
-    }
-  </script>
   <script defer src="build/bundle.js"></script>
-  <title>Wordle | Vplaza :p</title>
 
   <style>
-    #helperBtn {
+    .circle-btn {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
       width: 60px;
       height: 60px;
       border-radius: 50%;
@@ -36,13 +24,13 @@
       transition: 0.3s ease;
     }
 
-    #helperBtn svg {
+    .circle-btn svg {
       width: 28px;
       height: 28px;
       fill: white;
     }
 
-    #counter {
+    .counter {
       position: absolute;
       top: -6px;
       right: -6px;
@@ -59,10 +47,8 @@
       z-index: 10001;
     }
 
-    #helperBox {
+    .helper-box {
       position: fixed;
-      bottom: 90px;
-      right: 20px;
       width: 90vw;
       max-width: 600px;
       height: 400px;
@@ -74,98 +60,110 @@
       display: none;
     }
 
-    #helperBox iframe {
+    .helper-box iframe {
       width: 100%;
       height: 100%;
       border: none;
     }
 
-    /* Brightness styles */
-    .uses-3 {
-      background: #6aaa64;
-      box-shadow: 0 0 20px #6aaa64aa;
+    /* Lightbulb button states */
+    #lightbulbBtn { bottom: 20px; right: 20px; }
+    #lightbulbBtn.uses-3 { background: #6aaa64; box-shadow: 0 0 20px #6aaa64aa; }
+    #lightbulbBtn.uses-2 { background: #5d9958; box-shadow: 0 0 10px #5d995866; }
+    #lightbulbBtn.uses-1 { background: #4c804a; box-shadow: 0 0 6px #4c804a55; }
+    #lightbulbBtn.uses-0 { background: #2d2d2d; box-shadow: none; }
+
+    #lightbulbBox { bottom: 90px; right: 20px; }
+
+    /* AI button */
+    #aiBtn {
+      bottom: 20px;
+      left: 20px;
+      background: #d12222;
+      box-shadow: 0 0 20px #d12222aa;
     }
 
-    .uses-2 {
-      background: #5d9958;
-      box-shadow: 0 0 10px #5d995866;
+    #aiBox {
+      bottom: 90px;
+      left: 20px;
     }
 
-    .uses-1 {
-      background: #4c804a;
-      box-shadow: 0 0 6px #4c804a55;
-    }
-
-    .uses-0 {
+    #aiBtn.uses-0 {
       background: #2d2d2d;
       box-shadow: none;
-      cursor: pointer;
     }
   </style>
 </head>
 
 <body>
-  <div id="helperBtn">
+  <!-- Lightbulb Helper -->
+  <div id="lightbulbBtn" class="circle-btn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
       <path d="M96 464a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-16H96v16zM192 0C86 0 0 86 0 192c0 70.7 36.7 131.8 96 166.4V384a32 32 0 0 0 32 32h128a32 32 0 0 0 32-32v-25.6c59.3-34.6 96-95.7 96-166.4C384 86 298 0 192 0z"/>
     </svg>
-    <div id="counter">3</div>
+    <div id="lightbulbCounter" class="counter">3</div>
+  </div>
+  <div id="lightbulbBox" class="helper-box">
+    <iframe src="/active/embed.html?url=https://vineethtrv.github.io/wordle-helper/"></iframe>
   </div>
 
-  <div id="helperBox">
-    <iframe src="/active/embed.html?url=https://vineethtrv.github.io/wordle-helper/"></iframe>
+  <!-- AI Helper -->
+  <div id="aiBtn" class="circle-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+      <path d="M320 0C263 0 208 21.8 165.2 60.5l-4.8 4.3C111.4 111 96 167.1 96 223.1c0 40.8 8.3 81.1 24.1 118.6L75 459.6c-5.7 11.3-1.1 25.1 10.2 30.7s25.1 1.1 30.7-10.2l44.6-88.2c37.3 24.4 80.4 38.1 124.6 38.1s87.3-13.7 124.6-38.1l44.6 88.2c5.7 11.3 19.5 15.9 30.7 10.2s15.9-19.5 10.2-30.7l-45.1-117.9C535.7 304.2 544 263.9 544 223.1c0-56-15.4-112.1-64.4-158.3l-4.8-4.3C432 21.8 377 0 320 0z"/>
+    </svg>
+    <div id="aiCounter" class="counter">2</div>
+  </div>
+  <div id="aiBox" class="helper-box">
+    <iframe src="/ai.html"></iframe>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const btn = document.getElementById("helperBtn");
-      const counterEl = document.getElementById("counter");
-      const box = document.getElementById("helperBox");
-      const PASSWORD = "vpl1azadevs";
+      function setupHelper(btnId, boxId, counterId, storageKey, maxUses, password) {
+        const btn = document.getElementById(btnId);
+        const box = document.getElementById(boxId);
+        const counter = document.getElementById(counterId);
 
-      let uses = parseInt(localStorage.getItem("wordleHelperUses"));
-      if (isNaN(uses)) uses = 3;
+        let uses = parseInt(localStorage.getItem(storageKey));
+        if (isNaN(uses)) uses = maxUses;
 
-      function applyStyle() {
-        btn.classList.remove("uses-0", "uses-1", "uses-2", "uses-3");
-        btn.classList.add(`uses-${uses}`);
-      }
-
-      function updateUI() {
-        counterEl.textContent = uses;
-        localStorage.setItem("wordleHelperUses", uses);
-        applyStyle();
-
-        if (uses <= 0) {
-          box.style.display = "none"; // force-close box
+        function updateUI() {
+          counter.textContent = uses;
+          localStorage.setItem(storageKey, uses);
+          btn.classList.remove("uses-0", "uses-1", "uses-2", "uses-3");
+          btn.classList.add(`uses-${uses}`);
+          if (uses <= 0) box.style.display = "none";
         }
-      }
 
-      updateUI();
+        updateUI();
 
-      btn.addEventListener("click", () => {
-        const isOpen = box.style.display === "block";
-
-        if (uses > 0) {
-          if (!isOpen) {
-            box.style.display = "block";
-            uses--;
-            updateUI();
+        btn.addEventListener("click", () => {
+          const isOpen = box.style.display === "block";
+          if (uses > 0) {
+            if (!isOpen) {
+              box.style.display = "block";
+              uses--;
+              updateUI();
+            } else {
+              box.style.display = "none";
+            }
           } else {
-            box.style.display = "none";
+            const input = prompt("You're out of uses! Enter developer password:");
+            if (input === password) {
+              uses = maxUses;
+              updateUI();
+              box.style.display = "block";
+              alert("Helper unlocked. You have " + maxUses + " more uses.");
+            } else if (input !== null) {
+              alert("Incorrect password.");
+            }
           }
-        } else {
-          const input = prompt("You're out of uses! Enter developer password:");
-          if (input === PASSWORD) {
-            uses = 3;
-            updateUI();
-            box.style.display = "block";
-            alert("Access restored. You have 3 new uses.");
-          } else if (input !== null) {
-            alert("Incorrect password.");
-          }
-        }
-      });
+        });
+      }
+
+      setupHelper("lightbulbBtn", "lightbulbBox", "lightbulbCounter", "wordleHelperUses", 3, "vpl1azadevs");
+      setupHelper("aiBtn", "aiBox", "aiCounter", "aiHelperUses", 2, "d3vz");
     });
   </script>
 </body>
