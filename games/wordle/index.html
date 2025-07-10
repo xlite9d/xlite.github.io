@@ -28,18 +28,12 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background: #6aaa64;
-      box-shadow: 0 0 20px #6aaa6499;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       z-index: 10000;
       transition: 0.3s ease;
-    }
-
-    #helperBtn:hover {
-      transform: scale(1.1);
     }
 
     #helperBtn svg {
@@ -85,6 +79,28 @@
       height: 100%;
       border: none;
     }
+
+    /* Brightness styles */
+    .uses-3 {
+      background: #6aaa64;
+      box-shadow: 0 0 20px #6aaa64aa;
+    }
+
+    .uses-2 {
+      background: #5d9958;
+      box-shadow: 0 0 10px #5d995866;
+    }
+
+    .uses-1 {
+      background: #4c804a;
+      box-shadow: 0 0 6px #4c804a55;
+    }
+
+    .uses-0 {
+      background: #2d2d2d;
+      box-shadow: none;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -110,9 +126,19 @@
       let uses = parseInt(localStorage.getItem("wordleHelperUses"));
       if (isNaN(uses)) uses = 3;
 
+      function applyStyle() {
+        btn.classList.remove("uses-0", "uses-1", "uses-2", "uses-3");
+        btn.classList.add(`uses-${uses}`);
+      }
+
       function updateUI() {
         counterEl.textContent = uses;
         localStorage.setItem("wordleHelperUses", uses);
+        applyStyle();
+
+        if (uses <= 0) {
+          box.style.display = "none"; // force-close box
+        }
       }
 
       updateUI();
@@ -129,13 +155,12 @@
             box.style.display = "none";
           }
         } else {
-          // If uses == 0 and they click, ask for password
           const input = prompt("You're out of uses! Enter developer password:");
           if (input === PASSWORD) {
             uses = 3;
             updateUI();
             box.style.display = "block";
-            alert("Helper unlocked. You have 3 more uses.");
+            alert("Access restored. You have 3 new uses.");
           } else if (input !== null) {
             alert("Incorrect password.");
           }
