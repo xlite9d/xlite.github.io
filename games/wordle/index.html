@@ -7,7 +7,9 @@
   <title>Wordle | Vplaza :p</title>
   <link rel="stylesheet" href="global.css" />
   <link rel="stylesheet" href="build/bundle.css" />
+  <script type="text/javascript" src="https://yalogames.github.io/cloak.js"></script>
   <script defer src="build/bundle.js"></script>
+
   <style>
     .circle-btn {
       position: fixed;
@@ -21,11 +23,13 @@
       z-index: 10000;
       transition: 0.3s ease;
     }
+
     .circle-btn svg {
       width: 28px;
       height: 28px;
       fill: white;
     }
+
     .counter {
       position: absolute;
       top: -6px;
@@ -42,6 +46,7 @@
       justify-content: center;
       z-index: 10001;
     }
+
     .helper-box {
       position: fixed;
       width: 90vw;
@@ -54,26 +59,42 @@
       z-index: 9999;
       display: none;
     }
+
     .helper-box iframe {
       width: 100%;
       height: 100%;
       border: none;
     }
+
     #lightbulbBtn { bottom: 20px; right: 20px; }
     #lightbulbBtn.uses-3 { background: #6aaa64; box-shadow: 0 0 20px #6aaa64aa; }
     #lightbulbBtn.uses-2 { background: #5d9958; box-shadow: 0 0 10px #5d995866; }
     #lightbulbBtn.uses-1 { background: #4c804a; box-shadow: 0 0 6px #4c804a55; }
     #lightbulbBtn.uses-0 { background: #2d2d2d; box-shadow: none; }
+
     #lightbulbBox { bottom: 90px; right: 20px; }
-    #aiBtn { bottom: 20px; left: 20px; background: #d12222; box-shadow: 0 0 20px #d12222aa; }
-    #aiBox { bottom: 90px; left: 20px; }
-    #aiBtn.uses-0 { background: #2d2d2d; box-shadow: none; }
+
+    #aiBtn {
+      bottom: 20px;
+      left: 20px;
+      background: #d12222;
+      box-shadow: 0 0 20px #d12222aa;
+    }
+
+    #aiBox {
+      bottom: 90px;
+      left: 20px;
+    }
+
+    #aiBtn.uses-0 {
+      background: #2d2d2d;
+      box-shadow: none;
+    }
   </style>
 </head>
-<body>
-  <input id="guessInput" placeholder="Guess here" />
-  <button onclick="submitGuess()">Submit</button>
 
+<body>
+  <!-- Lightbulb Helper -->
   <div id="lightbulbBtn" class="circle-btn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
       <path d="M96 464a16 16 0 0 0 16 16h160a16 16 0 0 0 16-16v-16H96v16zM192 0C86 0 0 86 0 192c0 70.7 36.7 131.8 96 166.4V384a32 32 0 0 0 32 32h128a32 32 0 0 0 32-32v-25.6c59.3-34.6 96-95.7 96-166.4C384 86 298 0 192 0z"/>
@@ -84,6 +105,7 @@
     <iframe src="/active/embed.html?url=https://vineethtrv.github.io/wordle-helper/"></iframe>
   </div>
 
+  <!-- AI Helper -->
   <div id="aiBtn" class="circle-btn">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
       <path d="M320 0C263 0 208 21.8 165.2 60.5l-4.8 4.3C111.4 111 96 167.1 96 223.1c0 40.8 8.3 81.1 24.1 118.6L75 459.6c-5.7 11.3-1.1 25.1 10.2 30.7s25.1 1.1 30.7-10.2l44.6-88.2c37.3 24.4 80.4 38.1 124.6 38.1s87.3-13.7 124.6-38.1l44.6 88.2c5.7 11.3 19.5 15.9 30.7 10.2s15.9-19.5 10.2-30.7l-45.1-117.9C535.7 304.2 544 263.9 544 223.1c0-56-15.4-112.1-64.4-158.3l-4.8-4.3C432 21.8 377 0 320 0z"/>
@@ -94,13 +116,6 @@
     <iframe src="helper.html"></iframe>
   </div>
 
-  <script>
-    function submitGuess() {
-      const guess = document.getElementById("guessInput").value;
-      if (window.VPlazaInputMonitor.handleUserInput(guess)) return;
-      alert("Guess submitted: " + guess);
-    }
-  </script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       function setupHelper(btnId, boxId, counterId, storageKey, maxUses, password) {
@@ -123,11 +138,6 @@
 
         btn.addEventListener("click", () => {
           const isOpen = box.style.display === "block";
-          if (window.VPlazaInputMonitor?.isBlocked?.()) {
-            alert("You're currently blocked from using helpers.");
-            box.style.display = "none";
-            return;
-          }
           if (uses > 0) {
             if (!isOpen) {
               box.style.display = "block";
@@ -152,75 +162,6 @@
 
       setupHelper("lightbulbBtn", "lightbulbBox", "lightbulbCounter", "wordleHelperUses", 3, "vpl1azadevs");
       setupHelper("aiBtn", "aiBox", "aiCounter", "aiHelperUses", 2, "d3vz");
-    });
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const BLOCK_KEY = "vplaza_block_until";
-      const VIOLATION_KEY = "vplaza_violation_count";
-      const MAX_VIOLATIONS = 7;
-      const BLOCK_HOURS = 5;
-      const BAD_WORDS = ["fuck", "shit", "bitch", "cunt", "nigger", "fag", "dick", "pussy"];
-
-      const warning = document.createElement("div");
-      warning.textContent = "⚠️ Inappropriate content detected. Continued misuse may result in a temporary block.";
-      Object.assign(warning.style, {
-        position: "fixed",
-        bottom: "0",
-        left: "0",
-        right: "0",
-        background: "rgba(255, 0, 0, 0.9)",
-        color: "white",
-        textAlign: "center",
-        padding: "12px",
-        fontWeight: "bold",
-        display: "none",
-        zIndex: "99999"
-      });
-      document.body.appendChild(warning);
-
-      function showWarning() {
-        warning.style.display = "block";
-        setTimeout(() => (warning.style.display = "none"), 4000);
-      }
-
-      function isBlocked() {
-        const blockUntil = localStorage.getItem(BLOCK_KEY);
-        return blockUntil && new Date().getTime() < parseInt(blockUntil);
-      }
-
-      function blockUser() {
-        const until = new Date().getTime() + BLOCK_HOURS * 60 * 60 * 1000;
-        localStorage.setItem(BLOCK_KEY, until);
-        document.querySelectorAll(".helper-box").forEach(el => (el.style.display = "none"));
-        alert("You have been blocked from accessing helpers for 5 hours due to repeated violations.");
-      }
-
-      function checkInappropriate(content) {
-        const lower = content.toLowerCase();
-        return BAD_WORDS.some(word => lower.includes(word));
-      }
-
-      function handleUserInput(input) {
-        if (isBlocked()) {
-          alert("You're blocked from using helpers for now. Try again later.");
-          document.querySelectorAll(".helper-box").forEach(el => (el.style.display = "none"));
-          return true;
-        }
-
-        if (checkInappropriate(input)) {
-          let count = parseInt(localStorage.getItem(VIOLATION_KEY)) || 0;
-          count++;
-          localStorage.setItem(VIOLATION_KEY, count);
-          showWarning();
-          if (count >= MAX_VIOLATIONS) blockUser();
-          return true;
-        }
-
-        return false;
-      }
-
-      window.VPlazaInputMonitor = { handleUserInput, isBlocked };
     });
   </script>
 </body>
