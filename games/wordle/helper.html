@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wordle AI</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: #1a1a1b;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a1a1b;
+      margin: 0 0 0.5rem 0;
+      letter-spacing: 0.01em;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      color: #787c7e;
+      margin: 0;
+    }
+    
+    .instructions {
+      background: #f6f7f8;
+      border: 1px solid #d3d6da;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      max-width: 500px;
+      text-align: center;
+    }
+    
+    .instructions p {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.9rem;
+      color: #1a1a1b;
+    }
+    
+    .instructions p:last-child {
+      margin-bottom: 0;
+    }
+    
+    .color-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+    }
+    
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+    }
+    
+    .legend-color.green { background: #6aaa64; }
+    .legend-color.yellow { background: #c9b458; }
+    .legend-color.gray { background: #787c7e; }
+    
+    .keyboard {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 2rem;
+      max-width: 500px;
+    }
+    
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .key {
+      min-width: 43px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      background: #d3d6da;
+      color: #1a1a1b;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      user-select: none;
+      cursor: pointer;
+      transition: all 0.1s ease;
+      border: none;
+      font-family: inherit;
+    }
+    
+    .key:hover {
+      background: #c3c7ca;
+    }
+    
+    .key.green { 
+      background: #6aaa64; 
+      color: white;
+    }
+    
+    .key.green:hover { 
+      background: #5a9a54; 
+    }
+    
+    .key.yellow { 
+      background: #c9b458; 
+      color: white;
+    }
+    
+    .key.yellow:hover { 
+      background: #b9a448; 
+    }
+    
+    .key.gray { 
+      background: #787c7e; 
+      color: white;
+    }
+    
+    .key.gray:hover { 
+      background: #686c6e; 
+    }
+    
+    .key.wide {
+      min-width: 65px;
+    }
+    
+    .key.send {
+      background: #6aaa64;
+      color: white;
+      min-width: 80px;
+    }
+    
+    .key.send:hover {
+      background: #5a9a54;
+    }
+    
+    .answer-section {
+      background: #ffffff;
+      border: 2px solid #d3d6da;
+      border-radius: 8px;
+      padding: 1.5rem;
+      min-height: 80px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .answer-label {
+      font-size: 0.9rem;
+      color: #787c7e;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    
+    .answer {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a1b;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    
+    .answer.thinking {
+      color: #787c7e;
+      font-size: 1rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+    
+    .answer.error {
+      color: #dc3545;
+      font-size: 1rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+    
+    /* Tablet and smaller screens */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+      
+      .title {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .instructions {
+        padding: 0.8rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .keyboard {
+        gap: 6px;
+        margin-bottom: 1.5rem;
+      }
+      
+      .keyboard-row {
+        gap: 4px;
+      }
+      
+      .key {
+        min-width: 38px;
+        height: 52px;
+        font-size: 0.8rem;
+      }
+      
+      .key.wide {
+        min-width: 58px;
+      }
+      
+      .key.send {
+        min-width: 70px;
+      }
+      
+      .answer-section {
+        padding: 1.2rem;
+        min-height: 70px;
+      }
+      
+      .answer {
+        font-size: 1.3rem;
+      }
+    }
+    
+    /* Mobile phones */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      
+      .title {
+        font-size: 1.8rem;
+      }
+      
+      .subtitle {
+        font-size: 0.85rem;
+      }
+      
+      .header {
+        margin-bottom: 1.5rem;
+      }
+      
+      .instructions {
+        padding: 0.7rem;
+        margin-bottom: 1.2rem;
+        font-size: 0.85rem;
+      }
+      
+      .instructions p {
+        font-size: 0.8rem;
+      }
+      
+      .color-legend {
+        gap: 0.7rem;
+        flex-wrap: wrap;
+      }
+      
+      .legend-item {
+        font-size: 0.7rem;
+      }
+      
+      .legend-color {
+        width: 14px;
+        height: 14px;
+      }
+      
+      .keyboard {
+        gap: 5px;
+        margin-bottom: 1.2rem;
+      }
+      
+      .keyboard-row {
+        gap: 3px;
+      }
+      
+      .key {
+        min-width: 32px;
+        height: 45px;
+        font-size: 0.75rem;
+      }
+      
+      .key.wide {
+        min-width: 50px;
+      }
+      
+      .key.send {
+        min-width: 60px;
+      }
+      
+      .answer-section {
+        padding: 1rem;
+        min-height: 60px;
+      }
+      
+      .answer-label {
+        font-size: 0.8rem;
+      }
+      
+      .answer {
+        font-size: 1.2rem;
+      }
+    }
+    
+    /* Small mobile / iframe */
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+        min-height: auto;
+      }
+      
+      .title {
+        font-size: 1.5rem;
+      }
+      
+      .subtitle {
+        font-size: 0.8rem;
+      }
+      
+      .header {
+        margin-bottom: 1rem;
+      }
+      
+      .instructions {
+        padding: 0.6rem;
+        margin-bottom: 1rem;
+      }
+      
+      .instructions p {
+        font-size: 0.75rem;
+      }
+      
+      .color-legend {
+        gap: 0.5rem;
+      }
+      
+      .legend-item {
+        font-size: 0.65rem;
+      }
+      
+      .legend-color {
+        width: 12px;
+        height: 12px;
+      }
+      
+      .keyboard {
+        gap: 4px;
+        margin-bottom: 1rem;
+      }
+      
+      .keyboard-row {
+        gap: 2px;
+      }
+      
+      .key {
+        min-width: 28px;
+        height: 40px;
+        font-size: 0.7rem;
+      }
+      
+      .key.wide {
+        min-width: 42px;
+      }
+      
+      .key.send {
+        min-width: 50px;
+      }
+      
+      .answer-section {
+        padding: 0.8rem;
+        min-height: 50px;
+      }
+      
+      .answer-label {
+        font-size: 0.75rem;
+      }
+      
+      .answer {
+        font-size: 1.1rem;
+      }
+    }
+    
+    /* Very small screens / tiny iframes */
+    @media (max-width: 360px) {
+      body {
+        padding: 5px;
+      }
+      
+      .title {
+        font-size: 1.3rem;
+      }
+      
+      .subtitle {
+        font-size: 0.75rem;
+      }
+      
+      .header {
+        margin-bottom: 0.8rem;
+      }
+      
+      .instructions {
+        padding: 0.5rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .instructions p {
+        font-size: 0.7rem;
+      }
+      
+      .color-legend {
+        gap: 0.3rem;
+        justify-content: space-around;
+      }
+      
+      .legend-item {
+        font-size: 0.6rem;
+        flex-direction: column;
+        gap: 0.1rem;
+      }
+      
+      .legend-color {
+        width: 10px;
+        height: 10px;
+      }
+      
+      .keyboard {
+        gap: 3px;
+        margin-bottom: 0.8rem;
+      }
+      
+      .keyboard-row {
+        gap: 1px;
+      }
+      
+      .key {
+        min-width: 24px;
+        height: 35px;
+        font-size: 0.65rem;
+      }
+      
+      .key.wide {
+        min-width: 36px;
+      }
+      
+      .key.send {
+        min-width: 42px;
+      }
+      
+      .answer-section {
+        padding: 0.6rem;
+        min-height: 45px;
+      }
+      
+      .answer-label {
+        font-size: 0.7rem;
+        margin-bottom: 0.3rem;
+      }
+      
+      .answer {
+        font-size: 1rem;
+      }
+    }
+    
+    /* Ultra small / embedded widget */
+    @media (max-width: 280px) {
+      body {
+        padding: 3px;
+      }
+      
+      .title {
+        font-size: 1.1rem;
+      }
+      
+      .subtitle {
+        display: none; /* Hide subtitle on ultra small screens */
+      }
+      
+      .header {
+        margin-bottom: 0.5rem;
+      }
+      
+      .instructions {
+        padding: 0.4rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .instructions p {
+        font-size: 0.65rem;
+      }
+      
+      .color-legend {
+        display: none; /* Hide legend on ultra small screens */
+      }
+      
+      .keyboard {
+        gap: 2px;
+        margin-bottom: 0.5rem;
+      }
+      
+      .keyboard-row {
+        gap: 1px;
+      }
+      
+      .key {
+        min-width: 20px;
+        height: 30px;
+        font-size: 0.6rem;
+      }
+      
+      .key.wide {
+        min-width: 30px;
+      }
+      
+      .key.send {
+        min-width: 35px;
+      }
+      
+      .answer-section {
+        padding: 0.5rem;
+        min-height: 40px;
+      }
+      
+      .answer-label {
+        font-size: 0.65rem;
+        margin-bottom: 0.2rem;
+      }
+      
+      .answer {
+        font-size: 0.9rem;
+      }
+    }
+    
+    /* Height-based media queries for short iframes */
+    @media (max-height: 600px) {
+      body {
+        justify-content: flex-start;
+        padding-top: 10px;
+      }
+      
+      .header {
+        margin-bottom: 1rem;
+      }
+      
+      .instructions {
+        margin-bottom: 1rem;
+      }
+      
+      .keyboard {
+        margin-bottom: 1rem;
+      }
+    }
+    
+    @media (max-height: 500px) {
+      .title {
+        font-size: 1.5rem;
+      }
+      
+      .subtitle {
+        font-size: 0.8rem;
+      }
+      
+      .header {
+        margin-bottom: 0.8rem;
+      }
+      
+      .instructions {
+        margin-bottom: 0.8rem;
+        padding: 0.6rem;
+      }
+      
+      .keyboard {
+        margin-bottom: 0.8rem;
+      }
+      
+      .key {
+        height: 40px;
+      }
+    }
+    
+    @media (max-height: 400px) {
+      .instructions {
+        display: none; /* Hide instructions on very short screens */
+      }
+      
+      .header {
+        margin-bottom: 0.5rem;
+      }
+      
+      .keyboard {
+        margin-bottom: 0.5rem;
+      }
+      
+      .key {
+        height: 35px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1 class="title">Wordle AI Helper</h1>
+    <p class="subtitle">Click letters to set their status, then get AI suggestions</p>
+  </div>
+  
+  <div class="instructions">
+    <p><strong>How to use:</strong> Click each letter to cycle through its status</p>
+    <div class="color-legend">
+      <div class="legend-item">
+        <div class="legend-color green"></div>
+        <span>Correct position</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color yellow"></div>
+        <span>Wrong position</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color gray"></div>
+        <span>Not in word</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="keyboard" id="keyboard"></div>
+  
+  <div class="answer-section">
+    <div class="answer-label">AI Suggestion:</div>
+    <div class="answer" id="aiAnswer">Click letters above, then press Send</div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    const rows = [
+      ['Q','W','E','R','T','Y','U','I','O','P'],
+      ['A','S','D','F','G','H','J','K','L'],
+      ['Z','X','C','V','B','N','M','SEND']
+    ];
+    
+    const keyStates = {};
+    const keyboard = document.getElementById('keyboard');
+    
+    function renderKeyboard() {
+      keyboard.innerHTML = '';
+      
+      rows.forEach((row, rowIndex) => {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'keyboard-row';
+        
+        row.forEach(key => {
+          const keyDiv = document.createElement('div');
+          keyDiv.className = 'key';
+          
+          if (key === 'SEND') {
+            keyDiv.innerHTML = '<i data-lucide="send"></i>';
+            keyDiv.classList.add('send');
+            keyDiv.onclick = sendToAI;
+          } else {
+            keyDiv.textContent = key;
+            const state = keyStates[key] || '';
+            if (state) keyDiv.classList.add(state);
+            keyDiv.onclick = () => cycleState(key);
+          }
+          
+          rowDiv.appendChild(keyDiv);
+        });
+        
+        keyboard.appendChild(rowDiv);
+      });
+      
+      lucide.createIcons();
+    }
+    
+    function cycleState(key) {
+      const states = ['', 'green', 'yellow', 'gray'];
+      const current = keyStates[key] || '';
+      const next = states[(states.indexOf(current) + 1) % states.length];
+      keyStates[key] = next;
+      renderKeyboard();
+    }
+    
+    async function sendToAI() {
+      const green = Object.keys(keyStates).filter(k => keyStates[k] === 'green');
+      const yellow = Object.keys(keyStates).filter(k => keyStates[k] === 'yellow');
+      const gray = Object.keys(keyStates).filter(k => keyStates[k] === 'gray');
+      
+      const prompt = `You are a Wordle helper. Based on the following clues, suggest ONE valid 5-letter English word:
+      
+Green letters (correct position): ${green.length ? green.join(', ') : 'None'}
+Yellow letters (in word, wrong position): ${yellow.length ? yellow.join(', ') : 'None'}  
+Gray letters (not in word): ${gray.length ? gray.join(', ') : 'None'}
+
+Respond with only the word, nothing else.`;
+      
+      const output = document.getElementById('aiAnswer');
+      output.textContent = 'Thinking...';
+      output.className = 'answer thinking';
+      
+      try {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer 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",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "llama3-70b-8192",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.3,
+            max_tokens: 10
+          })
+        });
+        
+        const data = await res.json();
+        const suggestion = data.choices?.[0]?.message?.content?.trim().toUpperCase() || 'ERROR';
+        
+        output.textContent = suggestion;
+        output.className = 'answer';
+      } catch (e) {
+        output.textContent = 'Connection error - try again';
+        output.className = 'answer error';
+      }
+    }
+    
+    renderKeyboard();
+  </script>
+</body>
+</html>
