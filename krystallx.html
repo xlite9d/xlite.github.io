@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>krystallX</title>
+
+  <!-- Fonts + Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --text: #ddd;
+      --muted: #888;
+      --bg: #0b0b0c;
+      --glass: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 40px;
+      color: var(--muted);
+    }
+
+    .logo .triangle {
+      width: 14px;
+      height: 14px;
+      background: #aaa;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    }
+
+    .logo h1 {
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    .search-wrapper {
+      display: flex;
+      align-items: center;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 12px 20px;
+      width: 420px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+
+    .search-wrapper input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      color: white;
+      outline: none;
+    }
+
+    .search-wrapper button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+    }
+
+    .time {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200px;
+      z-index: -1;
+    }
+
+    .wave svg {
+      width: 100%;
+      height: 100%;
+      animation: waveMove 12s linear infinite alternate;
+    }
+
+    @keyframes waveMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">
+    <div class="triangle"></div>
+    <h1>krystallX</h1>
+  </div>
+
+  <form class="search-wrapper" id="searchForm">
+    <input type="text" id="searchInput" placeholder="Search Google or type a URL" />
+    <button type="submit"><i data-lucide="search"></i></button>
+  </form>
+
+  <div class="time" id="timeDisplay">--:--</div>
+
+  <div class="waves">
+    <div class="wave">
+      <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="url(#grad)" fill-opacity="1"
+          d="M0,192L120,181.3C240,171,480,149,720,160C960,171,1200,213,1320,234.7L1440,256L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z">
+        </path>
+        <defs>
+          <linearGradient id="grad" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stop-color="#0ff"/>
+            <stop offset="20%" stop-color="#0f0"/>
+            <stop offset="40%" stop-color="#ff0"/>
+            <stop offset="60%" stop-color="#f00"/>
+            <stop offset="80%" stop-color="#90f"/>
+            <stop offset="100%" stop-color="#00f"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function updateTime() {
+      const now = new Date();
+      let h = now.getHours();
+      const m = now.getMinutes().toString().padStart(2, '0');
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      document.getElementById('timeDisplay').textContent = `${h}:${m} ${ampm}`;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const val = document.getElementById('searchInput').value.trim();
+      if (!val) return;
+
+      let finalURL = "";
+
+      if (val.startsWith("http://") || val.startsWith("https://")) {
+        finalURL = `/active/embed.html?url=${encodeURIComponent(val)}`;
+      } else if (val.includes(".")) {
+        finalURL = `/active/embed.html?url=https://${encodeURIComponent(val)}`;
+      } else {
+        finalURL = `/active/embed.html?url=https://duckduckgo.com/?t=h_&q=${encodeURIComponent(val)}`;
+      }
+
+      window.location.href = finalURL;
+    });
+  </script>
+</body>
+</html>
