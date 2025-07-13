@@ -24,28 +24,6 @@
             color: #FFFFFF;
             position: relative;
         }
-        
-        /* Loading overlay that covers everything until animations complete */
-        #loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000000;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
-        
-        #loading-overlay.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
         .star {
             position: absolute;
             width: 3px;
@@ -98,38 +76,70 @@
     </style>
 </head>
 <body>
-    <!-- Loading overlay that prevents page from being "ready" -->
-    <div id="loading-overlay">
-        <div id="main">
-            <p id="glitch-text">deploying proxy</p>
-        </div>
+    <div id="main">
+        <p id="glitch-text">deploying proxy</p>
     </div>
-
+    
     <script>
-        // Prevent the page from finishing loading until animations complete
-        let animationsComplete = false;
+        // Prevent page from finishing loading until animations complete
+        let animationsFinished = false;
+        let originalOnLoad = window.onload;
         
-        // Override document ready state
-        Object.defineProperty(document, 'readyState', {
-            get: function() {
-                return animationsComplete ? 'complete' : 'loading';
+        // Override window.onload to prevent it from firing until animations are done
+        window.onload = null;
+        
+        // Store original addEventListener to intercept load events
+        const originalAddEventListener = window.addEventListener;
+        const loadEventListeners = [];
+        
+        // Intercept all load event listeners
+        window.addEventListener = function(type, listener, options) {
+            if (type === 'load') {
+                loadEventListeners.push({ listener, options });
+                return;
             }
-        });
-
-        // Function to mark page as fully loaded
-        function markPageAsLoaded() {
-            animationsComplete = true;
+            return originalAddEventListener.call(this, type, listener, options);
+        };
+        
+        // Function to complete page loading after animations
+        function completePageLoading() {
+            animationsFinished = true;
             
-            // Remove loading overlay
-            const overlay = document.getElementById('loading-overlay');
-            overlay.classList.add('fade-out');
+            // Restore original addEventListener
+            window.addEventListener = originalAddEventListener;
+            
+            // Fire all stored load event listeners
+            loadEventListeners.forEach(({ listener, options }) => {
+                window.addEventListener('load', listener, options);
+            });
+            
+            // Fire the original onload if it existed
+            if (originalOnLoad) {
+                originalOnLoad();
+            }
             
             // Dispatch load event
-            setTimeout(() => {
-                overlay.remove();
-                window.dispatchEvent(new Event('load'));
-                document.dispatchEvent(new Event('DOMContentLoaded'));
-            }, 500);
+            window.dispatchEvent(new Event('load'));
+            
+            // Load external scripts after animations complete
+            loadExternalScripts();
+        }
+        
+        // Function to load external scripts
+        function loadExternalScripts() {
+            const scripts = [
+                { src: 'uv/uv.bundle.js', charset: 'UTF-8' },
+                { src: 'uv/uv.config.js', charset: 'UTF-8' },
+                { src: 'register-sw.js' },
+                { src: 'embed.js' }
+            ];
+            
+            scripts.forEach(({ src, charset }) => {
+                const script = document.createElement('script');
+                script.src = src;
+                if (charset) script.charset = charset;
+                document.body.appendChild(script);
+            });
         }
 
         const target = document.getElementById('glitch-text');
@@ -170,10 +180,10 @@
                             target.classList.remove('red-glow');
                             target.style.opacity = '1';
                             
-                            // Mark animations as complete and allow page to finish loading
+                            // All animations complete - now allow page to finish loading
                             setTimeout(() => {
-                                markPageAsLoaded();
-                            }, 200); // Small delay to ensure fade-in is complete
+                                completePageLoading();
+                            }, 100);
                             
                         }, 500);
                     }, 1000);
@@ -197,25 +207,6 @@
         }
 
         setInterval(createStar, 20);
-        
-        // Prevent default load events until animations complete
-        window.addEventListener('load', function(e) {
-            if (!animationsComplete) {
-                e.stopImmediatePropagation();
-            }
-        }, true);
-        
-        document.addEventListener('DOMContentLoaded', function(e) {
-            if (!animationsComplete) {
-                e.stopImmediatePropagation();
-            }
-        }, true);
     </script>
-    
-    <!-- Scripts will only execute after page is marked as loaded -->
-    <script src="uv/uv.bundle.js" charset="UTF-8"></script>
-    <script src="uv/uv.config.js" charset="UTF-8"></script>
-    <script src="register-sw.js"></script>
-    <script src="embed.js"></script>
 </body>
 </html>
