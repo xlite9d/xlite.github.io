@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -532,11 +529,35 @@
             transition: background-color 0.2s;
             font-size: 14px;
             margin-right: 4px;
+            position: relative;
         }
         .action-btn:hover {
             background-color: rgba(255, 0, 0, 0.1);
             color: #fff;
         }
+        
+        /* Hard refresh button styling */
+        .action-btn#hard-reload-btn {
+            position: relative;
+        }
+        .action-btn#hard-reload-btn::after {
+            content: '+';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #ff0044;
+            background-color: #000;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        
         .url-bar-wrapper {
             flex-grow: 1;
             display: flex;
@@ -772,10 +793,8 @@ iframe {
     inset 0 0 20px rgba(255, 255, 255, 0.05);
   color: #fff;
   font-family: 'Poppins', sans-serif;
-  overflow-y: auto;
-
-  z-index: 9999;
-
+  overflow-y: auto; 
+  z-index: 9999; 
   opacity: 0;
   pointer-events: none;
   transform: translateY(-10px);
@@ -787,10 +806,7 @@ iframe {
   pointer-events: auto;
   transform: translateY(0);
 }
-
-
-
-        .history-panel.visible {
+           .history-panel.visible {
             opacity: 1;
             transform: translateY(0);
         }
@@ -1232,8 +1248,7 @@ iframe {
     }
 }
 
-
-        @keyframes fade-in {
+          @keyframes fade-in {
             from { opacity: 0; }
             to { opacity: 1; }
         }
@@ -1647,12 +1662,12 @@ iframe {
     </style>
 </head>
 <body>
-
+ 
     <audio id="background-audio" loop>
     <source src="/hertz/newesthertzaudiogodefpls.mp3" type="audio/mpeg" />
     Your browser does not support the audio element.
 </audio>
-    
+
     <div class="tabs-top-bar" id="tabs-top-bar">
         <div class="new-tab" id="new-tab-btn-top">
             <i class="fa-solid fa-plus"></i>
@@ -1665,12 +1680,12 @@ iframe {
                     <path d="M1 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2zm0 22.5c-4.694 0-8.5-3.806-8.5-8.5s3.806-8.5 8.5-8.5 8.5 3.806 8.5 8.5-3.806 8.5-8.5 8.5z" />
                 </svg>
             </div>
-
+ 
             <div class="sidebar-section tabs-section" id="sidebar-tabs-section" style="display:none;">
             </div>
-
+ 
             <div class="sidebar-divider"></div>
-
+ 
             <div class="sidebar-section">
                 <div class="sidebar-icon" data-url="/Active/embed.html?url=https://www.twitch.tv">
                     <ion-icon name="logo-twitch"></ion-icon>
@@ -1691,9 +1706,9 @@ iframe {
                     <ion-icon name="timer"></ion-icon>
                 </div>
             </div>
-
+ 
             <div class="sidebar-divider"></div>
-
+ 
             <div class="sidebar-section">
                 <div class="sidebar-icon" data-url="/v-ai">
                     <ion-icon name="call-outline"></ion-icon>
@@ -1711,15 +1726,15 @@ iframe {
                     <ion-icon name="headset"></ion-icon>
                 </div>
             </div>
-
+ 
             <div class="sidebar-divider"></div>
-
+ 
             <div class="sidebar-bottom">
                 <div class="sidebar-divider"></div>
                 <div class="sidebar-icon" id="history-btn">
                     <ion-icon name="alarm"></ion-icon>
                 </div>
-
+ 
                 <div class="sidebar-icon" data-url="/Active/embed.html?url=https://discord.com/widget?id=1378160304344535060&theme=dark">
                     <ion-icon name="logo-dropbox"></ion-icon>
                 </div>
@@ -1738,6 +1753,12 @@ iframe {
                         </div>
                         <div class="action-btn" id="reload-btn">
                             <i class="fa-solid fa-rotate-right"></i>
+                        </div>
+                        <div class="action-btn" id="hard-reload-btn">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </div>
+                        <div class="action-btn" id="home-btn">
+                            <i class="fa-solid fa-home"></i>
                         </div>
                     </div>
                     <div class="url-bar-wrapper">
@@ -1771,11 +1792,11 @@ iframe {
                     <iframe src="/landin" id="frame-0" onload="frameLoaded(0)" data-is-loading="false"></iframe>
                 </div>
             </div>
-
+ 
             <div class="background-container">
                 <div class="wave-background"></div>
             </div>
-
+ 
             <div class="history-panel" id="history-panel">
                 <div class="history-header">
                     <div class="history-icon">
@@ -2046,6 +2067,8 @@ iframe {
         const backBtn = document.getElementById('back-btn');
         const forwardBtn = document.getElementById('forward-btn');
         const reloadBtn = document.getElementById('reload-btn');
+        const hardReloadBtn = document.getElementById('hard-reload-btn');
+        const homeBtn = document.getElementById('home-btn');
         const loadingBarContainer = document.getElementById('loading-bar-container');
         const historyPanel = document.getElementById('history-panel');
         const historyItemsContainer = document.getElementById('history-items-container');
@@ -2456,6 +2479,23 @@ iframe {
             loadingBarContainer.style.display = 'block';
             activeFrame.dataset.isLoading = 'true';
             activeFrame.contentWindow.location.reload();
+        }
+
+        function hardReloadPage() {
+            const activeFrame = document.getElementById(`frame-${activeTabId}`);
+            loadingBarContainer.style.display = 'block';
+            activeFrame.dataset.isLoading = 'true';
+            
+            // Clear cache and reload (equivalent to Ctrl+Shift+R)
+            const currentSrc = activeFrame.src;
+            activeFrame.src = '';
+            setTimeout(() => {
+                activeFrame.src = currentSrc + (currentSrc.includes('?') ? '&' : '?') + '_t=' + Date.now();
+            }, 100);
+        }
+
+        function goHome() {
+            navigateToUrl('/landin.html');
         }
 
         function navigateToUrl(url) {
@@ -2954,6 +2994,8 @@ iframe {
         backBtn.addEventListener('click', goBack);
         forwardBtn.addEventListener('click', goForward);
         reloadBtn.addEventListener('click', reloadPage);
+        hardReloadBtn.addEventListener('click', hardReloadPage);
+        homeBtn.addEventListener('click', goHome);
         urlBar.addEventListener('keydown', handleUrlSubmit);
 
         document.querySelectorAll('.sidebar-icon:not(#history-btn)').forEach(icon => {
@@ -3113,8 +3155,7 @@ iframe {
                 icon.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-
-
+                     
                     const cloudContainer = document.getElementById('cloud-container');
                     const cloudIframeContainer = document.getElementById('cloud-iframe-container');
 
@@ -3258,10 +3299,9 @@ iframe {
       eruda.init();
     };
   }
-      
-        <script>
+               <script>
   const audio = document.getElementById('background-audio');
-
+ 
   function startAudio() {
     if (audio.paused) {
       audio.play().catch((e) => {
@@ -3269,12 +3309,12 @@ iframe {
       });
     }
   }
-
+ 
   document.addEventListener('click', startAudio);
   document.addEventListener('touchstart', startAudio);
 </script>
-        
-</script>
+
+        </script>
 
     <script>
         function initNotifications() {
