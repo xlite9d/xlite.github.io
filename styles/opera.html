@@ -2956,13 +2956,11 @@
       urlBar.addEventListener('keydown', handleUrlSubmit);
 
       document.querySelectorAll('.sidebar-icon:not(#history-btn)').forEach(icon => {
-          // This general click handler will now apply to all sidebar icons that are not history-btn,
-          // including the AI button, unless explicitly handled by a more specific listener below.
           icon.addEventListener('click', function() {
               const url = this.getAttribute('data-url');
               if (url) {
                   // Exclude panel-opening buttons from general navigation if they have their own specific logic
-                  if (this.id === 'music-player-btn' || this.id === 'chat-btn' || this.id === 'clouds-btn') return;
+                  if (this.id === 'music-player-btn' || this.id === 'chat-btn' || this.id === 'clouds-btn' || this.id === 'ai-btn') return;
                   navigateToUrl(url);
               }
           });
@@ -3140,8 +3138,8 @@
           // New AI Panel Logic
           if (icon.id === 'ai-btn') {
               icon.addEventListener('click', function(e) {
-                  // Do NOT preventDefault or stopPropagation here,
-                  // so the general sidebar-icon click handler (which navigates) also fires.
+                  e.preventDefault(); // Prevent default navigation
+                  e.stopPropagation(); // Stop event from bubbling up to general sidebar-icon handler
                   const aiContainer = document.getElementById('ai-container');
                   const aiIframeContainer = document.getElementById('ai-iframe-container');
                   let iframe = document.getElementById('ai-iframe');
