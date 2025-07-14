@@ -130,51 +130,18 @@ main {
     padding-bottom: 60px;
 }
 
-@keyframes pulseItemGlow {
-  0%, 100% {
-    box-shadow:
-      0 0 8px rgba(255, 0, 0, 0.2),
-      0 0 12px rgba(255, 0, 0, 0.1);
-  }
-  50% {
-    box-shadow:
-      0 0 12px rgba(255, 50, 50, 0.4),
-      0 0 18px rgba(255, 50, 50, 0.2);
-  }
-}
-
 .search-result-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px;
-    background: rgba(40, 40, 40, 0.5);
-    border: 1px solid rgba(255, 0, 0, 0.15);
+    background-color: rgba(40, 40, 40, 0.8);
     border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
     margin-bottom: 8px;
     position: relative;
     z-index: 16;
-
-    backdrop-filter: blur(12px) saturate(150%) brightness(120%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%) brightness(120%);
-
-    animation: pulseItemGlow 3s ease-in-out infinite;
-
-    transition: 
-        background-color 0.3s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease,
-        border-color 0.2s ease;
-}
-
-.search-result-item:hover {
-    background-color: rgba(60, 0, 0, 0.8);
-    transform: translateY(-4px) scale(1.02);
-    box-shadow:
-        0 0 12px rgba(255, 0, 0, 0.5),
-        0 0 20px rgba(255, 0, 0, 0.3);
-    border-color: rgba(255, 0, 0, 0.4);
 }
 
 .search-result-item:hover {
