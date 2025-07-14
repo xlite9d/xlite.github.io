@@ -1169,26 +1169,60 @@ iframe {
             100% { background-position: 200% 0; }
         }
 
-        .music-player-close {
-            position: relative;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 10000;
-            cursor: pointer;
-            color: white;
-            font-weight: 800;
-            background-color: #000;
-            text-align: center;
-            padding: 18px 0;
-            font-size: 16px;
-            font-family: 'Poppins', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-            border-top: 1px solid rgba(255, 0, 128, 0.7);
-            overflow: hidden;
-        }
+@keyframes intenseRedPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 15px rgba(255, 0, 0, 0.4),
+      0 0 30px rgba(255, 0, 0, 0.3),
+      inset 0 0 12px rgba(255, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(255, 0, 0, 0.6),
+      0 0 50px rgba(255, 0, 0, 0.4),
+      inset 0 0 20px rgba(255, 0, 0, 0.3);
+  }
+}
+
+.music-player-close {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    cursor: pointer;
+    color: white;
+    font-weight: 800;
+    background: rgba(255, 0, 0, 0.05); /* Very transparent red tint */
+    text-align: center;
+    padding: 18px 0;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-top: 1px solid rgba(255, 0, 0, 0.7);
+    overflow: hidden;
+
+    backdrop-filter: blur(20px) saturate(200%) brightness(120%) contrast(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%) brightness(120%) contrast(140%);
+
+    box-shadow:
+      0 0 15px rgba(255, 0, 0, 0.4),
+      inset 0 0 10px rgba(255, 0, 0, 0.2);
+
+    animation: intenseRedPulse 4s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+.music-player-close:hover {
+    background: rgba(255, 0, 0, 0.08);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:
+      0 0 30px rgba(255, 0, 0, 0.6),
+      0 0 50px rgba(255, 0, 0, 0.4),
+      inset 0 0 25px rgba(255, 0, 0, 0.3);
+    border-top-color: rgba(255, 0, 0, 0.9);
+}
 
         .music-player-close:hover {
             background-color: rgba(255, 0, 128, 0.8);
