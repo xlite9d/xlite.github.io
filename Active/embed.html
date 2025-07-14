@@ -26,14 +26,12 @@
         }
         .star {
             position: absolute;
-            width: 3px;
-            height: 3px;
             background: white;
             box-shadow: 0 0 8px white;
             border-radius: 50%;
             top: 0;
             left: 100%;
-            animation: moveStar 2s linear forwards;
+            animation: moveStar linear forwards;
         }
         @keyframes moveStar {
             to {
@@ -54,10 +52,8 @@
             font-weight: 700;
             letter-spacing: 3px;
             text-transform: uppercase;
-            animation: none;
-            text-shadow: none;
-            margin: 0;
             transition: color 1s ease, text-shadow 1s ease, opacity 0.5s ease;
+            margin: 0;
         }
         #glitch-text.red-glow {
             color: red;
@@ -66,12 +62,10 @@
         .v-red, .x-red {
             color: red;
             text-shadow: 0 0 10px red, 0 0 20px red, 0 0 40px red;
-            transition: color 0.5s ease, text-shadow 0.5s ease;
         }
         .plaza-white {
             color: white;
             text-shadow: 0 0 10px white, 0 0 20px white, 0 0 40px white;
-            transition: color 0.5s ease, text-shadow 0.5s ease;
         }
     </style>
 </head>
@@ -81,7 +75,7 @@
     </div>
 
     <script>
-        // Prevent page from finishing loading until animations complete
+        // Block page load until animation finishes
         let animationsFinished = false;
         let originalOnLoad = window.onload;
         window.onload = null;
@@ -98,7 +92,9 @@
         };
 
         function completePageLoading() {
+            if (animationsFinished) return;
             animationsFinished = true;
+
             window.addEventListener = originalAddEventListener;
 
             loadEventListeners.forEach(({ listener, options }) => {
@@ -120,7 +116,6 @@
                 { src: 'register-sw.js' },
                 { src: 'embed.js' }
             ];
-
             scripts.forEach(({ src, charset }) => {
                 const script = document.createElement('script');
                 script.src = src;
@@ -129,6 +124,7 @@
             });
         }
 
+        // Glitch effect
         const target = document.getElementById('glitch-text');
         const original = target.textContent;
         const chars = 'abcdefghijklmnopqrstuvwxyz';
@@ -167,7 +163,7 @@
                             target.classList.remove('red-glow');
                             target.style.opacity = '1';
 
-                            // After 2 seconds on VplazaX, complete loading
+                            // Stay on VplazaX for 2 seconds
                             setTimeout(() => {
                                 completePageLoading();
                             }, 2000);
@@ -183,8 +179,9 @@
             star.classList.add('star');
             star.style.top = `${Math.random() * 100}vh`;
             star.style.left = '100%';
-            star.style.width = `${Math.random() * 2 + 2}px`;
-            star.style.height = star.style.width;
+            const size = Math.random() * 2 + 2;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
             star.style.animationDuration = `${Math.random() * 1.5 + 0.5}s`;
             document.body.appendChild(star);
 
