@@ -79,20 +79,16 @@
     <div id="main">
         <p id="glitch-text">deploying proxy</p>
     </div>
-    
+
     <script>
         // Prevent page from finishing loading until animations complete
         let animationsFinished = false;
         let originalOnLoad = window.onload;
-        
-        // Override window.onload to prevent it from firing until animations are done
         window.onload = null;
-        
-        // Store original addEventListener to intercept load events
+
         const originalAddEventListener = window.addEventListener;
         const loadEventListeners = [];
-        
-        // Intercept all load event listeners
+
         window.addEventListener = function(type, listener, options) {
             if (type === 'load') {
                 loadEventListeners.push({ listener, options });
@@ -100,32 +96,23 @@
             }
             return originalAddEventListener.call(this, type, listener, options);
         };
-        
-        // Function to complete page loading after animations
+
         function completePageLoading() {
             animationsFinished = true;
-            
-            // Restore original addEventListener
             window.addEventListener = originalAddEventListener;
-            
-            // Fire all stored load event listeners
+
             loadEventListeners.forEach(({ listener, options }) => {
                 window.addEventListener('load', listener, options);
             });
-            
-            // Fire the original onload if it existed
+
             if (originalOnLoad) {
                 originalOnLoad();
             }
-            
-            // Dispatch load event
+
             window.dispatchEvent(new Event('load'));
-            
-            // Load external scripts after animations complete
             loadExternalScripts();
         }
-        
-        // Function to load external scripts
+
         function loadExternalScripts() {
             const scripts = [
                 { src: 'uv/uv.bundle.js', charset: 'UTF-8' },
@@ -133,7 +120,7 @@
                 { src: 'register-sw.js' },
                 { src: 'embed.js' }
             ];
-            
+
             scripts.forEach(({ src, charset }) => {
                 const script = document.createElement('script');
                 script.src = src;
@@ -146,7 +133,7 @@
         const original = target.textContent;
         const chars = 'abcdefghijklmnopqrstuvwxyz';
         let iterations = 0;
-        
+
         const glitchInterval = setInterval(() => {
             let displayed = '';
             for (let i = 0; i < original.length; i++) {
@@ -160,17 +147,17 @@
             }
             target.textContent = displayed;
             iterations += 0.5;
-            
+
             if (iterations >= original.length) {
                 clearInterval(glitchInterval);
                 target.textContent = original;
-                
+
                 setTimeout(() => {
                     target.classList.add('red-glow');
-                    
+
                     setTimeout(() => {
                         target.style.opacity = '0';
-                        
+
                         setTimeout(() => {
                             target.innerHTML = `
                                 <span class="v-red">V</span>
@@ -179,12 +166,12 @@
                             `;
                             target.classList.remove('red-glow');
                             target.style.opacity = '1';
-                            
-                            // All animations complete - now allow page to finish loading
+
+                            // After 2 seconds on VplazaX, complete loading
                             setTimeout(() => {
                                 completePageLoading();
-                            }, 100);
-                            
+                            }, 2000);
+
                         }, 500);
                     }, 1000);
                 }, 300);
@@ -200,7 +187,7 @@
             star.style.height = star.style.width;
             star.style.animationDuration = `${Math.random() * 1.5 + 0.5}s`;
             document.body.appendChild(star);
-            
+
             star.addEventListener('animationend', () => {
                 star.remove();
             });
