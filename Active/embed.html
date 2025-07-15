@@ -75,14 +75,12 @@
     </div>
 
     <script>
-        // Block page load until animation finishes
         let animationsFinished = false;
         let originalOnLoad = window.onload;
         window.onload = null;
 
         const originalAddEventListener = window.addEventListener;
         const loadEventListeners = [];
-
         window.addEventListener = function(type, listener, options) {
             if (type === 'load') {
                 loadEventListeners.push({ listener, options });
@@ -96,15 +94,11 @@
             animationsFinished = true;
 
             window.addEventListener = originalAddEventListener;
-
             loadEventListeners.forEach(({ listener, options }) => {
                 window.addEventListener('load', listener, options);
             });
 
-            if (originalOnLoad) {
-                originalOnLoad();
-            }
-
+            if (originalOnLoad) originalOnLoad();
             window.dispatchEvent(new Event('load'));
             loadExternalScripts();
         }
@@ -124,11 +118,11 @@
             });
         }
 
-        // Glitch effect
         const target = document.getElementById('glitch-text');
         const original = target.textContent;
         const chars = 'abcdefghijklmnopqrstuvwxyz';
         let iterations = 0;
+        let loadTimeout;
 
         const glitchInterval = setInterval(() => {
             let displayed = '';
@@ -163,8 +157,8 @@
                             target.classList.remove('red-glow');
                             target.style.opacity = '1';
 
-                            // Stay on VplazaX for 2 seconds
-                            setTimeout(() => {
+                            clearTimeout(loadTimeout);
+                            loadTimeout = setTimeout(() => {
                                 completePageLoading();
                             }, 2000);
 
