@@ -122,7 +122,6 @@
         const original = target.textContent;
         const chars = 'abcdefghijklmnopqrstuvwxyz';
         let iterations = 0;
-        let loadTimeout;
 
         const glitchInterval = setInterval(() => {
             let displayed = '';
@@ -157,13 +156,12 @@
                             target.classList.remove('red-glow');
                             target.style.opacity = '1';
 
-                            clearTimeout(loadTimeout);
-                            loadTimeout = setTimeout(() => {
+                            setTimeout(() => {
                                 completePageLoading();
-                            }, 2000);
+                            }, 500);
 
                         }, 500);
-                    }, 1000);
+                    }, 800);
                 }, 300);
             }
         }, 50);
