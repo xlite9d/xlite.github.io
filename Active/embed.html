@@ -11,62 +11,29 @@
             font-style: normal;
         }
         body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+            margin: 0; padding: 0; overflow: hidden;
             font-family: 'Cal Sans', Arial, Helvetica, sans-serif;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #000000;
-            color: #FFFFFF;
-            position: relative;
+            height: 100vh; width: 100vw;
+            display: flex; justify-content: center; align-items: center;
+            background: #000; color: #fff; position: relative;
         }
         .star {
-            position: absolute;
-            background: white;
-            box-shadow: 0 0 8px white;
-            border-radius: 50%;
-            top: 0;
-            left: 100%;
+            position: absolute; background: white;
+            box-shadow: 0 0 8px white; border-radius: 50%;
+            top: 0; left: 100%;
             animation: moveStar linear forwards;
         }
         @keyframes moveStar {
-            to {
-                transform: translateX(-120vw);
-                opacity: 0;
-            }
+            to { transform: translateX(-120vw); opacity: 0; }
         }
-        #main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            z-index: 1;
-        }
+        #main { display: flex; flex-direction: column; align-items: center; text-align: center; z-index: 1; }
         #glitch-text {
-            font-size: 40px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
+            font-size: 40px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
             transition: color 1s ease, text-shadow 1s ease, opacity 0.5s ease;
-            margin: 0;
         }
-        #glitch-text.red-glow {
-            color: red;
-            text-shadow: 0 0 20px red, 0 0 40px red, 0 0 60px red, 0 0 80px red;
-        }
-        .v-red, .x-red {
-            color: red;
-            text-shadow: 0 0 10px red, 0 0 20px red, 0 0 40px red;
-        }
-        .plaza-white {
-            color: white;
-            text-shadow: 0 0 10px white, 0 0 20px white, 0 0 40px white;
-        }
+        #glitch-text.red-glow { color: red; text-shadow: 0 0 20px red, 0 0 40px red, 0 0 60px red; }
+        .v-red, .x-red { color: red; text-shadow: 0 0 10px red, 0 0 20px red; }
+        .plaza-white { color: white; text-shadow: 0 0 10px white, 0 0 20px white; }
     </style>
 </head>
 <body>
@@ -76,110 +43,62 @@
 
     <script>
         let animationsFinished = false;
-        let originalOnLoad = window.onload;
-        window.onload = null;
-
-        const originalAddEventListener = window.addEventListener;
-        const loadEventListeners = [];
-        window.addEventListener = function(type, listener, options) {
-            if (type === 'load') {
-                loadEventListeners.push({ listener, options });
-                return;
-            }
-            return originalAddEventListener.call(this, type, listener, options);
-        };
-
-        function completePageLoading() {
-            if (animationsFinished) return;
-            animationsFinished = true;
-
-            window.addEventListener = originalAddEventListener;
-            loadEventListeners.forEach(({ listener, options }) => {
-                window.addEventListener('load', listener, options);
-            });
-
-            if (originalOnLoad) originalOnLoad();
-            window.dispatchEvent(new Event('load'));
-            loadExternalScripts();
-        }
-
-        function loadExternalScripts() {
-            const scripts = [
-                { src: 'uv/uv.bundle.js', charset: 'UTF-8' },
-                { src: 'uv/uv.config.js', charset: 'UTF-8' },
-                { src: 'register-sw.js' },
-                { src: 'embed.js' }
-            ];
-            scripts.forEach(({ src, charset }) => {
-                const script = document.createElement('script');
-                script.src = src;
-                if (charset) script.charset = charset;
-                document.body.appendChild(script);
-            });
-        }
-
         const target = document.getElementById('glitch-text');
         const original = target.textContent;
         const chars = 'abcdefghijklmnopqrstuvwxyz';
         let iterations = 0;
 
-        const glitchInterval = setInterval(() => {
-            let displayed = '';
-            for (let i = 0; i < original.length; i++) {
-                if (i < iterations) {
-                    displayed += original[i];
-                } else if (original[i] === ' ') {
-                    displayed += ' ';
-                } else {
-                    displayed += chars[Math.floor(Math.random() * chars.length)];
-                }
-            }
-            target.textContent = displayed;
-            iterations += 0.5;
+        function completePageLoading() {
+            if (animationsFinished) return;
+            animationsFinished = true;
+            loadExternalScripts();
+        }
 
-            if (iterations >= original.length) {
+        function loadExternalScripts() {
+            ['uv/uv.bundle.js', 'uv/uv.config.js', 'register-sw.js', 'embed.js'].forEach(src => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.charset = 'UTF-8';
+                document.body.appendChild(script);
+            });
+        }
+
+        const glitchInterval = setInterval(() => {
+            target.textContent = original.split('').map((char, i) =>
+                i < iterations ? char :
+                char === ' ' ? ' ' :
+                chars[Math.floor(Math.random() * chars.length)]
+            ).join('');
+
+            iterations += 1;
+            if (iterations > original.length) {
                 clearInterval(glitchInterval);
                 target.textContent = original;
-
                 setTimeout(() => {
                     target.classList.add('red-glow');
-
                     setTimeout(() => {
                         target.style.opacity = '0';
-
                         setTimeout(() => {
-                            target.innerHTML = `
-                                <span class="v-red">V</span>
-                                <span class="plaza-white">plaza</span>
-                                <span class="x-red">X</span>
-                            `;
+                            target.innerHTML = `<span class="v-red">V</span><span class="plaza-white">plaza</span><span class="x-red">X</span>`;
                             target.classList.remove('red-glow');
                             target.style.opacity = '1';
-
-                            setTimeout(() => {
-                                completePageLoading();
-                            }, 500);
-
-                        }, 500);
-                    }, 800);
-                }, 300);
+                            setTimeout(completePageLoading, 200);
+                        }, 300);
+                    }, 400);
+                }, 200);
             }
-        }, 50);
+        }, 40);
 
         function createStar() {
             const star = document.createElement('div');
-            star.classList.add('star');
+            star.className = 'star';
             star.style.top = `${Math.random() * 100}vh`;
-            star.style.left = '100%';
             const size = Math.random() * 2 + 2;
             star.style.width = `${size}px`;
             star.style.height = `${size}px`;
-            star.style.animationDuration = `${Math.random() * 1.5 + 0.5}s`;
+            star.style.animationDuration = `${Math.random() * 1.2 + 0.4}s`;
             document.body.appendChild(star);
-
-            star.addEventListener('animationend', () => {
-                star.remove();
-            });
+            star.addEventListener('animationend', () => star.remove());
         }
 
         setInterval(createStar, 20);
